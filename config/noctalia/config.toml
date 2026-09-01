@@ -1,0 +1,76 @@
+[bar.default]
+position = "left"
+thickness = 35
+concave_edge_corners = true
+margin_edge = 8
+margin_ends = 8
+radius_bottom_left = 15
+radius_bottom_right = 15
+radius_top_left =15
+radius_top_right = 15
+scale = 1.05
+start = [ "launcher", "workspaces" ]
+center = [ "media" ]
+monitors = [ "eDP-1" ]
+end = [ "network", "volume", "brightness", "sysmon_cpu", "sysmon_ram", "battery", "clock" ]
+
+
+[bar.default.monitor.hdmi]
+match = "HDMI-A-5"
+enabled = false
+
+[widget.launcher]
+glyph = "0xf303"
+color = "secondary"
+custom_image = "/usr/share/pixmaps/archlinux-logo.svg"
+custom_image_colorize = true
+# point this at an Arch logo if you want the launcher button itself to be the logo:
+# custom_image = "/usr/share/pixmaps/archlinux-logo.svg"
+
+[widget.workspaces]
+show_labels = false
+capsule = false
+active_pill_size = 1.5
+inactive_pill_size = 1.0
+pill_scale = 0.9
+
+[widget.media]
+hide_when_no_media = true
+title_scroll = "on_hover"
+
+[widget.clock]
+format = "{:%-I:%M %p}"
+vertical_format = "{:%I\n%M}"
+color = "secondary"
+
+[widget.sysmon_cpu]
+type = "sysmon"
+stat = "cpu_usage"
+show_value = false
+
+[widget.sysmon_ram]
+type = "sysmon"
+stat = "ram_used"
+show_value = false
+
+[widget.network]
+color = "secondary"
+show_label = false
+
+[widget.volume]
+color = "secondary"
+show_label = false
+
+[widget.brightness]
+color = "secondary"
+show_label = false
+
+[shell.mpris]
+blacklist = ["firefox", "chromium", "brave", "vlc", "mpv", "zen"]
+
+
+
+
+[theme.templates]
+builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "alacritty", "qt" ]
+
