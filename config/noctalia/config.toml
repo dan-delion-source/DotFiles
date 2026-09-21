@@ -74,3 +74,15 @@ blacklist = ["firefox", "chromium", "brave", "vlc", "mpv", "zen"]
 [theme.templates]
 builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "alacritty", "qt" ]
 
+[theme]
+mode = "dark"
+source = "custom"
+custom_palette = "Matugen"
+
+[hooks]
+wallpaper_changed = [
+  "matugen image \"$NOCTALIA_WALLPAPER_PATH\" --config \"$HOME/.config/matugen/config.toml\" --mode dark --type scheme-tonal-spot --source-color-index 0",
+  "noctalia msg color-scheme-set custom Matugen",
+  "noctalia msg templates-apply",
+  "hyprctl reload"
+]
