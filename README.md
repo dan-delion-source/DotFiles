@@ -1,5 +1,9 @@
 # DotFiles
 
+## Install individual configs
+
+See [install/README.md](install/README.md) for per-config install and restore commands. For example, `python3 install/configs.py install noctalia` backs up the existing Noctalia config, and `python3 install/configs.py uninstall noctalia` restores it.
+
 ## Wallpaper theming
 
 Matugen is configured to generate colors from a wallpaper into:

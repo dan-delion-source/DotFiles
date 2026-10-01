@@ -12,7 +12,10 @@ scale = 1.05
 start = [ "launcher", "workspaces" ]
 center = [ "media" ]
 monitors = [ "eDP-1" ]
-end = [ "network", "volume", "brightness", "sysmon_cpu", "sysmon_ram", "battery", "clock" ]
+# Vidgex-inspired widgets on the existing sidebar, without oval containers.
+capsule = false
+capsule_group = []
+end = [ "network", "volume", "brightness", "sysmon_temp", "sysmon_cpu", "sysmon_ram", "sysmon_gpu", "battery", "clock" ]
 
 
 [bar.default.monitor.hdmi]
@@ -39,23 +42,60 @@ hide_when_no_media = true
 title_scroll = "on_hover"
 
 [widget.clock]
-format = "{:%-I:%M %p}"
-vertical_format = "{:%I\n%M}"
-color = "secondary"
+format = "{:%H:%M}"
+vertical_format = "{:%H\n%M}"
+color = "primary"
+capsule = false
+
+# Small icon gauges follow the reference; exact readings remain in tooltips.
+[widget.sysmon_temp]
+type = "sysmon"
+stat = "cpu_temp"
+visualization = "gauge"
+show_glyph = true
+show_value = false
+color = "primary"
+capsule = false
 
 [widget.sysmon_cpu]
 type = "sysmon"
 stat = "cpu_usage"
+visualization = "gauge"
+show_glyph = true
 show_value = false
+color = "primary"
+capsule = false
 
 [widget.sysmon_ram]
 type = "sysmon"
-stat = "ram_used"
+stat = "ram_pct"
+visualization = "gauge"
+show_glyph = true
 show_value = false
+color = "primary"
+capsule = false
+
+[widget.sysmon_gpu]
+type = "sysmon"
+stat = "gpu_usage"
+visualization = "gauge"
+show_glyph = true
+show_value = false
+color = "primary"
+capsule = false
+
+# Native battery glyph: Noctalia has no config-only circular battery gauge.
+[widget.battery]
+display_mode = "glyph"
+show_label = false
+color = "primary"
+warning_color = "error"
+capsule = false
 
 [widget.network]
-color = "secondary"
+color = "primary"
 show_label = false
+capsule = false
 
 [widget.volume]
 color = "secondary"
