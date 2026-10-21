@@ -61,7 +61,7 @@ def cpu_times():
 
 
 def network_bytes():
-    received = transmitted = 0
+    interfaces = {}
     for line in read("/proc/net/dev").splitlines()[2:]:
         name, _, rest = line.partition(":")
         name = name.strip()
@@ -70,9 +70,8 @@ def network_bytes():
             continue
         fields = rest.split()
         if len(fields) >= 9:
-            received += int(fields[0])
-            transmitted += int(fields[8])
-    return received, transmitted
+            interfaces[name] = (int(fields[0]), int(fields[8]))
+    return interfaces
 
 
 def memory():
@@ -185,8 +184,10 @@ def report(before, after, slow=None):
         "memory": memory(),
         "disks": slow["disks"],
         "network": {
-            "down": max(0, int((second_net[0] - first_net[0]) / span)),
-            "up": max(0, int((second_net[1] - first_net[1]) / span)),
+            "down": sum(max(0, int((values[0] - first_net[name][0]) / span))
+                        for name, values in second_net.items() if name in first_net),
+            "up": sum(max(0, int((values[1] - first_net[name][1]) / span))
+                      for name, values in second_net.items() if name in first_net),
         },
         "temperature": slow["temperature"],
         "uptime": int(float(uptime[0])) if uptime else 0,

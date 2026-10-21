@@ -1,6 +1,6 @@
 // ╭──────────────────────────────────────────────────────────────────────────╮
 // │                                                                          │
-// │   I M P A S T O   B L O C K                                              │
+// │   S Y S T E M   I N F O                                              │
 // │   signature block · palette board and machine summary                    │
 // │                                                                          │
 // │   github.com/andreumassanet/impasto                                      │
@@ -15,7 +15,7 @@ import "../../../services"
 import "../../../components"
 
 // The terminal greeting as a block: the palette board where fastfetch puts its
-// logo, and the same lines beside it (user@host, distribution, kernel,
+// machine information, with the same lines (user@host, distribution, kernel,
 // compositor, load, uptime, colour daubs). Static data from `MachineService`,
 // live data from `StatsService`; the keys match `fastfetch/config.jsonc`.
 // Not clickable.
@@ -153,10 +153,6 @@ Card {
         visible: !root.wide && !root.tall
         spacing: 4
 
-        PaletteBoard {
-            anchors.horizontalCenter: parent.horizontalCenter
-            size: 46
-        }
 
         Title {
             width: parent.width
@@ -181,17 +177,13 @@ Card {
 
     // ── ROW ─────────────────────────────────────────────────────────────────
     //
-    // Logo left, machine column right, as fastfetch prints it.
+    // Machine information in a compact column.
 
     RowLayout {
         anchors.fill: parent
         visible: root.wide
         spacing: 14
 
-        PaletteBoard {
-            Layout.alignment: Qt.AlignVCenter
-            size: 64
-        }
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -226,7 +218,7 @@ Card {
 
     // ── LARGE SQUARE ────────────────────────────────────────────────────────
     //
-    // The full greeting: logo and name beside the machine, the load under a
+    // The full machine information, with the load under a
     // hairline, then uptime and daubs, in the config's order.
 
     ColumnLayout {
@@ -240,23 +232,6 @@ Card {
             Layout.bottomMargin: 2
             spacing: 14
 
-            Column {
-                Layout.alignment: Qt.AlignVCenter
-                spacing: 0
-
-                PaletteBoard {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    size: 72
-                }
-
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "impasto"
-                    font.family: Theme.fontSignature
-                    font.pixelSize: 20
-                    color: Theme.text
-                }
-            }
 
             ColumnLayout {
                 Layout.fillWidth: true

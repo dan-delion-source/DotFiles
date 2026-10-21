@@ -22,7 +22,7 @@ local mainMod = "SUPER"
 local function profile_keys()
     local state = os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")
     local keys  = {}
-    local file  = io.open(state .. "/quickshell/keys.tsv")
+    local file  = io.open(state .. "/danshell/keys.tsv")
     if not file then
         return keys
     end
@@ -212,8 +212,8 @@ bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AU
 bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true, description = "Media · Volume down" })
 bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, description = "Media · Mute output" })
 bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, description = "Media · Mute microphone" })
-bind("XF86MonBrightnessUp",   hl.dsp.global("quickshell:brightnessUp"),                          { locked = true, repeating = true, description = "Media · Brightness up" })
-bind("XF86MonBrightnessDown", hl.dsp.global("quickshell:brightnessDown"),                        { locked = true, repeating = true, description = "Media · Brightness down" })
+bind("XF86MonBrightnessUp",   hl.dsp.global("danshell:brightnessUp"),                          { locked = true, repeating = true, description = "Media · Brightness up" })
+bind("XF86MonBrightnessDown", hl.dsp.global("danshell:brightnessDown"),                        { locked = true, repeating = true, description = "Media · Brightness down" })
 
 -- · Acer laptops send XF86Launch6 for the microphone key
 bind("XF86Launch6",           hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, description = "Media · Mute microphone (Acer)" })
@@ -230,10 +230,10 @@ bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true,
 -- · the power button opens the session menu instead of powering off (logind
 -- · is told to ignore it, see system/etc/systemd/logind.conf.d/). Some
 -- · machines never report a short press, so the menu has keyboard binds too.
-bind(mainMod .. " + X",         hl.dsp.global("quickshell:session"), { description = "Session · Session menu" })
-bind("CTRL + ALT + Delete",     hl.dsp.global("quickshell:session"), { description = "Session · Session menu, from CTRL + ALT + Delete" })
-bind("XF86PowerOff",            hl.dsp.global("quickshell:session"), { description = "Session · Session menu, from the power button" })
-bind(mainMod .. " + L",         hl.dsp.global("quickshell:lock"),    { description = "Session · Lock the screen" })
+bind(mainMod .. " + X",         hl.dsp.global("danshell:session"), { description = "Session · Session menu" })
+bind("CTRL + ALT + Delete",     hl.dsp.global("danshell:session"), { description = "Session · Session menu, from CTRL + ALT + Delete" })
+bind("XF86PowerOff",            hl.dsp.global("danshell:session"), { description = "Session · Session menu, from the power button" })
+bind(mainMod .. " + L",         hl.dsp.global("danshell:lock"),    { description = "Session · Lock the screen" })
 bind(mainMod .. " + SHIFT + E", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"), { description = "Session · Exit Hyprland" })
 
 
@@ -243,54 +243,54 @@ bind(mainMod .. " + SHIFT + E", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/n
 -- · wakes it (key/mouse wake is off). The dispatcher toggles; it ignores
 -- · a state argument.
 bind(mainMod .. " + SHIFT + D", hl.dsp.dpms(), { locked = true, description = "Utilities · Turn the screen off or back on" })
-bind(mainMod .. " + CTRL + R",  hl.dsp.exec_cmd("pkill -x quickshell; pkill -x qs; sleep 0.5; qs -d"), { description = "Utilities · Restart the shell" })
+bind(mainMod .. " + CTRL + R",  hl.dsp.exec_cmd(require("modules.shell").command .. " restart"), { description = "Utilities · Restart the shell" })
 
 
 -- ── SHELL ───────────────────────────────────────────────────────────────────
 
 -- · global shortcuts registered by the shell
-bind(mainMod .. " + Space",     hl.dsp.global("quickshell:launcher"),   { description = "Shell · Open the launcher" })
-bind(mainMod .. " + A",         hl.dsp.global("quickshell:controls"),   { description = "Shell · Open the control centre" })
-bind(mainMod .. " + TAB",       hl.dsp.global("quickshell:overview"),   { description = "Shell · Open the workspace overview" })
-bind(mainMod .. " + comma",     hl.dsp.global("quickshell:settings"),   { description = "Shell · Open settings" })
-bind(mainMod .. " + T",         hl.dsp.global("quickshell:appearance"), { description = "Shell · Open appearance" })
-bind(mainMod .. " + SHIFT + T", hl.dsp.global("quickshell:palette"),    { description = "Shell · Open the palette" })
-bind(mainMod .. " + U",         hl.dsp.global("quickshell:stats"),      { description = "Shell · Open system statistics" })
-bind(mainMod .. " + SHIFT + P", hl.dsp.global("quickshell:pet"),        { description = "Shell · Open the pet" })
-bind(mainMod .. " + G",         hl.dsp.global("quickshell:games"),      { description = "Shell · Open the games" })
-bind(mainMod .. " + S",         hl.dsp.global("quickshell:notes"),      { description = "Shell · Open the notes" })
-bind(mainMod .. " + K",         hl.dsp.global("quickshell:board"),      { description = "Shell · Open the task board" })
+bind(mainMod .. " + Space",     hl.dsp.global("danshell:launcher"),   { description = "Shell · Open the launcher" })
+bind(mainMod .. " + A",         hl.dsp.global("danshell:controls"),   { description = "Shell · Open the control centre" })
+bind(mainMod .. " + TAB",       hl.dsp.global("danshell:overview"),   { description = "Shell · Open the workspace overview" })
+bind(mainMod .. " + comma",     hl.dsp.global("danshell:settings"),   { description = "Shell · Open settings" })
+bind(mainMod .. " + T",         hl.dsp.global("danshell:appearance"), { description = "Shell · Open appearance" })
+bind(mainMod .. " + SHIFT + T", hl.dsp.global("danshell:palette"),    { description = "Shell · Open the palette" })
+bind(mainMod .. " + U",         hl.dsp.global("danshell:stats"),      { description = "Shell · Open system statistics" })
+bind(mainMod .. " + SHIFT + P", hl.dsp.global("danshell:pet"),        { description = "Shell · Open the pet" })
+bind(mainMod .. " + G",         hl.dsp.global("danshell:games"),      { description = "Shell · Open the games" })
+bind(mainMod .. " + S",         hl.dsp.global("danshell:notes"),      { description = "Shell · Open the notes" })
+bind(mainMod .. " + K",         hl.dsp.global("danshell:board"),      { description = "Shell · Open the task board" })
 
 -- · key sheet, read from `hyprctl binds`. H, since / is SHIFT + 7 on a
 -- · Spanish layout
-bind(mainMod .. " + H",         hl.dsp.global("quickshell:keys"),       { description = "Shell · Show every key" })
+bind(mainMod .. " + H",         hl.dsp.global("danshell:keys"),       { description = "Shell · Show every key" })
 
 -- · zen: the bar away and its band to the windows; and the widgets away
-bind(mainMod .. " + CTRL + B",  hl.dsp.global("quickshell:zen"),        { description = "Shell · Hide or show the bar" })
-bind(mainMod .. " + CTRL + W",  hl.dsp.global("quickshell:widgets"),    { description = "Shell · Hide or show the desktop widgets" })
+bind(mainMod .. " + CTRL + B",  hl.dsp.global("danshell:zen"),        { description = "Shell · Hide or show the bar" })
+bind(mainMod .. " + CTRL + W",  hl.dsp.global("danshell:widgets"),    { description = "Shell · Hide or show the desktop widgets" })
 
 -- · packages panel (pacman + AUR); installs run in a terminal
-bind(mainMod .. " + I",         hl.dsp.global("quickshell:packages"),   { description = "Shell · Open the packages" })
+bind(mainMod .. " + I",         hl.dsp.global("danshell:packages"),   { description = "Shell · Open the packages" })
 
 -- · clipboard history is a launcher mode
-bind(mainMod .. " + V",         hl.dsp.global("quickshell:clipboard"),  { description = "Shell · Open the clipboard history" })
+bind(mainMod .. " + V",         hl.dsp.global("danshell:clipboard"),  { description = "Shell · Open the clipboard history" })
 
 -- · emoji, a launcher mode too
-bind(mainMod .. " + period",    hl.dsp.global("quickshell:emoji"),      { description = "Shell · Pick an emoji" })
+bind(mainMod .. " + period",    hl.dsp.global("danshell:emoji"),      { description = "Shell · Pick an emoji" })
 
 -- · colour picker (hyprpicker); the result goes to the clipboard
-bind(mainMod .. " + SHIFT + C", hl.dsp.global("quickshell:picker"),     { description = "Shell · Pick a colour off the screen" })
+bind(mainMod .. " + SHIFT + C", hl.dsp.global("danshell:picker"),     { description = "Shell · Pick a colour off the screen" })
 
 -- · capture surface. The direct captures below are unbound by default and
 -- · can be assigned in Settings → Keys.
-bind(mainMod .. " + SHIFT + S", hl.dsp.global("quickshell:capture"), { description = "Shell · Open the capture surface" })
-bind("Print",                   hl.dsp.global("quickshell:capture"), { description = "Shell · Open the capture surface, from Print" })
-bind(mainMod .. " + SHIFT + R", hl.dsp.global("quickshell:record"),  { description = "Shell · Start or stop recording the screen" })
-bind("", hl.dsp.global("quickshell:captureRegion"), { description = "Shell · Capture a region" })
-bind("", hl.dsp.global("quickshell:captureWindow"), { description = "Shell · Capture a window" })
-bind("", hl.dsp.global("quickshell:captureScreen"), { description = "Shell · Capture the whole screen" })
-bind("", hl.dsp.global("quickshell:captureEdit"),   { description = "Shell · Capture a region and annotate it" })
-bind("", hl.dsp.global("quickshell:captureText"),   { description = "Shell · Read a region as text" })
+bind(mainMod .. " + SHIFT + S", hl.dsp.global("danshell:capture"), { description = "Shell · Open the capture surface" })
+bind("Print",                   hl.dsp.global("danshell:capture"), { description = "Shell · Open the capture surface, from Print" })
+bind(mainMod .. " + SHIFT + R", hl.dsp.global("danshell:record"),  { description = "Shell · Start or stop recording the screen" })
+bind("", hl.dsp.global("danshell:captureRegion"), { description = "Shell · Capture a region" })
+bind("", hl.dsp.global("danshell:captureWindow"), { description = "Shell · Capture a window" })
+bind("", hl.dsp.global("danshell:captureScreen"), { description = "Shell · Capture the whole screen" })
+bind("", hl.dsp.global("danshell:captureEdit"),   { description = "Shell · Capture a region and annotate it" })
+bind("", hl.dsp.global("danshell:captureText"),   { description = "Shell · Read a region as text" })
 
 
 -- ── LID ─────────────────────────────────────────────────────────────────────
@@ -300,7 +300,7 @@ bind("", hl.dsp.global("quickshell:captureText"),   { description = "Shell · Re
 --
 -- `switch:on` is the lid closing. `locked = true` so it also fires on the lock
 -- screen. The shell decides what to do (Settings → Displays).
-hl.bind("switch:on:Lid Switch",  hl.dsp.global("quickshell:lidClosed"),
+hl.bind("switch:on:Lid Switch",  hl.dsp.global("danshell:lidClosed"),
         { locked = true, description = "Session · The laptop lid was closed" })
-hl.bind("switch:off:Lid Switch", hl.dsp.global("quickshell:lidOpened"),
+hl.bind("switch:off:Lid Switch", hl.dsp.global("danshell:lidOpened"),
         { locked = true, description = "Session · The laptop lid was opened" })

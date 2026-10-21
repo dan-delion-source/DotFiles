@@ -237,7 +237,7 @@ Singleton {
     function open(command: var): void {
         if (root.terminal.running)
             return
-        root.terminal.command = ["kitty", "--class", "impasto-packages",
+        root.terminal.command = ["kitty", "--class", "danshell-packages",
                                  "--title", command.join(" "),
                                  "sh", "-c", root.holdScript, "sh"].concat(command)
         root.terminal.running = true

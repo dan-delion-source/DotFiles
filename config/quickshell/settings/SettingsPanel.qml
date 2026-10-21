@@ -63,14 +63,9 @@ Item {
         { id: "controls", category: "shell", icon: "󰕰", label: Tr.t("Control Centre"),
           blurb: Tr.t("What the island opens onto when you click it."),
           tabs: [],
-          keywords: "controls control centre center panel doors buttons row pet games notes board tasks kanban stats blocks grid toggles tiles arrange edit tray wifi bluetooth airplane microphone focus",
+          keywords: "controls control centre center panel doors buttons row network speed upload download system info pet games notes board tasks kanban stats blocks grid toggles tiles arrange edit tray wifi bluetooth airplane microphone focus",
           page: controlsPage },
 
-        { id: "dock", category: "shell", icon: "󱂩", label: Tr.t("Dock"),
-          blurb: Tr.t("The dock and the applications kept on it."),
-          tabs: [],
-          keywords: "dock apps applications launcher pinned kept favourite favorite running edge bottom left right align icon size autohide taskbar menu windows close every screen monitors",
-          page: dockPage },
 
         { id: "launcher", category: "shell", icon: "󰍉", label: Tr.t("Launcher"),
           blurb: Tr.t("Search, sigils and the clipboard history."),
@@ -87,7 +82,7 @@ Item {
                  { id: "depth", label: Tr.t("Depth") },
                  { id: "type", label: Tr.t("Type") },
                  { id: "motion", label: Tr.t("Motion") }],
-          keywords: "appearance theme colour color wallpaper transition fade wipe wave circle random greeting fastfetch fa terminal scene lava lamp critters koi invaders shadow shadows depth ground glass classic rounding blur gaps border opacity glass rules font family sans mono nerd icons typeface animation speed curve easing preset motion",
+          keywords: "appearance theme colour color wallpaper transition fade wipe wave circle random greeting fastfetch fa terminal scene lava lamp critters koi invaders arch cat gif logo shadow shadows depth ground glass classic rounding blur gaps border opacity glass rules font family sans mono nerd icons typeface animation speed curve easing preset motion",
           page: appearancePage },
 
         { id: "monitors", category: "desk", icon: "󰍹", label: Tr.t("Displays"),
@@ -123,45 +118,9 @@ Item {
           blurb: Tr.t("Profiles, language, this machine and reset."),
           tabs: [{ id: "profiles", label: Tr.t("Profiles") },
                  { id: "machine", label: Tr.t("This machine") }],
-          keywords: "system about version update updates upgrade changelog commits cpu memory uptime reset defaults language spanish english profile profiles switch rename duplicate delete import export backup file json changed files edited deleted restore wallpapers .new config dotfiles keep mine",
+          keywords: "system about cpu memory uptime reset defaults language spanish english profile profiles switch rename duplicate delete import export backup json wallpapers config",
           page: systemPage }
     ]
-
-    // ── THE GUIDE ───────────────────────────────────────────────────────────
-    //
-    // Where the help button takes each page, or one part of it, on the
-    // documentation site. Keyed "section" or "section/part".
-    readonly property string guideRoot: "https://andreumassanet.github.io/impasto-docs/"
-    readonly property var guides: ({
-        "bar": "shell/bar/",
-        "bar/island": "shell/island/#settings",
-        "bar/modules": "shell/bar/#arranging",
-        "bar/workspaces": "shell/bar/#size-and-workspaces",
-        "bar/notifications": "shell/island/#notifications",
-        "widgets": "shell/desktop/",
-        "widgets/widgets": "shell/desktop/#arranging",
-        "controls": "shell/control-centre/#arranging",
-        "dock": "shell/dock/#settings",
-        "launcher": "shell/launcher/#settings",
-        "launcher/sigils": "shell/launcher/#modes",
-        "launcher/clipboard": "shell/launcher/#the-clipboard",
-        "appearance": "shell/settings/#the-pages",
-        "appearance/theme": "theming/palettes/",
-        "monitors": "shell/displays/",
-        "monitors/arrangement": "shell/displays/#arrangement",
-        "monitors/screen": "shell/displays/#the-screen",
-        "monitors/lid": "shell/displays/#the-lid",
-        "input": "shell/settings/#the-pages",
-        "keys": "shell/keys-and-packages/#changing-a-key",
-        "session": "shell/lock-and-login/",
-        "session/lock": "shell/lock-and-login/#the-lock-screen",
-        "session/idle": "shell/lock-and-login/#when-you-leave-it-alone",
-        "system": "shell/settings/#profiles",
-        "system/machine": "shell/settings/#language"
-    })
-
-    readonly property string guide: root.guideRoot
-        + (root.guides[`${root.section}/${root.tab}`] ?? root.guides[root.section] ?? "")
 
     // ── NAVIGATION ──────────────────────────────────────────────────────────
     //
@@ -275,35 +234,6 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 8
                 spacing: 8
-
-                // ── SIGNATURE ───────────────────────────────────────────────
-                //
-                // The name in the script face, beside the palette board painted
-                // in the active palette.
-                Item {
-                    Layout.fillWidth: true
-                    Layout.topMargin: 4
-                    implicitHeight: 38
-
-                    Row {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 8
-
-                        PaletteBoard {
-                            anchors.verticalCenter: parent.verticalCenter
-                            size: 34
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: "impasto"
-                            font.family: Theme.fontSignature
-                            font.pixelSize: 28
-                            color: Theme.text
-                        }
-                    }
-                }
 
                 Rectangle {
                     Layout.fillWidth: true
@@ -483,12 +413,6 @@ Item {
 
                 Item { Layout.fillWidth: true }
 
-                // This page, or this part of it, on the documentation site.
-                IconButton {
-                    icon: "󰋗"
-                    iconSize: 13
-                    onClicked: Qt.openUrlExternally(root.guide)
-                }
 
                 IconButton {
                     icon: "󰅖"
@@ -564,7 +488,6 @@ Item {
             root.panelRequested("controls")
             root.closed()
         } } }
-    Component { id: dockPage;       DockSection {} }
     Component { id: launcherPage;   LauncherSection {} }
     Component { id: appearancePage; AppearanceSection {
         onPanelRequested: name => root.panelRequested(name) } }

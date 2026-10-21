@@ -138,11 +138,14 @@ QtObject {
 
     property var clients: []
 
-    // Keep the client list refreshed on every window event, even when it is
-    // empty. Without it, refreshes only happen while the list is non-empty,
-    // which is fine for the overview but freezes the dock once the last
-    // window closes.
+    function coveredOn(name: string): bool {
+        const workspace = root.activeOn(name)
+        return workspace > 0 && root.clients.some(client => (client.fullscreen ?? 0) >= 2
+            && client.workspace && client.workspace.id === workspace)
+    }
+
     property bool watchClients: false
+    onWatchClientsChanged: { if (watchClients) root.loadClients() }
 
     // Address (`0x…`) of the window with keyboard focus, or "". Not
     // `focusHistoryID == 0`, which stays on the last window after focus moves

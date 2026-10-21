@@ -49,6 +49,8 @@ Singleton {
           detail: "The creature living on the bar",        panel: "pet" },
         { id: "games",      icon: "󰊗", label: "Games",
           detail: "The arcade",                            panel: "games" },
+        { id: "networkManager", icon: "󰤨", label: "Network Manager",
+          detail: "Connection and on-demand speed test", panel: "networkManager" },
         { id: "notes",      icon: "󰎞", label: "Notes",
           detail: "The deck of sticky notes",              panel: "notes" },
         { id: "board",      icon: "󰄲", label: "Task board",
@@ -67,7 +69,7 @@ Singleton {
           detail: "Updates, what is installed, the AUR",   panel: "packages" }
     ]
 
-    readonly property var defaultButtons: ["stats", "settings", "pet", "games", "notes", "board"]
+    readonly property var defaultButtons: ["stats", "settings", "pet", "games", "networkManager", "notes", "board"]
 
     // The grid when nothing is chosen, which the default layout fills.
     readonly property int defaultColumns: 6
@@ -110,11 +112,23 @@ Singleton {
         const kept = SettingsService.centreTop
         const clean = list => (root.stored(list) ? Array.from(list) : [])
             .filter(id => root.topEntry(id) !== null)
-        if (kept && root.stored(kept.left) && root.stored(kept.right))
-            return { left: clean(kept.left), right: clean(kept.right) }
+        const withNetwork = list => {
+            if (list.indexOf("networkManager") >= 0)
+                return list
+            const games = list.indexOf("games")
+            list.splice(games >= 0 ? games + 1 : list.length, 0, "networkManager")
+            return list
+        }
+        if (kept && root.stored(kept.left) && root.stored(kept.right)) {
+            const left = clean(kept.left)
+            const right = clean(kept.right)
+            return { left: left,
+                right: kept.networkManagerSeen || left.indexOf("networkManager") >= 0
+                    ? right : withNetwork(right) }
+        }
         return {
             left: SessionService.actions.map(action => action.id),
-            right: clean(root.buttons)
+            right: withNetwork(clean(root.buttons))
         }
     }
 
@@ -172,7 +186,7 @@ Singleton {
         const target = side === "left" ? left : side === "right" ? right : null
         if (target)
             target.splice(Math.max(0, Math.min(index, target.length)), 0, id)
-        SettingsService.set("centreTop", { left: left, right: right })
+        SettingsService.set("centreTop", { left: left, right: right, networkManagerSeen: true })
     }
 
     // Doors for one shortcuts block, from its own `doors` field (set in the
@@ -235,7 +249,7 @@ Singleton {
             key: "wifi"; icon: NetworkService.icon; label: "Wi-Fi"
             detail: NetworkService.connectionName
             active: NetworkService.wifiEnabled
-            expandable: true; panel: "wifi"
+            expandable: true; panel: "networkManager"
             action: () => NetworkService.toggleWifi()
         },
         Toggle {
@@ -294,12 +308,6 @@ Singleton {
             active: !AudioService.muted
             available: AudioService.ready
             action: () => AudioService.toggleMute()
-        },
-        Toggle {
-            key: "dock"; icon: "󱂠"; label: "Dock"
-            detail: SettingsService.dockEnabled ? "Shown" : "Hidden"
-            active: SettingsService.dockEnabled
-            action: () => SettingsService.set("dockEnabled", !SettingsService.dockEnabled)
         },
         Toggle {
             key: "notch"; icon: "󰌢"; label: "Notch"
@@ -468,12 +476,14 @@ Singleton {
         { id: "toggles",       name: "Toggles",       icon: "󰨚", sizes: ["2x2", "2x3", "2x4", "3x2", "3x3", "4x2", "4x3"] },
         { id: "volume",        name: "Volume",        icon: "󰕾", sizes: ["2x1", "3x1", "4x1"] },
         { id: "brightness",    name: "Brightness",    icon: "󰃠", sizes: ["2x1", "3x1", "4x1"] },
+        { id: "network",       name: "Network",       icon: "󰤨", sizes: ["2x1", "2x2"] },
         { id: "appearance",    name: "Appearance",    icon: "󰏘", sizes: ["2x2", "2x3", "2x4", "3x3", "4x2"] },
         { id: "media",         name: "Media",         icon: "󰝚", sizes: ["2x2", "2x3", "3x2", "4x2"] },
         { id: "weather",       name: "Weather",       icon: "󰖐", sizes: ["2x1", "2x2", "2x3", "4x2"] },
         { id: "calendar",      name: "Calendar",      icon: "󰃭", sizes: ["2x3", "2x4", "3x4"] },
         { id: "notifications", name: "Notifications", icon: "󰂚", sizes: ["3x2", "3x3", "2x4", "3x4", "2x6", "2x8", "3x8"] },
-        { id: "impasto",       name: "impasto",       icon: "󰏘", sizes: ["1x2", "2x2", "2x4"] },
+        { id: "systemInfo",       name: "System Info",       icon: "󰏘", sizes: ["1x2", "2x2", "2x4"] },
+        { id: "networkSpeed",  name: "Network Speed", icon: "󰓅", sizes: ["2x1", "2x2"] },
         { id: "pet",           name: "Pet",           icon: "󰏩", sizes: ["2x2", "2x3"] },
         { id: "clock",         name: "Clock",         icon: "󰥔", sizes: ["1x2", "2x2", "2x4"] },
         { id: "games",         name: "Games",         icon: "󰊗", sizes: ["2x1", "2x2"] },

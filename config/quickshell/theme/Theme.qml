@@ -63,16 +63,7 @@ QtObject {
     readonly property bool deskSolid: root.deskStyle !== "glass"
     readonly property bool deskGlass: root.deskStyle === "glass"
 
-    // The dock's, the same way (`SettingsService.dockGround`).
-    readonly property string dockStyle: SettingsService.dockGround || root.surfaceStyle
-    readonly property bool dockSolid: root.dockStyle !== "glass"
-    readonly property bool dockGlass: root.dockStyle === "glass"
 
-    // The same three on glass: white veils, by style. Only the bar's and the
-    // desk's windows are glass, each in its own style (a `glassy` window
-    // with a `groundStyle`), and the dock, which asks `dockStyle` directly;
-    // everything else — the settings, the lock — stays black, so a part
-    // drawn in both asks by its window (`surfaceIn`).
     function veilOf(style: string): color {
         return style === "glass" ? Qt.rgba(1, 1, 1, 0.08) : root.islandSurface
     }
@@ -231,11 +222,11 @@ QtObject {
     // and shortcut blocks, and the gap between two: six across two cells.
     readonly property int centreColumns: 6
     readonly property int centreRows: 8
-    readonly property int centreButton: 42
+    readonly property int centreButton: 40
     readonly property int centreButtonGap: 8
-    readonly property int centreCellWidth: 140
-    readonly property int centreCellHeight: 64
-    readonly property int centreGutter: 12
+    readonly property int centreCellWidth: 135
+    readonly property int centreCellHeight: 65
+    readonly property int centreGutter: 10
     readonly property int centreStrideX: root.centreCellWidth + root.centreGutter
     readonly property int centreStrideY: root.centreCellHeight + root.centreGutter
 
@@ -286,34 +277,9 @@ QtObject {
             + (body > 0 ? root.cardGap + body : 0)
     }
 
-    // ── DOCK ────────────────────────────────────────────────────────────────
-    //
-    // Everything scales off the icon size. The margin matches `gaps_out`.
-    readonly property int dockIcon: SettingsService.dockIconSize
-    readonly property int dockPadding: 11
-    readonly property int dockGap: root.capsuleSpacing
-    readonly property int dockMargin: root.desktopGutter
-
-    // The icons are centred across the dock; the running dot sits in the
-    // padding on the screen-edge side. An icon is drawn `dockInset` inside its
-    // square, so the dot clears both it and the rim.
-    readonly property int dockDot: 4
-    readonly property int dockInset: 2
-    readonly property int dockThickness: root.dockIcon + 2 * root.dockPadding
-
-    // Screen-edge strip a hidden dock still listens on.
-    readonly property int dockReveal: 4
-
-    // Fixed width so a long window title does not stretch the menu.
-    readonly property int dockMenuWidth: 250
-    readonly property int dockMenuRow: 30
-    readonly property int dockMenuPadding: 6
-
-    readonly property int dockRadius: root.desktopRadius
-
-    // Hover scale. Small enough that neighbours never move, which keeps the
-    // input region computable.
-    readonly property real dockLift: 1.125
+    readonly property int menuWidth: 250
+    readonly property int menuRow: 30
+    readonly property int menuPadding: 6
 
     // Matches Hyprland's `rounding`: widgets sit among windows.
     readonly property int desktopRadius: 22

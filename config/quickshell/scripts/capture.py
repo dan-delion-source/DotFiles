@@ -60,10 +60,10 @@ def runtime():
 def directory():
     """Where saved captures go.
 
-    $IMPASTO_CAPTURES or $HYPRSHOT_DIR (both set in `env.lua`), then the XDG
+    $DANSHELL_CAPTURES or $HYPRSHOT_DIR (both set in `env.lua`), then the XDG
     pictures directory, then $HOME.
     """
-    for key in ("IMPASTO_CAPTURES", "HYPRSHOT_DIR"):
+    for key in ("DANSHELL_CAPTURES", "HYPRSHOT_DIR"):
         value = os.environ.get(key)
         if value:
             return Path(value).expanduser()
@@ -154,7 +154,7 @@ def grab(output=""):
     if not shutil.which("grim"):
         report(error="grim is not installed")
         return
-    handle, name = tempfile.mkstemp(prefix="impasto-grab-", suffix=".png",
+    handle, name = tempfile.mkstemp(prefix="danshell-grab-", suffix=".png",
                                     dir=str(runtime()))
     os.close(handle)
     path = Path(name)
@@ -210,7 +210,7 @@ def cut_out(picture, geometry):
         return None
 
     x, y, width, height = box
-    cut = runtime() / f"impasto-cut-{datetime.now().strftime(STAMP)}.png"
+    cut = runtime() / f"danshell-cut-{datetime.now().strftime(STAMP)}.png"
     # Without `+repage` the crop keeps the original canvas offset, and viewers
     # draw it inside a full-screen canvas.
     result = run([tool, str(picture), "-crop", f"{width}x{height}+{x}+{y}",
@@ -232,7 +232,7 @@ def keep(cut, stamp):
         cut.unlink(missing_ok=True)
         report(error=f"Cannot write to {folder}: {error}")
         return None
-    saved = folder / f"{stamp}_impasto.png"
+    saved = folder / f"{stamp}_danshell.png"
     try:
         shutil.move(str(cut), saved)
     except OSError as error:
@@ -283,7 +283,7 @@ def finish(source, geometry, destination):
             cut.unlink(missing_ok=True)
             report(error=f"Cannot write to {folder}: {error}")
             return
-        saved = folder / f"{stamp}_impasto.png"
+        saved = folder / f"{stamp}_danshell.png"
         # Detached: satty outlives this script and owns its output and the
         # temporary file from here. Not `--fullscreen`; `windowrules.lua`
         # floats and centres it.

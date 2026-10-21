@@ -17,11 +17,6 @@ import "../theme"
 import "../services"
 import "../components"
 
-// One row per profile (`ProfileService`) in one card, the active one marked
-// In use. Each shows the profile's wallpaper and a one-line summary of its
-// bar, dock and widgets. Rename, duplicate, export and delete are in the row's
-// `⋯` menu (`PopMenu`); delete is confirmed on the row, since it cannot be
-// undone.
 Item {
     id: root
 
@@ -43,19 +38,8 @@ Item {
         island: Tr.t("One island")
     })
 
-    readonly property var dockPhrases: ({
-        bottom: Tr.t("dock at the bottom"),
-        left: Tr.t("dock on the left"),
-        right: Tr.t("dock on the right")
-    })
-
-    // "Grouped bar · dock at the bottom · 3 widgets", plus the palette's name
-    // when it is fixed rather than adaptive.
     function summary(values: var, palette: string): string {
         const parts = [root.barPhrases[values.barStyle] ?? root.barPhrases.grouped]
-        parts.push(values.dockEnabled
-            ? (root.dockPhrases[values.dockEdge] ?? root.dockPhrases.bottom)
-            : Tr.t("no dock"))
         const widgets = (values.desktopWidgets ?? []).filter(row => !row.edge).length
         parts.push(widgets === 0 ? Tr.t("nothing on the desk")
             : `${widgets} ${Tr.t(widgets === 1 ? "widget" : "widgets")}`)
@@ -93,7 +77,7 @@ Item {
         width: root.width
         title: Tr.t("Profiles")
         note: Tr.t("Changes are saved to the profile in use as you make them.")
-        hint: Tr.t("A profile holds the bar, widgets, dock, launcher, control centre, look, keys and wallpaper with its palette. Screens, your name and picture, language, weather location, GitHub user, Do not disturb and night light stay with the machine, and notes, tasks and clipboard are shared by every profile.")
+        hint: Tr.t("A profile holds the bar, widgets, launcher, control centre, look, keys and wallpaper with its palette. Screens, your name and picture, language, weather location, GitHub user, Do not disturb and night light stay with the machine, and notes, tasks and clipboard are shared by every profile.")
 
         Repeater {
             model: ProfileService.profiles

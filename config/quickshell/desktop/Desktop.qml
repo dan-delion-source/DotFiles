@@ -73,9 +73,9 @@ PanelWindow {
         bottom: true
     }
 
-    // Namespace for layer rules, e.g. `layerrule = blur, impasto-desktop`. Not
+    // Namespace for layer rules, e.g. `layerrule = blur, danshell-desktop`. Not
     // set by default.
-    WlrLayershell.namespace: "impasto-desktop"
+    WlrLayershell.namespace: "danshell-desktop"
     // The widgets take the island's glass (`Theme.surfaceIn`).
     readonly property bool glassy: true
     readonly property string groundStyle: Theme.deskStyle
@@ -126,10 +126,6 @@ PanelWindow {
         }
     }
 
-    // The whole screen, ignoring exclusive zones, so a widget dragged into the
-    // bar's area stays on this surface; the compositor sends away a pointer
-    // that leaves its surface, and the drag would drop. The board inside is
-    // inset by what the bar and the dock keep clear (`DesktopService.insets`).
     exclusionMode: ExclusionMode.Ignore
     exclusiveZone: 0
     color: "transparent"
@@ -258,13 +254,6 @@ PanelWindow {
             }
         }
 
-        // One widget per key: a Repeater given a new array rebuilds every
-        // delegate. The rows change on every drop; the keys only on add and
-        // remove.
-        // The board with the dock's band given back, and the bar's in zen,
-        // which is what the grid is laid out over. The widgets sit in it, so
-        // the board moving with the dock moves them not at all instead of
-        // sliding them back into place.
         Item {
             id: field
 
@@ -338,7 +327,7 @@ PanelWindow {
             bottom: true
         }
 
-        WlrLayershell.namespace: "impasto-desktop-backdrop"
+        WlrLayershell.namespace: "danshell-desktop-backdrop"
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
         exclusionMode: ExclusionMode.Ignore
@@ -348,8 +337,6 @@ PanelWindow {
         // Takes no input, ever.
         mask: Region {}
 
-        // The board's part of the screen, and the bar's band in zen, where
-        // the grid reaches into it; the dock keeps its band.
         ClippingRectangle {
             readonly property real bandTop: DesktopService.insets.top - DesktopService.zenBand
 
@@ -412,7 +399,7 @@ PanelWindow {
                 bottom: true
             }
 
-            WlrLayershell.namespace: "impasto-desktop-menu"
+            WlrLayershell.namespace: "danshell-desktop-menu"
             WlrLayershell.layer: WlrLayer.Top
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
             exclusionMode: ExclusionMode.Ignore

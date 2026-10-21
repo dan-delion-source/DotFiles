@@ -73,7 +73,7 @@ Singleton {
     // shell.
     readonly property Process sleepHold: Process {
         command: ["systemd-inhibit", "--what=sleep", "--mode=delay",
-            "--who=impasto", "--why=Locking the screen first", "cat"]
+            "--who=danshell", "--why=Locking the screen first", "cat"]
         stdinEnabled: true
         running: true
     }

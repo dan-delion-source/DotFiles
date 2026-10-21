@@ -88,7 +88,8 @@ Rectangle {
         // Depends on the results when `launcherFits` is on.
         launcher:   { width: LauncherService.panelWidth,
                       height: LauncherService.panelHeight },
-        wifi:       { width: 420,  height: 500 },
+        wifi:       { width: 420,  height: 540 },
+        networkManager: { width: 420, height: 540 },
         // The control centre's volume, opened out.
         sound:      { width: AudioService.panelWidth, height: AudioService.panelHeight },
         microphone: { width: AudioService.panelWidth, height: AudioService.microphoneHeight },
@@ -165,6 +166,7 @@ Rectangle {
         palette: appearancePanel,
         launcher: launcherPanel,
         wifi: networkDetail,
+        networkManager: networkDetail,
         sound: soundDetail,
         microphone: microphoneDetail,
         nightlight: nightLightDetail,

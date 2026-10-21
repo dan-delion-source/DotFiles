@@ -38,13 +38,15 @@ Item {
         toggles: togglesBlock,
         volume: volumeBlock,
         brightness: brightnessBlock,
+        network: networkBlock,
         appearance: appearanceBlock,
         media: mediaBlock,
         weather: weatherBlock,
         calendar: calendarBlock,
         notifications: notificationsBlock,
-        impasto: impastoBlock,
+        systemInfo: systemInfoBlock,
         pet: petBlock,
+        networkSpeed: networkSpeedBlock,
         clock: clockBlock,
         games: gamesBlock,
         notes: notesBlock,
@@ -112,6 +114,14 @@ Item {
     }
 
     Component {
+        id: networkBlock
+        NetworkBlock {
+            rows: root.shape.rows
+            onRequested: root.panelRequested("networkManager")
+        }
+    }
+
+    Component {
         id: sessionBlock
         ButtonsBlock {
             kind: "session"
@@ -158,11 +168,16 @@ Item {
     }
 
     Component {
-        id: impastoBlock
-        ImpastoBlock {
+        id: systemInfoBlock
+        SystemInfoBlock {
             cols: root.shape.cols
             rows: root.shape.rows
         }
+    }
+
+    Component {
+        id: networkSpeedBlock
+        NetworkSpeedBlock { rows: root.shape.rows }
     }
 
     Component {

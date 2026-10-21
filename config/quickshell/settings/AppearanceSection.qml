@@ -113,32 +113,52 @@ SettingsSection {
             }
         }
 
-        // The tiles play the generated greeting scenes in the current palette.
+        // Generated scenes and supplied Fastfetch logos share one selector.
         SettingGroup {
             title: Tr.t("Greeting")
-            note: Tr.t("The animation shown beside fastfetch when you run fa.")
-            hint: Tr.t("Four pixel-art scenes, redrawn in the current palette whenever it changes. Random picks a new one on every run, and fa with a scene name (fa koi) plays that one.")
+            note: Tr.t("Choose the logo shown beside Fastfetch in the terminal.")
+            hint: Tr.t("The four scenes follow your palette. Random uses the existing scene rotation. Arch is text art; Cat is an animated GIF.")
 
             SettingTiles {
-                label: Tr.t("Scene")
+                label: Tr.t("Logo")
 
-                Repeater {
-                    model: ThemeService.greetings
+                GridLayout {
+                    Layout.fillWidth: true
+                    columns: 4
+                    columnSpacing: 10
+                    rowSpacing: 10
 
-                    PreviewTile {
-                        id: greetingTile
+                    Repeater {
+                        model: ThemeService.greetings
 
-                        required property var modelData
+                        PreviewTile {
+                            id: greetingTile
 
-                        stageHeight: 124
-                        caption: Tr.t(greetingTile.modelData.label)
-                        selected: SettingsService.greeting === greetingTile.modelData.id
-                        onPicked: SettingsService.set("greeting", greetingTile.modelData.id)
+                            required property var modelData
 
-                        GreetingPreview {
-                            anchors.centerIn: parent
-                            scene: greetingTile.modelData.id
-                            version: ThemeService.greetingStamp
+                            stageHeight: 124
+                            caption: Tr.t(greetingTile.modelData.label)
+                            selected: SettingsService.greeting === greetingTile.modelData.id
+                            onPicked: SettingsService.set("greeting", greetingTile.modelData.id)
+
+                            Loader {
+                                anchors.centerIn: parent
+                                active: greetingTile.modelData.id !== "arch"
+                                    && greetingTile.modelData.id !== "cat"
+                                sourceComponent: GreetingPreview {
+                                    scene: greetingTile.modelData.id
+                                    version: ThemeService.greetingStamp
+                                }
+                            }
+
+                            Loader {
+                                anchors.centerIn: parent
+                                active: greetingTile.modelData.id === "arch"
+                                    || greetingTile.modelData.id === "cat"
+                                sourceComponent: FastfetchLogoPreview {
+                                    logo: greetingTile.modelData.id
+                                }
+                            }
                         }
                     }
                 }
@@ -385,8 +405,6 @@ SettingsSection {
         spacing: root.spacing
         visible: root.tab === "depth"
 
-        // One shadow per layer, side by side: the windows are Hyprland's, the
-        // bar, the dock and the widgets the shell's own.
         SettingGroup {
             title: Tr.t("Shadows")
             note: Tr.t("What is lifted off the wallpaper.")
@@ -394,7 +412,7 @@ SettingsSection {
             Repeater {
                 model: [
                     { key: "windowShadow", label: "Windows" },
-                    { key: "barShadow", label: "Bar and dock" },
+                    { key: "barShadow", label: "Bar" },
                     { key: "widgetShadow", label: "Desktop widgets" }
                 ]
 

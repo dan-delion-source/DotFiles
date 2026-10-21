@@ -106,7 +106,7 @@ def aur():
             query = urllib.parse.urlencode(
                 [("arg[]", name) for name in names[start:start + AUR_BATCH]])
             request = urllib.request.Request(f"{AUR_RPC}?{query}",
-                                             headers={"User-Agent": "impasto"})
+                                             headers={"User-Agent": "danshell"})
             with urllib.request.urlopen(request, timeout=AUR_TIMEOUT) as answer:
                 for row in json.load(answer).get("results", []):
                     remote[row.get("Name", "")] = row.get("Version", "")

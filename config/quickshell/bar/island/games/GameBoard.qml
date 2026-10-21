@@ -59,6 +59,7 @@ Item {
         space: spaceGame,
         tetris: tetrisGame,
         solitaire: solitaireGame,
+        breakout: neonBreakoutGame,
         slidingpuzzle: slidingPuzzleGame,
         towerdefence: towerDefenceGame,
         bubbleshooter: bubbleShooterGame,
@@ -98,4 +99,5 @@ Item {
     Component { id: bubbleShooterGame; BubbleShooter { tint: root.tint } }
     Component { id: towerDefenceGame; TowerDefence { tint: root.tint } }
     Component { id: slidingPuzzleGame; SlidingPuzzle { tint: root.tint } }
+    Component { id: neonBreakoutGame; Breakout { tint: root.tint } }
 }

@@ -60,7 +60,7 @@ def read_entry(path):
         # the shell. Empty is fine: the launcher falls back to a glyph.
         "icon": section.get("Icon", "").strip(),
         "exec": section.get("Exec", "").strip(),
-        # The only field linking an entry to an open window, which the dock
+        # The field linking an application entry to an open window.
         # uses to match running apps. Most entries omit it, so it is just
         # the first guess.
         "wmclass": section.get("StartupWMClass", "").strip(),

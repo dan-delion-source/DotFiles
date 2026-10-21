@@ -114,9 +114,7 @@ QtObject {
             "Control Centre": "Centro de control",
             "What the island opens onto when you click it.":
                 "Lo que abre la isla al hacer clic en ella.",
-            "Dock": "Dock",
-            "The dock and the applications kept on it.":
-                "El dock y las aplicaciones que guardas en él.",
+
             "Launcher": "Lanzador",
             "Search, sigils and the clipboard history.":
                 "Búsqueda, prefijos e historial del portapapeles.",
@@ -468,26 +466,17 @@ QtObject {
             "Record": "Grabar",
             "Clear clipboard": "Vaciar el portapapeles",
 
-            // ── DOCK ────────────────────────────────────────────────────────
-            "The dock": "El dock",
-            "The dock is off": "El dock está apagado",
             "Your kept and open applications, on one edge of the screen.":
                 "Tus aplicaciones guardadas y las abiertas, en un borde de la pantalla.",
-            "An empty dock is not drawn. Icons are reordered by dragging them on the dock itself, and the top edge is left to the bar.":
-                "Un dock vacío no se dibuja. Los iconos se reordenan arrastrándolos en el propio dock, y el borde superior queda para la barra.",
-            "Show the dock": "Mostrar el dock",
+
             "Edge": "Borde",
             "Alignment": "Alineación",
             "Background sets how opaque the classic capsule is; lower it to let the blurred wallpaper through.":
                 "Fondo fija la opacidad de la cápsula clásica; bájalo para que se vea el fondo desenfocado.",
-            "The capsule's ground, and the icon size everything on the dock scales with.":
-                "El fondo de la cápsula, y el tamaño de icono con el que escala todo el dock.",
+
             "Icon size": "Tamaño de icono",
             "Behaviour": "Comportamiento",
-            "What else the dock shows, and which screens it is on.":
-                "Qué más muestra el dock, y en qué pantallas está.",
-            "The launcher button opens the island's launcher, and open applications appear after a divider while they run. Windows and widgets pass under the dock, so moving or hiding it moves nothing else.":
-                "El botón del lanzador abre el lanzador de la isla, y las aplicaciones abiertas aparecen tras un separador mientras están en marcha. Las ventanas y los widgets pasan por debajo del dock, así que moverlo u ocultarlo no mueve nada más.",
+
             "Launcher button": "Botón del lanzador",
             "Open applications": "Aplicaciones abiertas",
             "On every screen": "En todas las pantallas",
@@ -504,15 +493,13 @@ QtObject {
             "Kept on it": "Guardadas en él",
             "These stay whether they are running or not, and they lead the launcher's list too.":
                 "Estas se quedan estén o no en marcha, y también van delante en la lista del lanzador.",
-            "Their order is set by dragging them on the dock, and right-clicking a dock icon also keeps or removes it. The launcher uses this list too, so it stays editable with the dock off.":
-                "El orden se fija arrastrándolas en el dock, y con el botón derecho sobre un icono también lo guardas o lo quitas. El lanzador también usa esta lista, así que se puede editar con el dock apagado.",
+
             "Nothing kept yet.": "Todavía no hay nada guardado.",
             "This application is no longer installed":
                 "Esta aplicación ya no está instalada",
             "Add an application": "Añadir una aplicación",
             "New window": "Ventana nueva",
-            "Keep in the dock": "Guardar en el dock",
-            "Remove from the dock": "Quitar del dock",
+
             "Close": "Cerrar",
             "Close all windows": "Cerrar todas las ventanas",
 
@@ -520,8 +507,7 @@ QtObject {
             "The list": "La lista",
             "What the launcher lists with nothing typed, and how tall it gets.":
                 "Lo que muestra el lanzador sin escribir nada, y cuánto crece.",
-            "By use ranks applications by launches, with older launches counting for less; those kept on the dock come first until something else is used more. As tall as the answer sizes the island to the results, up to the limit above; off, the box is fixed and the list scrolls.":
-                "Por uso ordena las aplicaciones por aperturas, y las antiguas cuentan menos; las guardadas en el dock van primero hasta que otra se use más. Tan alta como la respuesta ajusta la isla a los resultados, hasta el límite de arriba; apagado, la caja es fija y la lista se desplaza.",
+
             "Order": "Orden",
             "By use": "Por uso",
             "Alphabetical": "Alfabético",
@@ -531,8 +517,7 @@ QtObject {
             "Only as tall as it needs": "Solo lo alta que necesite",
             "A fixed box": "Una caja fija",
             "Kept applications": "Aplicaciones guardadas",
-            "They lead the list, and the dock keeps them too.":
-                "Van delante en la lista, y el dock también las guarda.",
+
             "Plain text searches applications, and a sigil in front switches mode. Click one to change it.":
                 "El texto normal busca aplicaciones, y un prefijo delante cambia de modo. Haz clic en uno para cambiarlo.",
 
@@ -620,7 +605,7 @@ QtObject {
             "Blur shows behind anything translucent, such as the terminal. Glass (a Hyprland plugin, tuned in look.lua) frosts and refracts what is behind a window.":
                 "El desenfoque se ve tras todo lo translúcido, como el terminal. El cristal (un plugin de Hyprland, ajustado en look.lua) esmerila y refracta lo que hay detrás de una ventana.",
             "What is lifted off the wallpaper.": "Lo que se despega del fondo.",
-            "Bar and dock": "Barra y dock",
+
             "Desktop widgets": "Widgets del escritorio",
             "size": "tamaño",
             "Glass": "Cristal",
@@ -851,8 +836,7 @@ QtObject {
             // ── SYSTEM ──────────────────────────────────────────────────────
             "Changes are saved to the profile in use as you make them.":
                 "Los cambios se guardan en el perfil en uso a medida que los haces.",
-            "A profile holds the bar, widgets, dock, launcher, control centre, look, keys and wallpaper with its palette. Screens, your name and picture, language, weather location, GitHub user, Do not disturb and night light stay with the machine, and notes, tasks and clipboard are shared by every profile.":
-                "Un perfil guarda la barra, los widgets, el dock, el lanzador, el centro de control, el aspecto, las teclas y el fondo con su paleta. Las pantallas, tu nombre y foto, el idioma, la ubicación del tiempo, el usuario de GitHub, No molestar y la luz nocturna se quedan con la máquina, y las notas, las tareas y el portapapeles son comunes a todos los perfiles.",
+
             "Profile": "Perfil",
             "New profile": "Perfil nuevo",
             "Import…": "Importar…",
@@ -870,10 +854,7 @@ QtObject {
             "Enter to keep the name · Esc to leave it": "Intro para guardar el nombre · Esc para dejarlo",
             "Grouped bar": "Barra agrupada",
             "Spread bar": "Barra repartida",
-            "dock at the bottom": "dock abajo",
-            "dock on the left": "dock a la izquierda",
-            "dock on the right": "dock a la derecha",
-            "no dock": "sin dock",
+
             "nothing on the desk": "nada en el escritorio",
             "widget": "widget",
             "widgets": "widgets",
@@ -895,10 +876,6 @@ QtObject {
             "% in use": "% en uso",
             "since boot": "desde el arranque",
 
-            "impasto itself, not the packages it runs.":
-                "impasto en sí, no los paquetes que usa.",
-            "Update pulls the checkout impasto was installed from and runs the installer again in a terminal, where its questions and your password stay visible.":
-                "Actualizar descarga el repositorio del que se instaló impasto y vuelve a ejecutar el instalador en una terminal, donde se ven sus preguntas y tu contraseña.",
             "Check for updates": "Buscar actualizaciones",
             "Check": "Buscar",
             "Checking…": "Buscando…",
@@ -918,10 +895,7 @@ QtObject {
             "more": "más",
 
             "Changed files": "Archivos cambiados",
-            "impasto's own files, as you left them.":
-                "Los archivos de impasto, tal como los dejaste.",
-            "Updates leave a file you deleted deleted, and a file you edited as you edited it, with any newer version beside it as .new. Restore puts impasto's version back; yours, if there was one, is kept in ~/.local/state/impasto/backups.":
-                "Las actualizaciones no vuelven a poner un archivo que borraste, ni tocan uno que editaste: si hay una versión nueva, la dejan al lado como .new. Restaurar vuelve a poner la versión de impasto; la tuya, si la había, se guarda en ~/.local/state/impasto/backups.",
+
             "No checkout to restore from": "No hay repositorio del que restaurar",
             "Every file as installed": "Todo como se instaló",
             "file edited": "archivo editado",

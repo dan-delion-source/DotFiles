@@ -1,7 +1,7 @@
 // ╭──────────────────────────────────────────────────────────────────────────╮
 // │                                                                          │
 // │   N E T W O R K   D E T A I L                                            │
-// │   wifi networks in range                                                 │
+// │   connection, manual speed test, wifi networks in range                 │
 // │                                                                          │
 // │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
@@ -15,8 +15,9 @@ import "../../theme"
 import "../../services"
 import "../../components"
 
-// The list behind the Wi-Fi tile. A known network connects on click; a new
-// one opens a password field in place.
+// Network Manager opens from the control centre's top row, network block, or
+// Wi-Fi tile. A known network connects on click; a new one opens a password
+// field in place. Internet throughput is tested only when Test is pressed.
 ColumnLayout {
     id: root
 
@@ -58,7 +59,8 @@ ColumnLayout {
                 text: NetworkService.icon
                 font.family: Theme.fontMono
                 font.pixelSize: 18
-                color: NetworkService.radioOn ? Theme.indicator : Theme.textMuted
+                color: NetworkService.wiredConnected || NetworkService.wifiConnected
+                    ? Theme.indicator : Theme.textMuted
             }
         }
 
@@ -68,7 +70,7 @@ ColumnLayout {
 
             Text {
                 Layout.fillWidth: true
-                text: "Wi-Fi"
+                text: "Network Manager"
                 elide: Text.ElideRight
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeMedium
@@ -78,9 +80,10 @@ ColumnLayout {
 
             Text {
                 Layout.fillWidth: true
-                text: NetworkService.radioOn
-                    ? (NetworkService.scanning ? "Scanning…" : NetworkService.connectionName)
-                    : "Radio off"
+                text: NetworkService.wiredConnected ? NetworkService.stateLine
+                    : NetworkService.radioOn
+                        ? (NetworkService.scanning ? "Scanning…" : NetworkService.connectionName)
+                        : "Wi-Fi radio off"
                 elide: Text.ElideRight
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeSmall
@@ -114,6 +117,93 @@ ColumnLayout {
         }
     }
 
+    DetailSection {
+        title: Tr.t("Internet speed")
+
+        RowLayout {
+            width: parent.width
+            height: 32
+            spacing: 12
+
+            Text {
+                Layout.fillWidth: true
+                text: NetworkSpeedTestService.testing
+                    ? (NetworkSpeedTestService.phase === "download"
+                        ? "Testing download…" : "Testing upload…")
+                    : NetworkSpeedTestService.phase === "done"
+                        ? "Last test · " + NetworkSpeedTestService.connection
+                        : "Check this connection on demand"
+                elide: Text.ElideRight
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.textMuted
+            }
+
+            PillButton {
+                text: NetworkSpeedTestService.testing ? Tr.t("Cancel")
+                    : NetworkSpeedTestService.phase === "done" ? Tr.t("Test again") : Tr.t("Test")
+                active: NetworkSpeedTestService.testing
+                enabled: NetworkSpeedTestService.testing || !NetworkSpeedTestService.runner.running
+                onClicked: {
+                    if (NetworkSpeedTestService.testing)
+                        NetworkSpeedTestService.cancel()
+                    else
+                        NetworkSpeedTestService.start(NetworkService.connectionName)
+                }
+            }
+        }
+
+        RowLayout {
+            width: parent.width
+            height: 38
+            spacing: 14
+
+            Repeater {
+                model: [
+                    { label: "↓ Download", value: NetworkSpeedTestService.downloadMbps },
+                    { label: "↑ Upload", value: NetworkSpeedTestService.uploadMbps }
+                ]
+
+                ColumnLayout {
+                    required property var modelData
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: 1
+                    spacing: 1
+
+                    Text {
+                        text: modelData.label
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSizeLabel
+                        color: Theme.textMuted
+                    }
+                    Text {
+                        text: modelData.value < 0 ? "—"
+                            : `${modelData.value.toFixed(1)} Mbps`
+                        font.family: Theme.fontMono
+                        font.pixelSize: Theme.fontSizeMedium
+                        font.features: { "tnum": 1 }
+                        color: Theme.text
+                    }
+                }
+            }
+        }
+
+        Text {
+            width: parent.width
+            text: NetworkSpeedTestService.phase === "error" || NetworkSpeedTestService.message !== ""
+                ? NetworkSpeedTestService.message
+                : NetworkSpeedTestService.testing
+                    ? "Measuring against Cloudflare. This may take a few seconds."
+                    : NetworkSpeedTestService.phase === "done"
+                        ? "Estimate to Cloudflare. Press Test again to recheck."
+                        : "Press Test to check download and upload speed. Uses up to 48 MB."
+            wrapMode: Text.WordWrap
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.fontSizeLabel
+            color: NetworkSpeedTestService.phase === "error" ? Theme.red : Theme.textMuted
+        }
+    }
+
     Text {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -122,7 +212,9 @@ ColumnLayout {
         verticalAlignment: Text.AlignVCenter
         text: NetworkService.radioOn
             ? (NetworkService.scanning ? "Looking for networks…" : "Nothing in range")
-            : "Turn Wi-Fi on to see what is around"
+            : NetworkService.wiredConnected
+                ? "Ethernet connected · turn on Wi-Fi to see nearby networks"
+                : "Turn Wi-Fi on to see what is around"
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSizeSmall
         color: Theme.textMuted

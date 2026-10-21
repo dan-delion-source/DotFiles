@@ -14,13 +14,13 @@ import Quickshell
 import Quickshell.Io
 
 // Every user preference. Defaults are the initialisers in `Store`; changes go
-// to $XDG_STATE_HOME/quickshell/settings.json, outside the files `./setup`
+// to $XDG_STATE_HOME/danshell/settings.json, outside the files `./setup`
 // manages. JsonAdapter writes the file back on every change.
 Singleton {
     id: root
 
     readonly property string stateDirectory:
-        `${Quickshell.env("XDG_STATE_HOME") || Quickshell.env("HOME") + "/.local/state"}/quickshell`
+        `${Quickshell.env("XDG_STATE_HOME") || Quickshell.env("HOME") + "/.local/state"}/danshell`
 
     // ── ACCESS ──────────────────────────────────────────────────────────────
 
@@ -51,21 +51,12 @@ Singleton {
     readonly property alias centreColumns: config.centreColumns
     readonly property alias centreRows: config.centreRows
     readonly property alias centreToggles: config.centreToggles
-    readonly property alias dockEnabled: config.dockEnabled
-    readonly property alias dockPinned: config.dockPinned
-    readonly property alias dockEdge: config.dockEdge
-    readonly property alias dockAlignment: config.dockAlignment
-    readonly property alias dockIconSize: config.dockIconSize
-    readonly property alias dockOpacity: config.dockOpacity
-    readonly property alias dockGround: config.dockGround
-    readonly property alias dockRunning: config.dockRunning
-    readonly property alias dockEverywhere: config.dockEverywhere
-    readonly property alias dockAutohide: config.dockAutohide
-    readonly property alias dockLauncher: config.dockLauncher
     readonly property alias weatherPlace: config.weatherPlace
     readonly property alias githubUser: config.githubUser
+    readonly property alias launcherFavourites: config.launcherFavourites
     readonly property alias petStyle: config.petStyle
     readonly property alias launcherResults: config.launcherResults
+    readonly property alias launcherListAll: config.launcherListAll
     readonly property alias launcherOrder: config.launcherOrder
     readonly property alias launcherFits: config.launcherFits
     readonly property alias emojiTone: config.emojiTone
@@ -431,7 +422,7 @@ Singleton {
         onLoaded: {
             root.arrived = true
             // A ground named "frosted" is read as glass.
-            for (const key of ["surfaceStyle", "desktopGround", "dockGround"])
+            for (const key of ["surfaceStyle", "desktopGround"])
                 if (config[key] === "frosted")
                     config[key] = "glass"
         }
@@ -487,8 +478,6 @@ Singleton {
         // island still comes down for what it has to show.
         property bool barHidden: false
 
-        // Three shadows, one per layer: Hyprland's under the windows, the
-        // shell's under the bar and the dock, and under the desk's widgets.
         property bool windowShadow: false
         property bool barShadow: false
         property bool widgetShadow: false
@@ -537,8 +526,12 @@ Singleton {
 
         property int launcherResults: 9
 
-        // Order with an empty query: `recent` ranks by launch count with
-        // decay; otherwise alphabetical.
+        // Show the full XDG application index in a scrollable list. The
+        // existing result count remains the visible row count.
+        property bool launcherListAll: true
+
+        // Short-list order: `recent` ranks by launch count with decay;
+        // otherwise alphabetical. List-all mode is always alphabetical.
         property string launcherOrder: "recent"
 
         // Fit the island to the number of results instead of a fixed-height
@@ -732,43 +725,10 @@ Singleton {
         // overflow becomes a second page.
         property var centreToggles: null
 
-        // ── DOCK ────────────────────────────────────────────────────────
-        //
-        // An empty dock is not drawn, so enabling it by default costs
-        // nothing on a fresh install.
-        property bool dockEnabled: true
-
-        // Pinned desktop entry ids, in order. Name, icon and command are
-        // read from the entry.
-        property var dockPinned: []
-
-        // Any edge but the top, which is the bar's.
-        property string dockEdge: "bottom"
-
-        property string dockAlignment: "center"
-
-        // Every other dock metric derives from the icon size.
-        property int dockIconSize: 44
-
-        // Percent; the compositor blurs behind the layer.
-        property int dockOpacity: 100
-
-        // The capsule's ground, as `surfaceStyle`, or "" for the bar's.
-        property string dockGround: ""
-
-        // Also show running applications that aren't pinned.
-        property bool dockRunning: true
-
-        // A dock on every screen, or only on the one being worked on.
-        property bool dockEverywhere: true
-
-        property bool dockAutohide: false
-
-        // Launcher button at the start of the row.
-        property bool dockLauncher: true
-
         // Anything wttr.in accepts: a city, postcode or airport code. Empty
         // lets wttr.in geolocate by IP, which can be tens of kilometres off.
+        property var launcherFavourites: []
+
         property string weatherPlace: ""
 
         // GitHub user for the contributions widget; empty draws nothing.

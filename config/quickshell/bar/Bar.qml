@@ -46,7 +46,7 @@ PanelWindow {
 
     // Named for the blur behind it (`windowrules.lua`), which shows only
     // through a ground that is not solid.
-    WlrLayershell.namespace: "impasto-bar"
+    WlrLayershell.namespace: "danshell-bar"
     // What is drawn here takes the island's glass (`Theme.surfaceIn`).
     readonly property bool glassy: true
     readonly property string groundStyle: Theme.surfaceStyle

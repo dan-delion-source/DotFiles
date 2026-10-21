@@ -164,9 +164,9 @@ def layouts():
 # or turns black when the colour is light. The busy spinner's four colours are
 # not in the body set, so they survive.
 #
-# Each build gets a new name (`impasto-cursor-<n>`): hypr-dynamic-cursors
+# Each build gets a new name (`danshell-cursor-<n>`): hypr-dynamic-cursors
 # caches the magnified cursor by theme name, so rebuilding under the same name
-# leaves the shake cursor in the old colour. `impasto-cursor` itself is the
+# leaves the shake cursor in the old colour. `danshell-cursor` itself is the
 # seed `env.lua` names for the moment before the shell is up.
 #
 # Builds are serialised by a lock in the runtime directory, shared by every
@@ -178,12 +178,15 @@ def layouts():
 
 STATE_DIR = (os.environ.get("XDG_STATE_HOME")
              or os.path.join(os.path.expanduser("~"), ".local", "state"))
-CURSOR_SRC = os.path.join(STATE_DIR, "quickshell", "cursor-src")
+CURSOR_SRC = os.path.join(STATE_DIR, "danshell", "cursor-src")
+# Read-only build input from the existing installation, not saved shell state.
+if not os.path.isfile(os.path.join(CURSOR_SRC, "manifest.hl")):
+    CURSOR_SRC = os.path.join(STATE_DIR, "quickshell", "cursor-src")
 CURSOR_ICONS = os.path.join(os.path.expanduser("~"), ".local", "share", "icons")
-CURSOR_BASE = "impasto-cursor"
-CURSOR_SERIAL = os.path.join(STATE_DIR, "quickshell", "cursor-serial")
+CURSOR_BASE = "danshell-cursor"
+CURSOR_SERIAL = os.path.join(STATE_DIR, "danshell", "cursor-serial")
 CURSOR_LOCK = os.path.join(os.environ.get("XDG_RUNTIME_DIR") or tempfile.gettempdir(),
-                           "impasto-cursor.lock")
+                           "danshell-cursor.lock")
 CURSOR_KEEP = 2
 
 # Bibata's body colours (black, and the orange of the arrows) and its white
@@ -197,7 +200,7 @@ def accent_from_state():
 
     The shell itself resolves "palette" and passes a `#rrggbb`.
     """
-    path = os.path.join(STATE_DIR, "quickshell", "dynamic-colors.json")
+    path = os.path.join(STATE_DIR, "danshell", "dynamic-colors.json")
     try:
         with open(path, encoding="utf-8") as handle:
             return json.load(handle).get("accent") or "#2e509e"
@@ -271,7 +274,7 @@ def next_cursor_name():
 def build_cursor(hexcolour, size, seed=False):
     """Paint the base SVGs one colour, compile them, install and set them.
 
-    `seed` builds the stable `impasto-cursor` env.lua names, for
+    `seed` builds the stable `danshell-cursor` env.lua names, for
     `./setup cursors`; otherwise each build takes the next serial name so the
     plugin reloads.
     """

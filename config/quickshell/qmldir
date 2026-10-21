@@ -3,7 +3,6 @@ module QuickshellConfig
 singleton Theme              1.0 theme/Theme.qml
 singleton Palettes           1.0 theme/Palettes.qml
 singleton Motion             1.0 theme/Motion.qml
-singleton Board              1.0 theme/Board.qml
 singleton Tr                 1.0 theme/Tr.qml
 
 singleton SettingsService    1.0 services/SettingsService.qml
@@ -24,6 +23,7 @@ singleton LockService        1.0 services/LockService.qml
 singleton WeatherService     1.0 services/WeatherService.qml
 singleton SessionService     1.0 services/SessionService.qml
 singleton NetworkService     1.0 services/NetworkService.qml
+singleton NetworkSpeedTestService 1.0 services/NetworkSpeedTestService.qml
 singleton FontService        1.0 services/FontService.qml
 singleton StatsService       1.0 services/StatsService.qml
 singleton TimerService       1.0 services/TimerService.qml
@@ -39,7 +39,6 @@ singleton ShortcutService    1.0 services/ShortcutService.qml
 singleton AccountService     1.0 services/AccountService.qml
 singleton MachineService     1.0 services/MachineService.qml
 singleton DesktopService     1.0 services/DesktopService.qml
-singleton DockService        1.0 services/DockService.qml
 singleton ControlsService    1.0 services/ControlsService.qml
 singleton GamesService       1.0 services/GamesService.qml
 singleton NotesService       1.0 services/NotesService.qml
@@ -57,7 +56,6 @@ singleton IdleService        1.0 services/IdleService.qml
 singleton GithubService      1.0 services/GithubService.qml
 singleton PackagesService    1.0 services/PackagesService.qml
 singleton ProfileService     1.0 services/ProfileService.qml
-singleton VersionService     1.0 services/VersionService.qml
 
 Card             1.0 components/Card.qml
 ColorSwatch      1.0 components/ColorSwatch.qml
@@ -73,7 +71,6 @@ NotchFillet      1.0 components/NotchFillet.qml
 NotchOutline     1.0 components/NotchOutline.qml
 ClaudeMark       1.0 components/ClaudeMark.qml
 CodexMark        1.0 components/CodexMark.qml
-PaletteBoard     1.0 components/PaletteBoard.qml
 PetFace          1.0 components/PetFace.qml
 PetFamily        1.0 components/PetFamily.qml
 PetShelf         1.0 components/PetShelf.qml
@@ -195,7 +192,7 @@ GridSize         1.0 bar/island/controls/GridSize.qml
 Block            1.0 bar/island/controls/Block.qml
 BlockFace        1.0 bar/island/controls/BlockFace.qml
 TogglesBlock     1.0 bar/island/controls/TogglesBlock.qml
-ImpastoBlock     1.0 bar/island/controls/ImpastoBlock.qml
+SystemInfoBlock     1.0 bar/island/controls/SystemInfoBlock.qml
 PetBlock         1.0 bar/island/controls/PetBlock.qml
 ClockBlock       1.0 bar/island/controls/ClockBlock.qml
 GamesBlock       1.0 bar/island/controls/GamesBlock.qml
@@ -211,3 +208,8 @@ NightLightDetail 1.0 bar/island/NightLightDetail.qml
 BrightnessDetail 1.0 bar/island/BrightnessDetail.qml
 TrayMenuPanel    1.0 bar/island/TrayMenuPanel.qml
 BluetoothDetail  1.0 bar/island/BluetoothDetail.qml
+
+NetworkSpeedModule 1.0 bar/modules/NetworkSpeedModule.qml
+NetworkSpeedBlock 1.0 bar/island/controls/NetworkSpeedBlock.qml
+NetworkBlock 1.0 bar/island/controls/NetworkBlock.qml
+NetworkRates 1.0 components/NetworkRates.qml

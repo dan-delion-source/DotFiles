@@ -45,6 +45,7 @@ Singleton {
         { id: "battery",       name: "Battery",       bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(3, 0) },
         { id: "volume",        name: "Volume",        bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(2, 0) },
         { id: "brightness",    name: "Brightness",    bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(1, 0) },
+        { id: "networkSpeed",  name: "Network Speed", bar: true, desk: false, width: Theme.cardWidth, height: Theme.cardHeight(2, Theme.cardRowGap + 48) },
         { id: "network",       name: "Network",       bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(2, 0) },
         { id: "bluetooth",     name: "Bluetooth",     bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(3, 0) },
         { id: "notifications", name: "Notifications", bar: true,  desk: false, width: Theme.cardWidth, height: Theme.cardHeight(7, 0) },
@@ -182,6 +183,8 @@ Singleton {
     // own mark instead of a glyph (`ChipFace`).
     function glyphOf(id: string): string {
         switch (id) {
+        case "networkSpeed":
+            return "󰓅"
         case "network":
             return NetworkService.icon
         case "bluetooth":
@@ -243,6 +246,10 @@ Singleton {
             return `${StatsService.cpu.toFixed(0)}%`
         case "pet":
             return PetService.hatched ? `Lv ${PetService.level}` : "Egg"
+        case "networkSpeed":
+            return StatsService.networkAvailable
+                ? `↓ ${StatsService.rate(StatsService.networkDown)}  ↑ ${StatsService.rate(StatsService.networkUp)}`
+                : StatsService.networkStatus
         case "network":
             return NetworkService.connectionName
         case "bluetooth":
@@ -505,6 +512,7 @@ Singleton {
         case "brightness":
             // A desktop has no backlight, the way it has no battery.
             return BrightnessService.available
+        case "networkSpeed":
         case "network":
             // Disconnected is still a reading.
             return true

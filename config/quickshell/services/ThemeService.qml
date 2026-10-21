@@ -110,7 +110,9 @@ QtObject {
         { id: "critters", label: "Critters" },
         { id: "koi", label: "Koi" },
         { id: "invaders", label: "Invaders" },
-        { id: "random", label: "Random" }
+        { id: "random", label: "Random" },
+        { id: "arch", label: "Arch" },
+        { id: "cat", label: "Cat" }
     ]
 
     readonly property string greetingScript: Quickshell.shellPath("scripts/greeting.py")

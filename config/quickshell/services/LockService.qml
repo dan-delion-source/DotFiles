@@ -84,7 +84,7 @@ Singleton {
     }
 
     readonly property string shotDirectory:
-        `${Quickshell.env("XDG_RUNTIME_DIR") || "/tmp"}/quickshell`
+        `${Quickshell.env("XDG_RUNTIME_DIR") || "/tmp"}/danshell`
 
     // One picture per screen, named by its output, so each surface shows
     // its own screen rather than all of them squeezed into one.

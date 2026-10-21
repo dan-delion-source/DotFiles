@@ -63,7 +63,7 @@ SUFFIXES = {
 
 def state_directory():
     root = os.environ.get("XDG_STATE_HOME") or f"{os.environ['HOME']}/.local/state"
-    return Path(root) / "quickshell"
+    return Path(root) / "danshell"
 
 
 def store_path():
@@ -298,7 +298,7 @@ def wipe():
 
 def watcher_pidfile():
     runtime = os.environ.get("XDG_RUNTIME_DIR") or "/tmp"
-    return Path(runtime) / "impasto-clipboard.pid"
+    return Path(runtime) / "danshell-clipboard.pid"
 
 
 def displace():

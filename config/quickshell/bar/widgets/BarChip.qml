@@ -35,7 +35,8 @@ Item {
     property string ownShape: ""
     property string ownFigure: ""
     property string ownWhen: ""
-    readonly property string figure: ModuleService.figureOf(root.ownFigure)
+    readonly property string figure: root.moduleId === "networkSpeed" && root.ownFigure === ""
+        ? "on" : ModuleService.figureOf(root.ownFigure)
 
     readonly property bool button: ModuleService.isButton(root.moduleId)
     readonly property var door: ModuleService.buttons[root.moduleId] ?? null

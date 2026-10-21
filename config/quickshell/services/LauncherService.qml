@@ -25,6 +25,7 @@ QtObject {
     id: root
 
     readonly property int maxResults: SettingsService.launcherResults
+    readonly property bool listAllApps: SettingsService.launcherListAll
 
     // The prefix-less mode must be last. Sigils come from the settings
     // (`SettingsService.launcherPrefixDefaults`).
@@ -122,7 +123,7 @@ QtObject {
     readonly property int panelWidth: 560
 
     // Fixed height with a scrolling list, or (`launcherFits`) sized to the
-    // results up to `maxResults` rows.
+    // visible rows up to `maxResults`. All-apps mode never grows past that.
     readonly property int panelHeight:
         SettingsService.launcherFits ? root.heightFor(root.rows) : 520
 
@@ -181,10 +182,19 @@ QtObject {
     }
 
     // ── FAVOURITES ──────────────────────────────────────────────────────────
-    //
-    // The dock's pinned apps, read from the settings rather than `DockService`
-    // (which depends on this service). They get a bonus of one launch.
-    readonly property var favourites: SettingsService.dockPinned ?? []
+    function isPinned(id: string): bool { return root.favourites.indexOf(id) >= 0 }
+    function pin(id: string): void {
+        if (id && !root.isPinned(id))
+            SettingsService.set("launcherFavourites", root.favourites.concat([id]))
+    }
+    function unpin(id: string): void {
+        SettingsService.set("launcherFavourites", root.favourites.filter(entry => entry !== id))
+    }
+    function entryOf(id: string): var {
+        return root.applications.find(app => app.id === id) ?? null
+    }
+
+    readonly property var favourites: SettingsService.launcherFavourites ?? []
 
     function weightOf(app: var): real {
         return root.scoreOf(app.id)
@@ -234,17 +244,10 @@ QtObject {
             return root.emoji(term)
         }
 
-        return root.rank(term).slice(0, root.maxResults)
+        const apps = root.rank(term)
+        return root.listAllApps ? apps : apps.slice(0, root.maxResults)
     }
 
-    // All applications matching `term`, sorted by:
-    //
-    //   1. name starts with the term (applies in every order)
-    //   2. weight: decayed launches plus the favourite bonus
-    //   3. dock order, between two favourites of equal weight
-    //   4. name
-    //
-    // With `order` set to alphabetical only 1 and 4 apply.
     function rank(term: string): var {
         const found = []
         for (const app of root.applications) {
@@ -254,9 +257,9 @@ QtObject {
             found.push(app)
         }
 
-        const byUse = root.order !== "alphabetical"
+        const byUse = !root.listAllApps && root.order !== "alphabetical"
         found.sort((a, b) => {
-            if (term !== "") {
+            if (term !== "" && !root.listAllApps) {
                 const leadA = a.name.toLowerCase().startsWith(term) ? 0 : 1
                 const leadB = b.name.toLowerCase().startsWith(term) ? 0 : 1
                 if (leadA !== leadB)
@@ -271,7 +274,11 @@ QtObject {
                 if (keptA >= 0 && keptB >= 0 && keptA !== keptB)
                     return keptA - keptB
             }
-            return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+            const first = a.name.toLowerCase()
+            const second = b.name.toLowerCase()
+            if (first !== second)
+                return first < second ? -1 : 1
+            return a.id < b.id ? -1 : (a.id > b.id ? 1 : 0)
         })
         return found
     }
@@ -434,8 +441,6 @@ QtObject {
         if (!entry)
             return
         if (entry.kind === "app") {
-            // Recorded here, not in `launchDesktop`, so dock launches do not
-            // count towards the ranking.
             root.record(entry.id)
             root.launchDesktop(entry.id)
         }

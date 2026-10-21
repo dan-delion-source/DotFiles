@@ -1,7 +1,7 @@
 // ╭──────────────────────────────────────────────────────────────────────────╮
 // │                                                                          │
 // │   K E P T   A P P L I C A T I O N S                                      │
-// │   pinned applications list · shared by dock and launcher                 │
+// │   pinned applications list · launcher favorites                 │
 // │                                                                          │
 // │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
@@ -15,10 +15,6 @@ import "../theme"
 import "../services"
 import "../components"
 
-// The kept (pinned) applications, one row each, and a row to add one, whose
-// matches open under it as you type. Stored as the dock's pinned list, but
-// the launcher also ranks them first, so the rows stay editable while the
-// dock is off. Sits in a `SettingGroup`'s card.
 ColumnLayout {
     id: root
 
@@ -30,7 +26,7 @@ ColumnLayout {
             return []
         const list = []
         for (const app of LauncherService.applications) {
-            if (DockService.isPinned(app.id))
+            if (LauncherService.isPinned(app.id))
                 continue
             if (!app.name.toLowerCase().includes(root.term)
                     && !app.keywords.includes(root.term))
@@ -44,7 +40,7 @@ ColumnLayout {
     spacing: 0
 
     SettingBlock {
-        visible: DockService.pinnedCount === 0
+        visible: LauncherService.favourites.length === 0
 
         Text {
             Layout.alignment: Qt.AlignHCenter
@@ -57,7 +53,7 @@ ColumnLayout {
 
     Repeater {
         model: ScriptModel {
-            values: DockService.pinned
+            values: LauncherService.favourites
         }
 
         Item {
@@ -66,7 +62,7 @@ ColumnLayout {
             required property string modelData
             required property int index
 
-            readonly property var entry: DockService.entryOf(kept.modelData)
+            readonly property var entry: LauncherService.entryOf(kept.modelData)
             readonly property string picture: kept.entry && kept.entry.icon
                 ? Quickshell.iconPath(kept.entry.icon, true) : ""
 
@@ -137,7 +133,7 @@ ColumnLayout {
                     Layout.alignment: Qt.AlignVCenter
                     icon: "󰅖"
                     iconSize: 12
-                    onClicked: DockService.unpin(kept.modelData)
+                    onClicked: LauncherService.unpin(kept.modelData)
                 }
             }
         }
@@ -280,7 +276,7 @@ ColumnLayout {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: DockService.pin(option.modelData.id)
+                onClicked: LauncherService.pin(option.modelData.id)
             }
         }
     }

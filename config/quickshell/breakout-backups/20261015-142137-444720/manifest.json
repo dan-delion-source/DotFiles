@@ -1,0 +1,41 @@
+{
+  "pack": "neon-breakout",
+  "version": 1,
+  "files": [
+    {
+      "path": "bar/island/games/Breakout.qml",
+      "existed": false,
+      "installed_sha256": "d3131d8680c4b16b34650df535c5f0aa4dcf7586a5182bd71727d99f2b9dc939"
+    },
+    {
+      "path": "bar/island/games/BreakoutLogic.js",
+      "existed": false,
+      "installed_sha256": "0d69f50179e79eacd771a2fdfae62d7d2aa68048651a9d5dd57428bfb48d8d2e"
+    },
+    {
+      "path": "bar/island/games/BreakoutStore.qml",
+      "existed": false,
+      "installed_sha256": "32bcfec8bc182359350d8b9edc9bc36e2250c63211758b4b4179adc1860556ff"
+    },
+    {
+      "path": "bar/island/games/breakout-logo.svg",
+      "existed": false,
+      "installed_sha256": "bf847eda2cf3fc001c10ab9f32f06fb636cae7c8d5488b6f82e0c3c8dea70d4e"
+    },
+    {
+      "path": "bar/island/games/GameBoard.qml",
+      "existed": true,
+      "installed_sha256": "e46a925b065fccc3c535ad082762aec43a3b5d76a5707b035498b17c6c31ab91"
+    },
+    {
+      "path": "services/GamesService.qml",
+      "existed": true,
+      "installed_sha256": "72c581dfbb4f0f27f7386a882f7f0c38cb38c9694d950af97ff994f563fa67a3"
+    },
+    {
+      "path": "bar/island/GamesPanel.qml",
+      "existed": true,
+      "installed_sha256": "3e94fc5e8aca321751a836c3ba5b6f7b78da9db6f6ea2b90b1c0f8ba419e7802"
+    }
+  ]
+}

@@ -27,6 +27,7 @@ import json
 import math
 import os
 import random
+import re
 import shutil
 import subprocess
 import sys
@@ -713,11 +714,12 @@ def invaders(paint):
 
 SCENES = {"lava": lava, "critters": critters, "koi": koi, "invaders": invaders}
 
-# · what the settings window can choose: a scene, or a new one every greeting
-CHOICES = (*SCENES, "random")
+# · generated scenes and the supplied Fastfetch logo files
+EXTRA_LOGOS = {"arch": ("file", "arch.txt"), "cat": ("kitty-icat", "cat.gif")}
+CHOICES = (*SCENES, "random", *EXTRA_LOGOS)
 
 STATE_DIR = os.path.join(os.environ.get("XDG_STATE_HOME")
-                         or os.path.expanduser("~/.local/state"), "quickshell")
+                         or os.path.expanduser("~/.local/state"), "danshell")
 # · the paint the scenes are drawn in, the choice, the one fastfetch's config
 #   names, the moment the last full set landed, and what the drawing said
 PAINT_FILE = os.path.join(STATE_DIR, "greeting-paint.json")
@@ -725,6 +727,10 @@ CHOICE_FILE = os.path.join(STATE_DIR, "greeting")
 LINK = os.path.join(STATE_DIR, "greeting.gif")
 STAMP_FILE = os.path.join(STATE_DIR, "greeting.stamp")
 LOG_FILE = os.path.join(STATE_DIR, "greeting.log")
+FASTFETCH_CONFIG = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                             "../../fastfetch/config.jsonc"))
+LOGO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                       "../../fastfetch/logos"))
 
 
 def scene_file(scene):
@@ -833,12 +839,38 @@ def choose(choice):
     if choice not in CHOICES:
         sys.stderr.write(f"Unknown greeting: {choice}\n")
         return False
+    if choice in EXTRA_LOGOS:
+        logo_type, filename = EXTRA_LOGOS[choice]
+        source = os.path.join(LOGO_DIR, filename)
+        if not os.path.isfile(source):
+            sys.stderr.write(f"Fastfetch logo is missing: {source}\n")
+            return False
+    else:
+        logo_type = "kitty-icat"
+        source = LINK
+    # Only the logo block changes; all the user's Fastfetch modules stay as-is.
+    # The installer links this config into ~/.config/fastfetch when installed.
+    try:
+        with open(FASTFETCH_CONFIG, encoding="utf-8") as handle:
+            config = handle.read()
+        pattern = r'("logo"\s*:\s*\{[^}]*?"type"\s*:\s*")[^"]+("[^}]*?"source"\s*:\s*")[^"]+("[^}]*?"width")'
+        updated, count = re.subn(pattern, lambda match: match.group(1) + logo_type +
+                                 match.group(2) + source + match.group(3), config, count=1,
+                                 flags=re.DOTALL)
+        if count != 1:
+            raise ValueError("Fastfetch logo block not found")
+        if updated != config:
+            replace_text(FASTFETCH_CONFIG, updated)
+    except (OSError, ValueError) as error:
+        sys.stderr.write(f"Cannot update Fastfetch logo: {error}\n")
+        return False
     os.makedirs(STATE_DIR, exist_ok=True)
     replace_text(CHOICE_FILE, choice + "\n")
-    scene = random.choice(tuple(SCENES)) if choice == "random" else choice
-    staging = f"{LINK}.{os.getpid()}.part"
-    os.symlink(os.path.basename(scene_file(scene)), staging)
-    os.replace(staging, LINK)
+    if choice not in EXTRA_LOGOS:
+        scene = random.choice(tuple(SCENES)) if choice == "random" else choice
+        staging = f"{LINK}.{os.getpid()}.part"
+        os.symlink(os.path.basename(scene_file(scene)), staging)
+        os.replace(staging, LINK)
     return True
 
 

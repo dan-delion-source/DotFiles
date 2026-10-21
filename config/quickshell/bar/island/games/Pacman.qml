@@ -1,4 +1,4 @@
-// Original maze-chase game for Impasto: smooth tile movement and persistent rounds.
+// Original maze-chase game for Shell: smooth tile movement and persistent rounds.
 import QtQuick
 import Quickshell
 import Quickshell.Io

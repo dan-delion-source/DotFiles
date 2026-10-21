@@ -31,7 +31,8 @@ Item {
 
     // "random" cycles through the scenes.
     readonly property var pool: ThemeService.greetings
-        .filter(row => row.id !== "random").map(row => row.id)
+        .filter(row => row.id !== "random" && row.id !== "arch" && row.id !== "cat")
+        .map(row => row.id)
     property int pass: 0
     readonly property string drawn: root.scene === "random"
         ? root.pool[root.pass % root.pool.length] : root.scene

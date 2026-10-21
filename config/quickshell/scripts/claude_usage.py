@@ -37,7 +37,7 @@ TRANSCRIPTS = HOME / ".claude" / "projects"
 
 STATE = Path(
     os.environ.get("XDG_STATE_HOME") or (HOME / ".local" / "state")
-) / "quickshell"
+) / "danshell"
 CACHE = STATE / "claude-usage.json"
 
 

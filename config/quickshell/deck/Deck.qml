@@ -16,20 +16,6 @@ import "../theme"
 import "../services"
 import "../components"
 
-// Notes docked on the screen edges. At rest each is a thin strip of colour;
-// hovering slides the tabs out with their titles, the tab under the pointer
-// peeks the full note beside it, and a click opens the note in the island.
-//
-// While the desktop is being arranged the tabs stay out: drag a tab along its
-// edge to reorder, to another edge to move it, onto the grid to make it a
-// widget, or onto the tray to remove it. Clicking a tab opens the deck's
-// inspector.
-//
-// A full-screen surface with a computed input mask (DeckService), like the
-// dock, so it shares the desktop's origin and grid cells line up. It moves to
-// the overlay layer while arranging: the desktop is raised to `top` then, and
-// its full-screen mask would otherwise take every press meant for a tab. Never
-// takes the keyboard.
 PanelWindow {
     id: root
 
@@ -73,7 +59,7 @@ PanelWindow {
         bottom: true
     }
 
-    WlrLayershell.namespace: "impasto-deck"
+    WlrLayershell.namespace: "danshell-deck"
     WlrLayershell.layer: root.editing ? WlrLayer.Overlay : WlrLayer.Top
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 

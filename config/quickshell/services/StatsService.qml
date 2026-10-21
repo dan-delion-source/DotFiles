@@ -39,6 +39,32 @@ Singleton {
     property real swapTotal: 0
 
     property var disks: []
+    property bool networkAvailable: false
+    property bool networkSeen: false
+    readonly property string networkStatus: networkAvailable ? "Live traffic"
+        : networkSeen ? "Unavailable" : "Waiting…"
+    readonly property Timer networkExpiry: Timer {
+        interval: root.pollInterval * 3
+        onTriggered: { root.networkSeen = true; root.networkAvailable = false }
+    }
+    Component.onCompleted: networkExpiry.start()
+
+    function ingestNetwork(data: var): void {
+        if (!data || typeof data.down !== "number" || typeof data.up !== "number"
+                || !isFinite(data.down) || !isFinite(data.up)) {
+            root.networkSeen = true
+            root.networkAvailable = false
+            return
+        }
+        root.networkDown = Math.max(0, data.down)
+        root.networkUp = Math.max(0, data.up)
+        root.networkSeen = true
+        root.networkAvailable = true
+        root.networkExpiry.restart()
+        root.downHistory = root.push(root.downHistory, root.networkDown)
+        root.upHistory = root.push(root.upHistory, root.networkUp)
+    }
+
     property real networkDown: 0
     property real networkUp: 0
     property var temperature: null
@@ -82,7 +108,7 @@ Singleton {
 
         // Restart after a delay, so a script that fails immediately is not
         // respawned in a tight loop.
-        onExited: revive.start()
+        onExited: { root.networkSeen = true; root.networkAvailable = false; revive.start() }
     }
 
     readonly property Timer revive: Timer {
@@ -107,7 +133,7 @@ Singleton {
             console.warn("Cannot parse the machine stats:", error)
             return
         }
-        if (!data.cpu)
+        if (!data || !data.cpu || !data.memory)
             return
 
         root.cpu = data.cpu.total
@@ -121,15 +147,12 @@ Singleton {
         root.swapTotal = data.memory.swapTotal
 
         root.disks = data.disks ?? []
-        root.networkDown = data.network.down
-        root.networkUp = data.network.up
+        root.ingestNetwork(data.network)
         root.temperature = data.temperature
         root.uptime = data.uptime
 
         root.cpuHistory = root.push(root.cpuHistory, root.cpu / 100)
         root.memoryHistory = root.push(root.memoryHistory, root.memoryFraction)
-        root.downHistory = root.push(root.downHistory, root.networkDown)
-        root.upHistory = root.push(root.upHistory, root.networkUp)
         if (root.temperature)
             root.temperatureHistory = root.push(root.temperatureHistory, root.temperature.celsius)
 

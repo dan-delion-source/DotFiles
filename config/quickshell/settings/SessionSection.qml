@@ -349,27 +349,18 @@ SettingsSection {
                 label: Tr.t("Face unlock")
                 reading: root.faceReading
                 alarm: FaceService.outcome !== "" && FaceService.outcome !== "added"
-                locked: FaceService.known && !FaceService.camera
-                reason: Tr.t("Needs an infrared camera")
+                locked: FaceService.known && !FaceService.ready
+                reason: !FaceService.camera ? Tr.t("Needs an infrared camera") : Tr.t("Face unlock requires system setup")
 
                 PillButton {
-                    visible: FaceService.known && FaceService.camera
-                    text: !FaceService.installed ? Tr.t("Set up")
-                        : !FaceService.wired ? Tr.t("Finish setting up")
-                        : Tr.t("Add a face")
+                    visible: FaceService.ready
+                    text: Tr.t("Add a face")
                     icon: "󰄀"
                     active: true
-                    enabled: FaceService.busy === "" && !FaceService.installer.running
+                    enabled: FaceService.busy === ""
                     implicitWidth: 136
                     implicitHeight: 30
-                    onClicked: {
-                        if (!FaceService.installed)
-                            FaceService.install("face")
-                        else if (!FaceService.wired)
-                            FaceService.install("system")
-                        else
-                            FaceService.add()
-                    }
+                    onClicked: FaceService.add()
                 }
             }
 

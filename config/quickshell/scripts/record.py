@@ -41,7 +41,7 @@ STAMP = "%Y-%m-%d-%H%M%S"
 
 # Where the pid and the path live while a take is running. The runtime
 # directory, so a reboot cannot leave a stale one behind.
-STATE = "impasto-recording.json"
+STATE = "danshell-recording.json"
 
 
 def run(command, **kwargs):
@@ -95,9 +95,9 @@ def encoders():
 
 
 def directory():
-    """Where recordings go: $IMPASTO_RECORDINGS (set in `env.lua`), then the
+    """Where recordings go: $DANSHELL_RECORDINGS (set in `env.lua`), then the
     XDG videos directory, then $HOME."""
-    value = os.environ.get("IMPASTO_RECORDINGS")
+    value = os.environ.get("DANSHELL_RECORDINGS")
     if value:
         return Path(value).expanduser()
     if shutil.which("xdg-user-dir"):
@@ -182,7 +182,7 @@ def start(geometry, audio, shape, output=""):
     except OSError as error:
         report(error=f"Cannot write to {folder}: {error}")
         return
-    path = folder / f"{datetime.now().strftime(STAMP)}_impasto.mp4"
+    path = folder / f"{datetime.now().strftime(STAMP)}_danshell.mp4"
 
     process = None
     for tool in tools_found:

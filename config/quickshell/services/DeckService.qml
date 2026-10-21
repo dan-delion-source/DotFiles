@@ -43,10 +43,6 @@ Singleton {
 
     readonly property int count: root.decks.reduce((sum, deck) => sum + deck.notes.length, 0)
 
-    // Hidden under a fullscreen window, as the dock is, and with
-    // `deckOnEmpty` also on any workspace that has windows. Both are asked of
-    // the workspace the screen is showing, not of the focused one: the edges
-    // on one screen have no opinion about what is open on the other.
     readonly property bool onEmptyOnly: SettingsService.deckOnEmpty
 
     function awayOn(name: string): bool {

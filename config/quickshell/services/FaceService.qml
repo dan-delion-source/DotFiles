@@ -62,23 +62,6 @@ Singleton {
             root.probe.running = true
     }
 
-    // What is missing is the installer's to put there, in the terminal every
-    // command that asks for a password runs in: `face` for howdy and the
-    // first face, `system` for the helper and its policy.
-    readonly property Process installer: Process {
-        onExited: root.refresh()
-    }
-
-    function install(verb: string): void {
-        if (VersionService.repo === "" || root.installer.running)
-            return
-        root.installer.command = ["kitty", "--class", "impasto-update",
-                                  "--title", `impasto ${verb}`,
-                                  "sh", "-c", PackagesService.holdScript, "sh",
-                                  `${VersionService.repo}/setup`, verb]
-        root.installer.running = true
-    }
-
     // ── THE FACES ───────────────────────────────────────────────────────────
 
     // `{ id, added, label }`, as howdy lists them; `added` is "YYYY-MM-DD hh:mm:ss".

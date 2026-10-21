@@ -1,0 +1,8 @@
+This configuration derives from Impasto by Andreu Massanet.
+Copyright (c) 2026 Andreu Massanet.
+Source: https://github.com/andreumassanet/impasto
+License: GNU GPL version 3; see LICENSE.
+
+Local modifications, 2026-10-15: remove the application dock and visible
+branding, isolate shell storage and process targeting, and add network
+throughput widgets. Original source attribution headers are retained.

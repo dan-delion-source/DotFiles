@@ -13,6 +13,7 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- · cursor theme: a vector hyprcursor so shake-to-find (input.lua) magnifies
 -- · it cleanly. The shell rebuilds it in the chosen colour; Bibata is the
 -- · XCursor fallback. `./setup cursors` fetches both.
+-- Reuse the installed seed until the shell builds its own cursor theme.
 hl.env("HYPRCURSOR_THEME", "impasto-cursor")
 hl.env("XCURSOR_THEME",    "Bibata-Modern-Classic")
 
@@ -45,6 +46,6 @@ end
 local dirs       = user_dirs()
 local captures   = dirs.SCREENSHOTS or (dirs.PICTURES or home) .. "/Screenshots"
 local recordings = dirs.SCREENCASTS or (dirs.VIDEOS or home) .. "/Screencasts"
-hl.env("IMPASTO_CAPTURES",   captures)
+hl.env("DANSHELL_CAPTURES",   captures)
 hl.env("HYPRSHOT_DIR",       captures)
-hl.env("IMPASTO_RECORDINGS", recordings)
+hl.env("DANSHELL_RECORDINGS", recordings)

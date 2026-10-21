@@ -24,6 +24,7 @@ import glob
 import hashlib
 import json
 import os
+import shlex
 import re
 import shutil
 import subprocess
@@ -44,8 +45,8 @@ WALLPAPERS_DIR = os.path.join(XDG_DATA_HOME, "wallpapers")
 ANIMATED_DIR = os.path.join(WALLPAPERS_DIR, "animated")
 # One frame of each video, for the palette and for everything that draws the
 # wallpaper as a picture (the lock, the overview, the arranging desk).
-POSTERS_DIR = os.path.join(XDG_CACHE_HOME, "impasto", "posters")
-STATE_DIR = os.path.join(XDG_STATE_HOME, "quickshell")
+POSTERS_DIR = os.path.join(XDG_CACHE_HOME, "danshell", "posters")
+STATE_DIR = os.path.join(XDG_STATE_HOME, "danshell")
 STATE_FILE = os.path.join(STATE_DIR, "state.json")
 TERMINAL_PALETTE_FILE = os.path.join(STATE_DIR, "kitty-palette.conf")
 # Separate from the palette fragment, which is rewritten whole on every push.
@@ -91,7 +92,7 @@ DYNAMIC_COLORS_FILE = os.path.join(STATE_DIR, "dynamic-colors.json")
 # ignores absolute paths, so the theme is written there. ./setup never touches
 # files it did not install, so the two can share the directory.
 BTOP_DIR = os.path.join(XDG_CONFIG_HOME, "btop")
-BTOP_THEME_FILE = os.path.join(BTOP_DIR, "themes", "impasto.theme")
+BTOP_THEME_FILE = os.path.join(BTOP_DIR, "themes", "danshell.theme")
 
 # GTK reads gtk.css only from its own config directory.
 GTK3_DIR = os.path.join(XDG_CONFIG_HOME, "gtk-3.0")
@@ -124,13 +125,13 @@ GTK_DIM = 0.5
 # is touched (papirus-folders needs root for that). A theme of our own, rather
 # than overrides in a local Papirus-Dark/, can be deleted cleanly and never
 # shadows the package's files.
-ICON_THEME_NAME = "impasto"
+ICON_THEME_NAME = "danshell"
 ICON_THEME_DIR = os.path.join(XDG_DATA_HOME, "icons", ICON_THEME_NAME)
 ICON_INDEX_FILE = os.path.join(ICON_THEME_DIR, "index.theme")
 
 # Records the swatch last written, so a push that lands on the same one skips
 # rebuilding ~2000 symlinks.
-ICON_STAMP_FILE = os.path.join(ICON_THEME_DIR, "impasto.colour")
+ICON_STAMP_FILE = os.path.join(ICON_THEME_DIR, "danshell.colour")
 
 ICON_SOURCE_THEME = "Papirus-Dark"
 ICON_INHERITS = (ICON_SOURCE_THEME, "Adwaita", "hicolor")
@@ -168,7 +169,7 @@ ICON_GREY_BELOW = 0.15
 # enough. No class names, which Discord hashes per build.
 VESKTOP_DIR = os.path.join(XDG_CONFIG_HOME, "vesktop")
 VESKTOP_THEMES_DIR = os.path.join(VESKTOP_DIR, "themes")
-VESKTOP_THEME_FILE = os.path.join(VESKTOP_THEMES_DIR, "impasto.css")
+VESKTOP_THEME_FILE = os.path.join(VESKTOP_THEMES_DIR, "danshell.css")
 
 # Vencord's own settings, where a theme is ticked. Only `./setup vesktop`
 # writes it, once, with Vesktop closed; the push never does.
@@ -199,7 +200,7 @@ VESKTOP_STEPS = (100, 130, 160, 200, 230, 260, 300, 330, 360, 400, 430, 460,
 SPICETIFY_DIR = (os.environ.get("SPICETIFY_CONFIG")
                  or os.path.join(XDG_CONFIG_HOME, "spicetify"))
 SPICETIFY_CONFIG_FILE = os.path.join(SPICETIFY_DIR, "config-xpui.ini")
-SPICETIFY_THEME_DIR = os.path.join(SPICETIFY_DIR, "Themes", "impasto")
+SPICETIFY_THEME_DIR = os.path.join(SPICETIFY_DIR, "Themes", "danshell")
 SPICETIFY_COLORS_FILE = os.path.join(SPICETIFY_THEME_DIR, "color.ini")
 
 # Spotify has one ground with cards on it. The sidebar and player bar sit on
@@ -213,14 +214,14 @@ SPICETIFY_DISABLED = 0.45
 # VSCodium colour themes are extensions. The push writes a manifest and the
 # theme JSON into ~/.vscode-oss/extensions/ (VSCodium's dataFolderName), which
 # the editor loads on its next window without anything being installed.
-VSCODIUM_EXTENSION_DIR = os.path.expanduser("~/.vscode-oss/extensions/impasto")
+VSCODIUM_EXTENSION_DIR = os.path.expanduser("~/.vscode-oss/extensions/danshell")
 VSCODIUM_MANIFEST_FILE = os.path.join(VSCODIUM_EXTENSION_DIR, "package.json")
 VSCODIUM_THEME_FILE = os.path.join(VSCODIUM_EXTENSION_DIR, "themes",
-                                   "impasto-color-theme.json")
+                                   "danshell-color-theme.json")
 
 # The theme's name in the picker and in `workbench.colorTheme`. The push never
 # selects it, so a theme picked by hand stays picked.
-VSCODIUM_LABEL = "Impasto"
+VSCODIUM_LABEL = "Shell"
 
 # Merged whole by `./setup vscodium`. The pushes only rewrite, in place, the
 # values that follow the palette and the font, and only where they are set.
@@ -261,7 +262,7 @@ VSCODIUM_ANSI = {
 # repository; changes made in the qt6ct GUI are overwritten on the next push.
 QT6CT_DIR = os.path.join(XDG_CONFIG_HOME, "qt6ct")
 QT6CT_CONFIG_FILE = os.path.join(QT6CT_DIR, "qt6ct.conf")
-QT6CT_COLORS_FILE = os.path.join(QT6CT_DIR, "colors", "impasto.conf")
+QT6CT_COLORS_FILE = os.path.join(QT6CT_DIR, "colors", "danshell.conf")
 
 # Fusion draws every widget from the palette; Kvantum would bring its own SVG
 # theme.
@@ -301,7 +302,7 @@ KDE_RAISED_SETS = ("Button", "Tooltip", "Header")
 
 # kdeglobals is merged through a parser that drops comments, so the scheme
 # name is the only marker of what wrote it.
-KDE_SCHEME_NAME = "Impasto"
+KDE_SCHEME_NAME = "Shell"
 
 # How far ForegroundInactive on a selection fades towards the accent.
 KDE_SELECTION_QUIET = 0.35
@@ -350,7 +351,7 @@ SYNTAX_SCOPES = (
 # yazi resolves `[flavor] dark` by name to flavors/<name>.yazi/, which holds
 # the interface theme and a tmTheme for the preview pane.
 YAZI_DIR = os.path.join(XDG_CONFIG_HOME, "yazi")
-YAZI_FLAVOR_DIR = os.path.join(YAZI_DIR, "flavors", "impasto.yazi")
+YAZI_FLAVOR_DIR = os.path.join(YAZI_DIR, "flavors", "danshell.yazi")
 YAZI_FLAVOR_FILE = os.path.join(YAZI_FLAVOR_DIR, "flavor.toml")
 YAZI_TMTHEME_FILE = os.path.join(YAZI_FLAVOR_DIR, "tmtheme.xml")
 
@@ -369,7 +370,7 @@ YAZI_CAP_CLOSE = "\ue0b4"
 # neovim finds colourschemes on its runtimepath, which the config extends, so
 # this one stays in the state directory instead of ~/.config/nvim.
 NVIM_DIR = os.path.join(STATE_DIR, "nvim")
-NVIM_COLORS_FILE = os.path.join(NVIM_DIR, "colors", "impasto.lua")
+NVIM_COLORS_FILE = os.path.join(NVIM_DIR, "colors", "danshell.lua")
 
 # neovim's default server socket: $XDG_RUNTIME_DIR/nvim.<pid>.0.
 NVIM_SOCKETS = os.path.join(XDG_RUNTIME_DIR, "nvim.*.0")
@@ -392,7 +393,7 @@ IMV_OVERLAY_FONT = "monospace:11"
 # cava resolves `theme` by name inside themes/, and a running cava can be told
 # to reload it.
 CAVA_DIR = os.path.join(XDG_CONFIG_HOME, "cava")
-CAVA_THEME_FILE = os.path.join(CAVA_DIR, "themes", "impasto")
+CAVA_THEME_FILE = os.path.join(CAVA_DIR, "themes", "danshell")
 
 # The bars run from near the terminal ground up to the brightest accent,
 # across the accent/accentHover pair. No red: loudness is not a warning.
@@ -532,7 +533,7 @@ def poster_of(video):
 
 # The name the waiting shell runs under, so a video still waiting to start
 # is stopped with the ones already playing.
-MOTION_TAG = "impasto-motion"
+MOTION_TAG = "danshell-motion"
 
 
 def stop_motion():
@@ -831,7 +832,7 @@ def build_btop_theme(colors):
 
     lines = [
         "# GENERATED by scripts/theme_manager.py on every palette change.",
-        "# Read by btop as `color_theme = \"impasto\"`; edits here are lost at the",
+        "# Read by btop as `color_theme = \"danshell\"`; edits here are lost at the",
         "# next theme switch.",
         "#",
         "# btop wants forty-eight colours and a palette here carries thirteen.",
@@ -885,7 +886,7 @@ def build_cava_theme(colors):
     background = terminal_background(colors)
     lines = [
         "# GENERATED by scripts/theme_manager.py on every palette change.",
-        "# Read by cava as `theme = 'impasto'`; edits here are lost at the next",
+        "# Read by cava as `theme = 'danshell'`; edits here are lost at the next",
         "# theme switch, and a running cava is signalled to re-read it.",
         "#",
         "# Four stops in one family, bottom to top. The island draws the same",
@@ -983,7 +984,7 @@ def build_yazi_flavor(colors):
     caps = f'{{ open = "{YAZI_CAP_OPEN}", close = "{YAZI_CAP_CLOSE}" }}'
     return "\n".join([
         "# GENERATED by scripts/theme_manager.py on every palette change.",
-        "# Read by yazi as `[flavor] dark = \"impasto\"`; edits here are lost at",
+        "# Read by yazi as `[flavor] dark = \"danshell\"`; edits here are lost at",
         "# the next theme switch, and yazi has to be reopened to see it.",
         "#",
         "# Backgrounds are set only where something has to sit on one, so the",
@@ -1152,7 +1153,7 @@ def build_yazi_tmtheme(colors):
         "<!-- Read by yazi as the active flavour's tmTheme; edits here are lost. -->",
         '<plist version="1.0">',
         "<dict>",
-        "  <key>name</key><string>impasto</string>",
+        "  <key>name</key><string>danshell</string>",
         "  <key>settings</key>",
         "  <array>",
         "    <dict>",
@@ -1885,7 +1886,7 @@ def write_kde_colors(colors):
             parser.set(section, key, value)
 
     # Written to a temporary file and renamed, so it is never left truncated.
-    temporary = KDEGLOBALS_FILE + ".impasto"
+    temporary = KDEGLOBALS_FILE + ".danshell"
     try:
         with open(temporary, "w", encoding="utf-8") as handle:
             parser.write(handle, space_around_delimiters=False)
@@ -2139,10 +2140,10 @@ def build_vesktop_css(colors):
     # Vencord reads this header to list the theme.
     lines = [
         "/**",
-        " * @name impasto",
+        " * @name danshell",
         " * @description The desk's palette, written by theme_manager.py on",
         " *   every palette push. Edits here are lost at the next switch.",
-        " * @author impasto",
+        " * @author Local configuration",
         " */",
         "",
         # Also on the theme classes: Discord sets .theme-dark on a wrapper div,
@@ -2192,7 +2193,7 @@ def tick_vesktop_theme():
     if name in themes:
         return True
     settings["enabledThemes"] = themes + [name]
-    temporary = VESKTOP_SETTINGS_FILE + ".impasto"
+    temporary = VESKTOP_SETTINGS_FILE + ".danshell"
     try:
         os.makedirs(os.path.dirname(VESKTOP_SETTINGS_FILE), exist_ok=True)
         with open(temporary, "w", encoding="utf-8") as handle:
@@ -2298,7 +2299,7 @@ def refresh_spotify():
 
     `spicetify refresh` rewrites the stylesheets in Apps/xpui and nothing
     else: no re-patch and no restart, so a running client keeps its colours
-    until it next starts. Only when the impasto theme is the selected one and
+    until it next starts. Only when the danshell theme is the selected one and
     the client is patched and writable; the first patch is `./setup spotify`.
     Last in the push, since spicetify may ask the network for a new version.
     """
@@ -2312,7 +2313,7 @@ def refresh_spotify():
     if not parser.has_section("Setting"):
         return
     setting = parser["Setting"]
-    if setting.get("current_theme", "").strip() != "impasto":
+    if setting.get("current_theme", "").strip() != "danshell":
         return
     spotify = os.path.expandvars(setting.get("spotify_path", "").strip())
     xpui = os.path.join(spotify, "Apps", "xpui")
@@ -2665,7 +2666,7 @@ def build_nvim_colorscheme(colors):
         'if vim.fn.exists("syntax_on") == 1 then vim.cmd("syntax reset") end',
         "",
         "vim.o.termguicolors = true",
-        'vim.g.colors_name = "impasto"',
+        'vim.g.colors_name = "danshell"',
         "",
         "local hl = vim.api.nvim_set_hl",
         "",
@@ -2703,7 +2704,7 @@ def push_nvim_colorscheme(colors):
     for socket_path in sorted(glob.glob(NVIM_SOCKETS)):
         result = subprocess.run(
             [nvim, "--server", socket_path, "--remote-expr",
-             'luaeval("tostring(pcall(vim.cmd.colorscheme, \'impasto\'))")'],
+             'luaeval("tostring(pcall(vim.cmd.colorscheme, \'danshell\'))")'],
             capture_output=True, text=True, timeout=5)
         if result.returncode != 0:
             # A stale socket from a closed neovim; keep going.
@@ -2722,11 +2723,11 @@ def build_vscodium_manifest(colors):
                         colors.get("accent", "#0a84ff"))
     lit = luminance(*hex_to_rgb(ground)) > GTK_LIGHT_ABOVE
     manifest = {
-        "name": "impasto",
+        "name": "danshell",
         "displayName": VSCODIUM_LABEL,
         "description": "The wallpaper's palette. Generated; edits are lost.",
         "version": "1.0.0",
-        "publisher": "impasto",
+        "publisher": "danshell",
         "engines": {"vscode": "^1.0.0"},
         "categories": ["Themes"],
         "contributes": {
@@ -3348,7 +3349,7 @@ def update_vscodium_settings(values):
 
     for start, end, value in sorted(edits, reverse=True):
         text = text[:start] + value + text[end:]
-    temporary = VSCODIUM_SETTINGS_FILE + ".impasto"
+    temporary = VSCODIUM_SETTINGS_FILE + ".danshell"
     try:
         with open(temporary, "w", encoding="utf-8") as handle:
             handle.write(text)
@@ -3478,7 +3479,7 @@ def write_vscodium_settings(colors):
             return False
 
     settings.update(build_vscodium_settings(colors))
-    temporary = VSCODIUM_SETTINGS_FILE + ".impasto"
+    temporary = VSCODIUM_SETTINGS_FILE + ".danshell"
     try:
         os.makedirs(os.path.dirname(VSCODIUM_SETTINGS_FILE), exist_ok=True)
         with open(temporary, "w", encoding="utf-8") as handle:
@@ -3576,21 +3577,21 @@ THUNAR_SETTINGS = (
 # path and %F all the selected ones; Thunar quotes them, so they are not
 # quoted here, and shell commands take the path as an argument.
 THUNAR_ACTIONS = (
-    ("impasto-terminal", "utilities-terminal", "Open Terminal Here",
+    ("danshell-terminal", "utilities-terminal", "Open Terminal Here",
      "Open kitty in this folder",
      "kitty --working-directory %f", ("directories",)),
-    ("impasto-yazi", "folder-open", "Open yazi Here",
+    ("danshell-yazi", "folder-open", "Open yazi Here",
      "Open this folder in yazi",
      "kitty --working-directory %f yazi", ("directories",)),
-    ("impasto-editor", "accessories-text-editor", "Open in the Editor",
+    ("danshell-editor", "accessories-text-editor", "Open in the Editor",
      "Open in VSCodium",
      "codium %F", ("directories", "text-files", "other-files")),
-    ("impasto-wallpaper", "preferences-desktop-wallpaper", "Set as Wallpaper",
+    ("danshell-wallpaper", "preferences-desktop-wallpaper", "Set as Wallpaper",
      "Use this picture or video as the wallpaper and theme the desktop from it",
-     "qs ipc call wallpaper set %f", ("image-files", "video-files")),
-    ("impasto-copy-path", "edit-copy", "Copy Path",
+     "qs ipc --path " + shlex.quote(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + " call wallpaper set %f", ("image-files", "video-files")),
+    ("danshell-copy-path", "edit-copy", "Copy Path",
      "Copy the full path of the selection to the clipboard",
-     "sh -c 'printf %s \"$1\" | wl-copy' impasto %f",
+     "sh -c 'printf %s \"$1\" | wl-copy' danshell %f",
      ("directories", "audio-files", "image-files", "other-files",
       "text-files", "video-files")),
 )
@@ -3793,7 +3794,7 @@ def build_zen_css(colors):
 def build_zen_prefs():
     """user.js, written whole: Firefox never writes to it."""
     lines = [
-        "// Written by impasto. github.com/andreumassanet/impasto",
+        "// Generated wallpaper palette.",
         "// Read at startup and never written back, which is why it is here",
         "// and not in prefs.js.",
         "",

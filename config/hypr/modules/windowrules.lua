@@ -40,10 +40,10 @@ hl.window_rule({
 -- · the settings window is a regular toplevel; float it instead of tiling.
 -- · The title is set by settings/SettingsWindow.qml.
 hl.window_rule({
-    name  = "quickshell-settings",
+    name  = "danshell-settings",
     match = {
         -- A regex, not a Lua pattern.
-        class = "^(org\\.quickshell)$",
+        class = "^(org\\.danshell)$",
         title = "^(Settings)$",
     },
 
@@ -80,7 +80,7 @@ hl.window_rule({
 --   installer from Settings
 hl.window_rule({
     name  = "shell-terminal",
-    match = { class = "^(impasto-packages|impasto-update)$" },
+    match = { class = "^(danshell-packages|danshell-update)$" },
 
     float  = true,
     center = true,
@@ -186,8 +186,8 @@ hl.window_rule({
 -- entire wallpaper gets blurred. 0.12 matches the bar and the dock, and is
 -- below the widget opacity slider's 20% floor.
 hl.layer_rule({
-    name  = "impasto-desktop-blur",
-    match = { namespace = "^(impasto-desktop)$" },
+    name  = "danshell-desktop-blur",
+    match = { namespace = "^(danshell-desktop)$" },
 
     blur         = true,
     ignore_alpha = 0.12,

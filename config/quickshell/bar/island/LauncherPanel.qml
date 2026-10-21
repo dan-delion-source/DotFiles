@@ -9,6 +9,7 @@
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 
@@ -393,6 +394,16 @@ ColumnLayout {
             }
         }
         boundsBehavior: Flickable.StopAtBounds
+        interactive: true
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            width: 5
+            contentItem: Rectangle {
+                implicitWidth: 5
+                radius: 2
+                color: Theme.textMuted
+            }
+        }
         // The delegate paints the selection itself; no separate highlight.
         currentIndex: 0
 
@@ -522,8 +533,6 @@ ColumnLayout {
                     }
                 }
 
-                // Marks apps kept on the dock, which is why they rank near the
-                // top of an empty query.
                 Text {
                     Layout.alignment: Qt.AlignVCenter
                     visible: row.modelData.kind === "app"
@@ -568,6 +577,8 @@ ColumnLayout {
                 // pointer would otherwise steal the selection on open.
                 onPositionChanged: row.ListView.view.currentIndex = row.index
                 onClicked: mouse => root.confirm(row.modelData, mouse.modifiers)
+                // Leave wheel and touchpad scrolling to the ListView.
+                onWheel: wheel => wheel.accepted = false
             }
         }
     }

@@ -40,6 +40,12 @@ import "../theme"
 Singleton {
     id: root
 
+    readonly property Binding watchingClients: Binding {
+        target: HyprlandService
+        property: "watchClients"
+        value: root.widgets.some(widget => widget.edge || widget.id === "spectrum")
+    }
+
     // ── FAMILIES ────────────────────────────────────────────────────────────
     //
     // In cells; `sizeFor` converts to pixels.
@@ -189,20 +195,11 @@ Singleton {
     }
 
     // ── BOARD ───────────────────────────────────────────────────────────────
-    //
-    // The desktop surface covers the whole screen and ignores exclusive zones
-    // so drags can cross the bar. The board is the surface minus the bar and
-    // dock reservations; the decks share these insets, and the grid is laid
-    // out as if there were no dock (`wholeGrid`).
-    // One answer for every board: the dock's band is kept clear wherever the
-    // dock could be, not where it happens to be painting (`DockService.zone`),
-    // so nothing on a grid moves because a window went fullscreen or a hand
-    // crossed a screen.
     readonly property var insets: ({
         top: Theme.barReserve,
-        left: DockService.edge === "left" ? DockService.zone : 0,
-        right: DockService.edge === "right" ? DockService.zone : 0,
-        bottom: DockService.edge === "bottom" ? DockService.zone : 0
+        left: 0,
+        right: 0,
+        bottom: 0
     })
 
     // ── SCREENS ─────────────────────────────────────────────────────────────
@@ -292,9 +289,6 @@ Singleton {
         }
     }
 
-    // Laid out over the screen below the bar, dock or no dock, then placed
-    // on the board, which the dock's inset has moved: the dock is drawn over
-    // the widgets, and reserving, hiding or moving it moves none of them.
     function wholeGrid(width: real, height: real): var {
         const grid = root.gridFor(width + root.insets.left + root.insets.right,
             height + root.insets.bottom + root.zenBand)
@@ -305,9 +299,6 @@ Singleton {
         return grid
     }
 
-    // The screen edge a point on the board is against, measured from the
-    // screen's own edge: the grid runs on under a dock's band, so a square
-    // there is not an edge.
     function edgeAt(x: real, y: real, width: real, height: real): string {
         return DeckService.edgeAt(x + root.insets.left, y,
             width + root.insets.left + root.insets.right, height + root.insets.bottom)
@@ -968,12 +959,6 @@ Singleton {
     }
 
     // ── SPECTRUM ────────────────────────────────────────────────────────────
-    //
-    // Sound bars along a whole edge, one per edge. The box runs to the
-    // screen's own edge, past the dock's band, so it is measured from the
-    // board out by the insets: the bottom from corner to corner, a side from
-    // under the bar to the bottom — or to the top of the bottom's bars, which
-    // keep the corner, so the two never cross.
 
     function spectrumBox(name: string, row: var, boardWidth: real, boardHeight: real): var {
         const reach = root.spectrumOf(row).reach
@@ -1072,7 +1057,7 @@ Singleton {
     // workspace that has windows — asked of the workspace the screen is
     // showing, as the edges' deck is. Gone, it does not listen either.
     function spectrumAwayOn(name: string): bool {
-        if (DockService.coveredOn(name))
+        if (HyprlandService.coveredOn(name))
             return true
         if (!SettingsService.spectrumOnEmpty)
             return false

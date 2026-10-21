@@ -73,7 +73,9 @@ Singleton {
         { id: "towerdefence", name: "Tower Defence", icon: "◆", tint: "green",
           width: 780, height: 620, unit: "points", lower: false },
         { id: "slidingpuzzle", name: "Sliding Puzzle", icon: "◆", tint: "yellow",
-          width: 650, height: 640, unit: "points", lower: false }
+          width: 650, height: 640, unit: "points", lower: false },
+        { id: "breakout", name: "Neon Breakout", icon: "▰", tint: "blue",
+          width: 740, height: 620, unit: "points", lower: false }
     ]
 
     function entry(id: string): var {

@@ -1,4 +1,4 @@
-// Spider Solitaire for Impasto, one suit. Original code and vector logo.
+// Spider Solitaire for Shell, one suit. Original code and vector logo.
 import QtQuick
 import Quickshell
 import Quickshell.Io

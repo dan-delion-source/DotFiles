@@ -182,13 +182,21 @@ FocusScope {
                                         source: "./games/puzzle-logo.svg"
                                         sourceSize.width: 68; sourceSize.height: 68
                                     }
+                                    Image {
+                                        anchors.centerIn: parent
+                                        width: 34; height: 34
+                                        visible: card.modelData.id === "breakout"
+                                        source: "./games/breakout-logo.svg"
+                                        sourceSize.width: 68; sourceSize.height: 68
+                                    }
+
 
 
 
 
                                     Text {
                                         anchors.centerIn: parent
-                                        text: ["memorymatch", "bubbleshooter", "towerdefence", "slidingpuzzle"].indexOf(card.modelData.id) >= 0 ? "" : (card.modelData.id === "chess" ? "" : (card.modelData.id === "spider" ? "" : card.modelData.icon))
+                                        text: card.modelData.id === "breakout" ? "" : (["memorymatch", "bubbleshooter", "towerdefence", "slidingpuzzle"].indexOf(card.modelData.id) >= 0 ? "" : (card.modelData.id === "chess" ? "" : (card.modelData.id === "spider" ? "" : card.modelData.icon)))
                                         font.family: Theme.fontMono
                                         font.pixelSize: 22
                                         color: card.tint

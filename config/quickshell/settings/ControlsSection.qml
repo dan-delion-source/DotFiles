@@ -29,7 +29,7 @@ SettingsSection {
 
     SettingGroup {
         title: Tr.t("The panel")
-        note: Tr.t("A grid of the size chosen here, arranged on the panel itself.")
+        note: Tr.t("Network Manager is a top-row button beside Games and Settings. It opens your connection and a speed test that runs only when you press Test. The Network block is also available in Edit.")
         hint: Tr.t("Edit shows the grid, its columns and rows under the island, and a card of every block under them. Drag a block onto the cells, pull a corner or scroll to resize it, and drop it on the card to remove it; a click on a toggles or shortcuts block chooses what it carries. Columns come and go on both sides alike, so the blocks stay centred. Escape leaves, and the right button on the panel enters or leaves without opening settings.")
 
         SettingRow {

@@ -9,6 +9,11 @@
 
 // Greyscale text: subpixel edges assume an opaque ground and fringe on a
 // transparent surface.
+//@ pragma ShellId danshell
+//@ pragma AppId org.danshell
+//@ pragma StateDir $BASE/danshell
+//@ pragma DataDir $BASE/danshell
+//@ pragma CacheDir $BASE/danshell
 //@ pragma Env QSG_DISTANCEFIELD_ANTIALIASING=gray
 
 import QtQuick
@@ -19,7 +24,6 @@ import Quickshell.Io
 import "./bar"
 import "./capture"
 import "./desktop"
-import "./dock"
 import "./lock"
 import "./services"
 import "./settings"
@@ -255,22 +259,6 @@ ShellRoot {
         }
     }
 
-    // A dock on every screen, each drawn or not by `dockEverywhere` and
-    // which screen is live.
-    Variants {
-        model: Quickshell.screens
-
-        Dock {
-            required property var modelData
-
-            screen: modelData
-            live: modelData.name === root.liveScreenName
-
-            // The dock cannot see the island, so it asks.
-            onLauncherRequested: root.togglePanel("launcher")
-        }
-    }
-
     // Notes docked on the screen edges, on every screen, for the desktop's
     // reason. A deck is a row like a widget and carries its screen too.
     Variants {
@@ -345,6 +333,7 @@ ShellRoot {
     // Global shortcuts: keybinds.lua binds a key to the name, and the action
     // lives here, so a new panel needs no compositor config.
     GlobalShortcut {
+        appid: "danshell"
         name: "launcher"
         description: "Open the island launcher"
         onPressed: root.togglePanel("launcher")
@@ -358,6 +347,7 @@ ShellRoot {
     // same file as `hl.monitor()` calls is also silently not registered, and
     // a runtime monitor rule does not survive a reload.
     GlobalShortcut {
+        appid: "danshell"
         name: "lidClosed"
         description: "The laptop lid was closed"
         onPressed: MonitorService.lid(true)
@@ -366,6 +356,7 @@ ShellRoot {
     // Opening the lid is somebody sitting down: it wakes the lock, which
     // looks for them.
     GlobalShortcut {
+        appid: "danshell"
         name: "lidOpened"
         description: "The laptop lid was opened"
         onPressed: {
@@ -375,6 +366,7 @@ ShellRoot {
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "controls"
         description: "Open the island quick controls"
         onPressed: root.togglePanel("controls")
@@ -383,36 +375,42 @@ ShellRoot {
     // The brightness keys act on the focused screen, which only the shell
     // knows how to dim. A held key repeats the press.
     GlobalShortcut {
+        appid: "danshell"
         name: "brightnessUp"
         description: "Raise the focused screen's brightness"
         onPressed: BrightnessService.step(5)
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "brightnessDown"
         description: "Lower the focused screen's brightness"
         onPressed: BrightnessService.step(-5)
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "overview"
         description: "Open the workspace overview"
         onPressed: root.togglePanel("overview")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "stats"
         description: "Open the system statistics"
         onPressed: root.togglePanel("stats")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "session"
         description: "Open the session menu"
         onPressed: root.togglePanel("session")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "lock"
         description: "Lock the screen"
         onPressed: LockService.lock()
@@ -427,12 +425,14 @@ ShellRoot {
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "settings"
         description: "Open the settings window"
         onPressed: root.toggleSettings()
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "appearance"
         description: "Open the island appearance panel"
         onPressed: root.togglePanel("appearance")
@@ -441,54 +441,63 @@ ShellRoot {
     // Same panel, on the palette strip. Each name only closes from its own
     // strip.
     GlobalShortcut {
+        appid: "danshell"
         name: "palette"
         description: "Open the island appearance panel on the palettes"
         onPressed: root.togglePanel("palette")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "pet"
         description: "Open the pet"
         onPressed: root.togglePanel("pet")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "games"
         description: "Open the games"
         onPressed: root.togglePanel("games")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "notes"
         description: "Open the notes"
         onPressed: root.togglePanel("notes")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "board"
         description: "Open the task board"
         onPressed: root.togglePanel("board")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "keys"
         description: "Show every key"
         onPressed: root.togglePanel("keys")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "zen"
         description: "Hide or show the bar"
         onPressed: SettingsService.set("barHidden", !SettingsService.barHidden)
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "widgets"
         description: "Hide or show the desktop widgets"
         onPressed: SettingsService.set("desktopHidden", !SettingsService.desktopHidden)
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "packages"
         description: "Open the packages"
         onPressed: root.togglePanel("packages")
@@ -510,12 +519,14 @@ ShellRoot {
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "clipboard"
         description: "Open the launcher on the clipboard"
         onPressed: root.openLauncherOn("clipboard")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "emoji"
         description: "Open the launcher on the emoji"
         onPressed: root.openLauncherOn("emoji")
@@ -524,6 +535,7 @@ ShellRoot {
     // hyprpicker freezes a screenshot of the screen, so an open panel has to
     // finish closing before it starts.
     GlobalShortcut {
+        appid: "danshell"
         name: "picker"
         description: "Pick a colour off the screen"
         onPressed: {
@@ -543,42 +555,49 @@ ShellRoot {
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "capture"
         description: "Open the capture surface"
         onPressed: CaptureService.open("", "", "", 0)
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "captureRegion"
         description: "Capture a region"
         onPressed: root.capture("region", "file")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "captureWindow"
         description: "Capture a window"
         onPressed: root.capture("window", "file")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "captureScreen"
         description: "Capture the whole screen"
         onPressed: root.capture("screen", "file")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "captureEdit"
         description: "Capture a region and annotate it"
         onPressed: root.capture("region", "editor")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "captureText"
         description: "Read a region as text"
         onPressed: root.capture("region", "text")
     }
 
     GlobalShortcut {
+        appid: "danshell"
         name: "record"
         description: "Start or stop recording the screen"
         onPressed: {
@@ -616,13 +635,13 @@ ShellRoot {
     // Every palette push hangs off WallpaperService.applied, which only fires
     // inside this process. External callers (Thunar's "Set as Wallpaper")
     // come in here instead of running theme_manager.py directly:
-    //   qs ipc call wallpaper set <path>
+    //   qs ipc --path /path/to/this/quickshell call wallpaper set <path>
     IpcHandler {
         target: "wallpaper"
 
         function set(path: string): string {
             if (!path)
-                return "usage: qs ipc call wallpaper set <path>"
+                return "usage: qs ipc --path /path/to/this/quickshell call wallpaper set <path>"
             WallpaperService.apply(path)
             return path
         }
@@ -631,7 +650,7 @@ ShellRoot {
     // `./setup sync` calls this once every file has landed. The reload the
     // shell starts on its own when a file changes can begin before the last
     // one is written, and then never sees it:
-    //   qs ipc call shell reload
+    //   qs ipc --path /path/to/this/quickshell call shell reload
     // The same two switches as the keys, for anything else to bind.
     IpcHandler {
         target: "bar"

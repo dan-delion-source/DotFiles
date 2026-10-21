@@ -143,7 +143,7 @@ def repositories(term, into):
 
 
 def fetch(url):
-    request = urllib.request.Request(url, headers={"User-Agent": "impasto"})
+    request = urllib.request.Request(url, headers={"User-Agent": "danshell"})
     with urllib.request.urlopen(request, timeout=AUR_TIMEOUT) as response:
         return json.load(response)
 

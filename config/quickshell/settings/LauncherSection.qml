@@ -36,11 +36,25 @@ SettingsSection {
     SettingGroup {
         visible: root.tab === "results"
         title: Tr.t("The list")
-        note: Tr.t("What the launcher lists with nothing typed, and how tall it gets.")
-        hint: Tr.t("By use ranks applications by launches, with older launches counting for less; those kept on the dock come first until something else is used more. As tall as the answer sizes the island to the results, up to the limit above; off, the box is fixed and the list scrolls.")
+        note: Tr.t("Choose whether to browse every installed application or a short ranked list.")
+        hint: Tr.t("List all apps shows every launchable application alphabetically and lets you scroll. With it off, By use ranks applications by launches, with older launches counting for less; favorites come first until something else is used more. As tall as the answer sizes the island to the visible rows; off, the box is fixed and the list scrolls.")
+
+        SettingRow {
+            label: Tr.t("List all apps")
+            reading: SettingsService.launcherListAll
+                ? Tr.t("All launchable apps · A–Z")
+                : Tr.t("Short list · chosen order")
+
+            ToggleSwitch {
+                checked: SettingsService.launcherListAll
+                onToggled: checked => SettingsService.set("launcherListAll", checked)
+            }
+        }
 
         SettingRow {
             label: Tr.t("Order")
+            locked: SettingsService.launcherListAll
+            reason: Tr.t("Used when List all apps is off")
 
             SegmentedControl {
                 options: [
@@ -53,7 +67,7 @@ SettingsSection {
         }
 
         SettingSlider {
-            label: Tr.t("Results shown")
+            label: SettingsService.launcherListAll ? Tr.t("Visible rows") : Tr.t("Results shown")
             value: SettingsService.launcherResults
             from: 4
             to: 14
@@ -171,11 +185,10 @@ SettingsSection {
 
     }
 
-    // The dock's kept list, editable here as well because it leads this one.
     SettingGroup {
         visible: root.tab === "results"
         title: Tr.t("Kept applications")
-        note: Tr.t("They lead the list, and the dock keeps them too.")
+        note: Tr.t("Manage your favorite applications.")
 
         KeptApplications {}
     }
