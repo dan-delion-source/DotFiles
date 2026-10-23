@@ -1,26 +1,6 @@
+# QuickShell invokes Matugen with --dry-run --json hex and maps Material
+# colours to its UI tokens. The shared theme backend publishes application
+# themes for both Matugen and presets; no duplicate output hooks run here.
 [config]
 
-[templates.noctalia]
-input_path = "~/.config/matugen/templates/noctalia-palette.json"
-output_path = "~/.config/noctalia/palettes/Matugen.json"
-
-[templates.hypr]
-input_path = "~/.config/matugen/templates/hypr-colors.lua"
-output_path = "~/.config/hypr/colors.lua"
-
-[templates.kitty]
-input_path = "~/.config/matugen/templates/kitty-colors.conf"
-output_path = "~/.config/kitty/themes/matugen.conf"
-post_hook = "kitty @ set-colors --all --configured ~/.config/kitty/themes/matugen.conf 2>/dev/null || true"
-
-[templates.alacritty]
-input_path = "~/.config/matugen/templates/alacritty-colors.toml"
-output_path = "~/.config/alacritty/themes/matugen.toml"
-
-[templates.gtk3]
-input_path = "~/.config/matugen/templates/gtk.css"
-output_path = "~/.config/gtk-3.0/gtk.css"
-
-[templates.gtk4]
-input_path = "~/.config/matugen/templates/gtk.css"
-output_path = "~/.config/gtk-4.0/gtk.css"
+[templates]

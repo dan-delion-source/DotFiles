@@ -28,7 +28,7 @@ ColumnLayout {
 
     DetailHeading {
         title: Tr.t("Sound")
-        detail: AudioService.ready ? AudioService.outputName(AudioService.sink) : ""
+        detail: AudioService.ready ? AudioService.outputName(AudioService.sink) : Tr.t("No audio output available")
         onBack: root.back()
     }
 

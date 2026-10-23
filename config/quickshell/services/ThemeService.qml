@@ -23,12 +23,13 @@ QtObject {
 
     property string activeId: "adaptive"
     property var dynamicColors: null
+    property string error: ""
 
     // The adaptive entry has no static colours: they come from the wallpaper.
     readonly property var adaptiveTheme: ({
         id: "adaptive",
-        name: "Adaptive (Wallpaper)",
-        badge: "From Wallpaper",
+        name: "Matugen (Wallpaper)",
+        badge: "Matugen",
         adaptive: true,
         colors: null
     })
@@ -59,6 +60,10 @@ QtObject {
 
     readonly property Process extractProcess: Process {
         command: [root.script, "extract-colors"]
+        onStarted: root.error = ""
+        stderr: StdioCollector {
+            onStreamFinished: root.error = text.trim()
+        }
         stdout: StdioCollector {
             onStreamFinished: {
                 const colors = root.parseJson(text, "wallpaper colours")

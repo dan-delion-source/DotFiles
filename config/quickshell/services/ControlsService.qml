@@ -249,6 +249,7 @@ Singleton {
             key: "wifi"; icon: NetworkService.icon; label: "Wi-Fi"
             detail: NetworkService.connectionName
             active: NetworkService.wifiEnabled
+            available: NetworkService.wifiAvailable
             expandable: true; panel: "networkManager"
             action: () => NetworkService.toggleWifi()
         },
@@ -263,9 +264,9 @@ Singleton {
         },
         Toggle {
             key: "power"; icon: "󰓅"; label: "Power"
-            detail: SystemService.powerProfile || "Unknown"
+            detail: SystemService.powerProfile || "Power profiles unavailable"
             active: SystemService.performanceMode
-            available: SystemService.ready
+            available: SystemService.ready && SystemService.powerProfile !== ""
             action: () => SystemService.toggle("power-profile")
         },
         Toggle {
@@ -276,7 +277,7 @@ Singleton {
         },
         Toggle {
             key: "microphone"; icon: AudioService.sourceIcon; label: "Microphone"
-            detail: AudioService.sourceMuted ? "Muted" : "Live"
+            detail: !AudioService.sourceReady ? "No microphone" : AudioService.sourceMuted ? "Muted" : "Live"
             active: !AudioService.sourceMuted
             available: AudioService.sourceReady
             expandable: AudioService.sourceReady; panel: "microphone"
@@ -286,6 +287,7 @@ Singleton {
             key: "airplane"; icon: root.airborne ? "󰀝" : "󰀞"; label: "Airplane"
             detail: root.airborne ? "Radios off" : "Radios on"
             active: root.airborne
+            available: NetworkService.wifiAvailable || BluetoothService.available
             action: () => {
                 const turnOn = root.airborne
                 OsdService.suppressAudio()
@@ -304,7 +306,7 @@ Singleton {
         },
         Toggle {
             key: "output"; icon: AudioService.icon; label: "Output"
-            detail: AudioService.muted ? "Muted" : `${AudioService.volume}%`
+            detail: !AudioService.ready ? "No audio output" : AudioService.muted ? "Muted" : `${AudioService.volume}%`
             active: !AudioService.muted
             available: AudioService.ready
             action: () => AudioService.toggleMute()

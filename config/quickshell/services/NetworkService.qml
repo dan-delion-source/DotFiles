@@ -29,6 +29,9 @@ Singleton {
     readonly property NetworkDevice wiredDevice:
         root.devices.find(device => device.type === DeviceType.Ethernet) ?? null
 
+    readonly property bool available: root.wifiDevice !== null || root.wiredDevice !== null
+    readonly property bool wifiAvailable: root.wifiDevice !== null
+
     readonly property bool wifiEnabled: root.radioOn
     readonly property bool wifiConnected: root.wifiDevice !== null && root.wifiDevice.connected
     readonly property bool wiredConnected: root.wiredDevice !== null && root.wiredDevice.connected
@@ -45,6 +48,8 @@ Singleton {
             if (active)
                 return active.name
         }
+        if (!root.wifiAvailable)
+            return "No Wi-Fi adapter"
         if (!root.radioOn)
             return "Off"
         return root.wifiDevice ? "Not connected" : "Unavailable"

@@ -68,7 +68,7 @@ Item {
         ModuleCard {
             title: "Sound"
             subtitle: AudioService.ready ? AudioService.outputName(AudioService.sink) : "No output"
-            figure: AudioService.muted ? "Muted" : `${AudioService.volume}%`
+            figure: !AudioService.ready ? "—" : AudioService.muted ? "Muted" : `${AudioService.volume}%`
             figureColor: AudioService.muted ? Theme.textMuted : Theme.text
 
             mark: RingIndicator {

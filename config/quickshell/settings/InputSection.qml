@@ -116,7 +116,7 @@ SettingsSection {
         SettingGroup {
             title: Tr.t("The cursor")
             note: Tr.t("One vector shape, sharp at any size — Palette follows the wallpaper.")
-            hint: Tr.t("Colour and size are applied with hyprctl setcursor, so every application updates at once and Palette follows wallpaper changes. Shake to find briefly enlarges the pointer when you shake the mouse; it needs the hypr-dynamic-cursors plugin (./setup plugins).")
+            hint: Tr.t("Colour and size are applied with hyprctl setcursor, so every application updates at once and Palette follows wallpaper changes. Shake to find briefly enlarges the pointer when you shake the mouse; it needs the hypr-dynamic-cursors plugin, installed separately.")
 
             // Swatches, wrapping, rather than tiles; the chosen one is ringed.
             SettingTiles {
@@ -205,7 +205,7 @@ SettingsSection {
             SettingRow {
                 label: Tr.t("Shake to find")
                 locked: !CompositorService.shakeAvailable
-                reason: Tr.t("Needs the cursor plugin — run ./setup plugins")
+                reason: Tr.t("Needs the optional hypr-dynamic-cursors plugin")
 
                 ToggleSwitch {
                     checked: SettingsService.shakeToFind

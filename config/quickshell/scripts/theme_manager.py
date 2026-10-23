@@ -30,10 +30,12 @@ import shutil
 import subprocess
 import sys
 import textwrap
+import tempfile
 from xml.sax.saxutils import escape
 
 # Sibling module with the greeting's pixel-art scenes.
 import greeting
+import palette as matugen_palette
 
 XDG_CONFIG_HOME = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
 XDG_DATA_HOME = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
@@ -464,7 +466,9 @@ def get_current_wallpaper():
                 return match.group(1)
         except (OSError, subprocess.SubprocessError):
             pass
-    return ""
+    # Fresh machines get the first bundled image; a user selection overrides it.
+    wallpapers = list_wallpapers()
+    return wallpapers[0]["path"] if wallpapers else ""
 
 
 def list_wallpapers():
@@ -702,11 +706,26 @@ def build_terminal_palette(colors):
     return "\n".join(lines) + "\n"
 
 
+def expose_kitty_fragment(fragment, name):
+    """Expose the XDG state fragment beside Kitty's config without hardcoded HOME."""
+    directory = os.path.join(XDG_CONFIG_HOME, "kitty")
+    os.makedirs(directory, exist_ok=True)
+    link = os.path.join(directory, name)
+    if os.path.islink(link):
+        if os.readlink(link) == fragment:
+            return
+        os.unlink(link)
+    if not os.path.exists(link):
+        os.symlink(fragment, link)
+
+
 def push_terminal_palette(colors):
     """Write the fragment, then repaint whatever is already open."""
     ensure_state_dir()
     with open(TERMINAL_PALETTE_FILE, "w", encoding="utf-8") as handle:
         handle.write(build_terminal_palette(colors))
+
+    expose_kitty_fragment(TERMINAL_PALETTE_FILE, "danshell-colors.conf")
 
     kitten = shutil.which("kitten")
     if not kitten:
@@ -3847,6 +3866,8 @@ def push_terminal_font(family):
 
     update_vscodium_settings(vscodium_font_settings(family))
 
+    expose_kitty_fragment(TERMINAL_FONT_FILE, "danshell-font.conf")
+
     kitten = shutil.which("kitten")
     if not kitten:
         sys.stderr.write("kitten not found; the font applies to new terminals only\n")
@@ -3862,87 +3883,34 @@ def push_terminal_font(family):
                              f"{result.stderr.strip()}\n")
 
 
-def saturation(red, green, blue):
-    highest = max(red, green, blue)
-    return 0 if highest == 0 else (highest - min(red, green, blue)) / highest
-
-
-def sample_colors(image_path):
-    """Quantize the image down to a handful of representative colors."""
-    magick = shutil.which("magick") or shutil.which("convert")
-    if not magick:
-        return []
-    command = [magick, image_path, "-resize", "120x120", "-colors", "24", "-unique-colors", "txt:-"]
-    try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=20)
-    except (OSError, subprocess.SubprocessError) as error:
-        sys.stderr.write(f"Color extraction failed: {error}\n")
-        return []
-    return re.findall(r"#[0-9A-Fa-f]{6}", result.stdout)
-
-
-def pick_accent(swatches):
-    """Prefer a saturated mid-tone; those read as an accent at small sizes."""
-    if not swatches:
-        return NEUTRAL_ACCENT
-
-    candidates = []
-    for value in swatches:
-        red, green, blue = hex_to_rgb(value)
-        candidates.append({
-            "hex": value.upper(),
-            "r": red, "g": green, "b": blue,
-            "lum": luminance(red, green, blue),
-            "sat": saturation(red, green, blue),
-        })
-
-    vibrant = [c for c in candidates if c["sat"] > 0.2 and 0.2 < c["lum"] < 0.85]
-    if vibrant:
-        return max(vibrant, key=lambda c: c["sat"] * 2.0 + (1.0 - abs(c["lum"] - 0.55)))
-
-    colorful = [c for c in candidates if c["sat"] > 0.1]
-    return max(colorful, key=lambda c: c["sat"]) if colorful else NEUTRAL_ACCENT
-
-
 def build_palette(image_path):
-    """Derive a full UI palette from the wallpaper's dominant accent."""
-    accent = pick_accent(sample_colors(image_path))
-    red, green, blue = accent["r"], accent["g"], accent["b"]
-
-    # Surfaces are near-black, tinted just enough to feel related to the accent.
-    background = (17 + red * 0.04, 19 + green * 0.04, 24 + blue * 0.05)
-    surface = tuple(channel + 14 for channel in background)
-    surface_hover = (surface[0] + 16, surface[1] + 16, surface[2] + 18)
-    border = (surface_hover[0] + 16, surface_hover[1] + 16, surface_hover[2] + 20)
-
-    return {
-        "background": rgb_to_hex(*background),
-        "surface": rgb_to_hex(*surface),
-        "surfaceHover": rgb_to_hex(*surface_hover),
-        "border": rgb_to_hex(*border),
-        "text": "#eef2f7",
-        "textMuted": "#94a1b2",
-        "accent": accent["hex"],
-        "accentHover": rgb_to_hex(red * 1.15 + 15, green * 1.15 + 15, blue * 1.15 + 15),
-        "accentText": "#11111b" if luminance(red, green, blue) > 0.45 else "#ffffff",
-        "red": "#f38ba8",
-        "green": "#a6e3a1",
-        "yellow": "#f9e2af",
-        "blue": "#89b4fa",
-    }
+    """Generate wallpaper colours with Matugen, without running template hooks."""
+    return matugen_palette.generate(image_path)
 
 
 def extract_colors(image_path):
-    if not image_path or not os.path.isfile(image_path):
-        return None
-    palette = build_palette(image_path)
-    ensure_state_dir()
     try:
-        with open(DYNAMIC_COLORS_FILE, "w", encoding="utf-8") as handle:
+        if not image_path or not os.path.isfile(image_path):
+            raise ValueError("Select an existing wallpaper to generate colours")
+        palette = build_palette(image_path)
+        ensure_state_dir()
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=STATE_DIR,
+                                         prefix="palette-", delete=False) as handle:
+            temporary = handle.name
             json.dump(palette, handle, indent=2)
-    except OSError as error:
-        sys.stderr.write(f"Cannot save dynamic colors: {error}\n")
-    return palette
+        try:
+            os.replace(temporary, DYNAMIC_COLORS_FILE)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        return palette
+    except (OSError, ValueError, subprocess.SubprocessError) as error:
+        sys.stderr.write(f"Matugen: {error}. Check Matugen with install.sh check, then reselect the wallpaper.\n")
+        try:
+            with open(DYNAMIC_COLORS_FILE, encoding="utf-8") as handle:
+                return matugen_palette.validate(json.load(handle))
+        except (OSError, ValueError, TypeError):
+            return None
 
 
 def link_current_wallpaper(image_path):
@@ -4024,7 +3992,7 @@ def restore_wallpaper():
     if result.returncode != 0:
         return 3
 
-    # ": eDP-1: 1920x1200, scale: 1, currently displaying: image: /path"
+    # Example daemon output: ": DP-2: 1920x1200, scale: 1, currently displaying: image: /path"
     blank = []
     for line in result.stdout.splitlines():
         found = re.match(r"\s*:\s*([^:]+):", line)

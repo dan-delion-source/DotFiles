@@ -1,1 +1,5 @@
 INSPO/
+__pycache__/
+*.py[cod]
+*-backups/
+.pytest_cache/

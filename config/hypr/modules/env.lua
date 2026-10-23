@@ -10,12 +10,8 @@
 hl.env("XCURSOR_SIZE",    "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
--- · cursor theme: a vector hyprcursor so shake-to-find (input.lua) magnifies
--- · it cleanly. The shell rebuilds it in the chosen colour; Bibata is the
--- · XCursor fallback. `./setup cursors` fetches both.
--- Reuse the installed seed until the shell builds its own cursor theme.
-hl.env("HYPRCURSOR_THEME", "impasto-cursor")
-hl.env("XCURSOR_THEME",    "Bibata-Modern-Classic")
+-- Portable XCursor fallback; optional generated cursors are selected in settings.
+hl.env("XCURSOR_THEME",    "Adwaita")
 
 -- · Qt platform theme; the palette push writes qt6ct's colour scheme.
 -- · Quickshell draws from its own Theme.qml and is unaffected.

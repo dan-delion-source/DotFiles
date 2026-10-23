@@ -9,6 +9,7 @@
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 
 import "../theme"
 
@@ -17,7 +18,8 @@ import "../theme"
 //
 // It is an xdg-shell toplevel, not a layer surface: Hyprland moves, resizes,
 // focuses and closes it like any other window, and draws its rounding and
-// shadow. `windowrules.lua` floats and sizes it, matched on the title.
+// shadow. `windowrules.lua` floats it when that Hyprland config is loaded;
+// the scoped helper covers sessions using another Hyprland config.
 FloatingWindow {
     id: root
 
@@ -44,6 +46,13 @@ FloatingWindow {
     onVisibleChanged: {
         if (!root.visible && root.shown)
             root.shown = false
+        if (root.visible && !floatProcess.running)
+            floatProcess.running = true
+    }
+
+    Process {
+        id: floatProcess
+        command: [Quickshell.shellPath("scripts/float_settings.py")]
     }
 
     // Built on open and destroyed on close, so pages query state when created

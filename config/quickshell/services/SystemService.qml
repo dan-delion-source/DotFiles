@@ -65,11 +65,9 @@ Singleton {
             return
         }
 
-        // A null field means the tool behind it is missing; keep the last
-        // known value rather than snapping the control to a wrong one.
-        if (state.wifi !== null) root.wifi = state.wifi
-        if (state.bluetooth !== null) root.bluetooth = state.bluetooth
-        if (state.powerProfile) root.powerProfile = state.powerProfile
+        root.wifi = state.wifi === true
+        root.bluetooth = state.bluetooth === true
+        root.powerProfile = state.powerProfile || ""
         root.ready = true
     }
 

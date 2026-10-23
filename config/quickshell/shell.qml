@@ -75,13 +75,9 @@ ShellRoot {
     // a new one; Variants destroys and rebuilds the window with the list,
     // which does.
 
-    // The visible bar stays on the laptop. On unplug, use an available screen.
-    readonly property string barScreenName: {
-        for (const screen of Quickshell.screens)
-            if (screen.name === "eDP-1")
-                return screen.name
-        return MonitorService.effectivePrimaryName
-    }
+    // Follow the primary selected in Settings → Monitors; hotplug falls back
+    // to an available display without assuming a connector or laptop panel.
+    readonly property string barScreenName: MonitorService.effectivePrimaryName
 
     // The live island is free to open on any screen. Open panels retain their
     // host until closed; the fixed bar remains visible on its own screen.

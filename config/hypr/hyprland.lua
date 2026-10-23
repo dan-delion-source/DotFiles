@@ -14,7 +14,6 @@
 -- require in its own scope: an error in one module will not break the rest.
 
 require("modules.monitors")
-require("config.workspaces")
 require("modules.autostart")
 require("modules.env")
 require("modules.look")

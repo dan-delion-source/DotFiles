@@ -64,7 +64,7 @@ SettingsSection {
         // this row only opens it.
         SettingGroup {
             title: Tr.t("Theme")
-            note: Tr.t("The palette follows the wallpaper, and both are chosen in the island.")
+            note: Tr.t("Choose Matugen wallpaper colours or a preset palette in the island.")
             hint: Tr.t("This opens the island's appearance panel, where wallpapers and palettes are chosen together.")
 
             SettingRow {
@@ -80,6 +80,17 @@ SettingsSection {
                     onClicked: root.panelRequested("appearance")
                 }
             }
+        }
+
+        Text {
+            Layout.fillWidth: true
+            visible: ThemeService.error !== ""
+            text: ThemeService.error
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.fontSizeSmall
+            color: Theme.red
         }
 
         // Each tile loops its awww transition in miniature.
@@ -269,7 +280,7 @@ SettingsSection {
             SettingRow {
                 label: Tr.t("Glass")
                 locked: !CompositorService.glassAvailable
-                reason: Tr.t("Needs the glass plugin — run ./setup plugins")
+                reason: Tr.t("Needs the optional hyprglass plugin")
 
                 ToggleSwitch {
                     checked: SettingsService.windowGlass

@@ -51,10 +51,10 @@ Item {
             title: "Battery"
             // The estimate is blank for a minute or two after the cable
             // changes, so the state stands on its own until it arrives.
-            subtitle: BatteryService.estimate !== ""
+            subtitle: !BatteryService.available ? "No battery detected" : BatteryService.estimate !== ""
                 ? `${BatteryService.stateWord} · ${BatteryService.estimate}`
                 : BatteryService.stateWord
-            figure: `${BatteryService.percent}%`
+            figure: BatteryService.available ? `${BatteryService.percent}%` : "—"
             figureColor: ModuleService.tintOf("battery")
 
             mark: BatteryWidget {

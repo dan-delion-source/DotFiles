@@ -67,10 +67,10 @@ Item {
 
         ModuleCard {
             title: "Brightness"
-            subtitle: BrightnessService.several
+            subtitle: !BrightnessService.available ? "Brightness control unavailable" : BrightnessService.several
                 ? `${BrightnessService.dimmable.length} screens`
                 : "One screen"
-            figure: `${BrightnessService.percent}%`
+            figure: BrightnessService.available ? `${BrightnessService.percent}%` : "—"
 
             Component.onCompleted: BrightnessService.refresh()
 

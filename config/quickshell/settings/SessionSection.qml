@@ -158,7 +158,7 @@ SettingsSection {
                             if (AccountService.avatar === "")
                                 return Tr.t("Click it, or drop an image here")
                             if (SettingsService.userAvatar !== "" || !AccountService.shared)
-                                return Tr.t("The lock screen only, until ./setup system")
+                                return Tr.t("Lock screen only; shared avatar helper is unavailable")
                             return Tr.t("On the lock and login screens")
                         }
                         alarm: AccountService.failedKind === "picture"

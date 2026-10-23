@@ -21,7 +21,7 @@ QtObject {
     // ── ACTIVE THEME ────────────────────────────────────────────────────────
 
     property string activeId: "adaptive"
-    property string activeName: "Adaptive (Wallpaper)"
+    property string activeName: "Matugen (Wallpaper)"
 
     // ── ISLAND ──────────────────────────────────────────────────────────────
 

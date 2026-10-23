@@ -141,6 +141,17 @@ FocusScope {
         anchors.fill: parent
         spacing: root.gap
 
+        Text {
+            Layout.fillWidth: true
+            visible: ThemeService.error !== ""
+            text: ThemeService.error
+            textFormat: Text.PlainText
+            wrapMode: Text.Wrap
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.fontSizeSmall
+            color: Theme.red
+        }
+
         // ── STRIPS ──────────────────────────────────────────────────────────
 
         // All three live here, each parked a strip's height per page away
