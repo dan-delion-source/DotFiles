@@ -8,6 +8,7 @@
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
 import QtQuick
+import QtQuick.Controls as QQC
 
 import Quickshell
 import "../../theme"
@@ -15,6 +16,7 @@ import "../../services"
 import "../island"
 import "../modules"
 import "../../components"
+import "../BarGeometry.js" as Geometry
 
 // One capsule that changes shape to fit whatever it shows. IslandState picks
 // the layer, this sizes the capsule for it, and a Loader swaps the contents;
@@ -55,11 +57,12 @@ Rectangle {
     // Solid, a floating island at rest is a shade off the black; on glass it
     // is the capsules' ground, since a lighter veil reads as another material.
     readonly property color surfaceColor: {
+        if (root.blackBand && !root.expanded) return "#000000"
         if (!Theme.solid)
             return root.lit ? Theme.islandGroundLit : Theme.islandGround
         if (root.lit)
             return Theme.islandSurfaceHover
-        return SettingsService.islandAttached ? Theme.islandGround : Theme.islandSurface
+        return root.attached ? Theme.islandGround : Theme.islandSurface
     }
 
     // ── HOSTED ──────────────────────────────────────────────────────────────
@@ -69,6 +72,9 @@ Rectangle {
     // once it shows more than the clock, the band morphs into it
     // (`Bar.islandTaken`).
     property bool hosted: false
+    property bool blackBand: false
+    property bool attached: SettingsService.islandAttached
+    property real maximumHeight: 100000
 
     // Width left between the bar's ends (`Bar.panelRoom`). Unconstrained by
     // default, so an island without a bar gets the size it asks for.
@@ -101,8 +107,8 @@ Rectangle {
         pet:        { width: 560,  height: 205 + 62 * PetService.family.length },
         // The shelf of cards, or the game being played at its own size.
         games:      GamesService.playing !== ""
-            ? GamesService.panelSize(GamesService.playing)
-            : { width: GamesService.shelfWidth, height: GamesService.shelfHeight },
+            ? Geometry.gameFrameSize(SettingsService.barPosition, GamesService.panelSize(GamesService.playing))
+            : Geometry.pickerSize(SettingsService.barPosition),
         // Declared by their services, which the panels read back for layout.
         notes:      { width: NotesService.panelWidth, height: NotesService.panelHeight },
         board:      { width: TasksService.panelWidth, height: TasksService.panelHeight },
@@ -116,8 +122,8 @@ Rectangle {
     })
 
     // One panel under two names (its two strips), so switching between them
-    // slides instead of rebuilding. Fits five strip tiles and the large one.
-    readonly property var appearanceSize: ({ width: 940, height: 196 })
+    // slides instead of rebuilding. Side bars use a portrait picker.
+    readonly property var appearanceSize: Geometry.pickerSize(SettingsService.barPosition)
 
     // A module's detail, sized from the catalogue.
     readonly property var moduleSize: ModuleService.openSize(ModuleService.openId)
@@ -143,7 +149,10 @@ Rectangle {
         panel:        { width: root.panelWidth, height: root.panelHeight, padding: Theme.panelPadding }
     })
 
-    readonly property var size: root.layerSizes[islandState.layer] ?? root.layerSizes.modules
+    readonly property var naturalSize: root.layerSizes[islandState.layer] ?? root.layerSizes.modules
+    readonly property var size: ({ width: Math.min(root.naturalSize.width, root.roomForPanel),
+        height: Math.min(root.naturalSize.height, Math.max(1, root.maximumHeight - root.notchPad)),
+        padding: root.naturalSize.padding })
 
     // Off for the first frame so the island does not animate in from nothing
     // at startup.
@@ -151,7 +160,7 @@ Rectangle {
 
     // Attached, only the shape reaches up to the screen edge; the contents keep
     // their padding, so nothing already drawn moves.
-    readonly property int notchPad: SettingsService.islandAttached ? Theme.barTopMargin : 0
+    readonly property int notchPad: root.attached ? Theme.barTopMargin : 0
 
     readonly property var layerComponents: ({
         modules: restLayer,
@@ -204,8 +213,8 @@ Rectangle {
     // Under everything the island holds; a note's paper is not glass.
     GlassSheen {
         shape: root
-        visible: Theme.glass && !root.paper && !root.hosted
-        edges: !SettingsService.islandAttached
+        visible: Theme.glass && !root.paper && !root.hosted && !(root.blackBand && !root.expanded)
+        edges: !root.attached
     }
 
     IslandState {
@@ -349,13 +358,13 @@ Rectangle {
     // edge. `Bar.qml` draws the outline over both. Attached, `Bar.qml` draws
     // it too, down the fillets and open along the screen edge.
     readonly property bool inBand: root.hosted
-    border.width: root.paper || root.inBand || SettingsService.islandAttached ? 0 : 1
+    border.width: root.paper || root.inBand || root.attached || (root.blackBand && !root.expanded) ? 0 : 1
     clip: true
 
     // Attached, the upper corners go square: the curve is added outside the
     // island by NotchFillet, flaring away from it rather than cutting into it.
-    topLeftRadius: SettingsService.islandAttached ? 0 : root.radius
-    topRightRadius: SettingsService.islandAttached ? 0 : root.radius
+    topLeftRadius: root.attached ? 0 : root.radius
+    topRightRadius: root.attached ? 0 : root.radius
 
     Behavior on topLeftRadius {
         enabled: root.animated
@@ -464,21 +473,32 @@ Rectangle {
 
         Keys.onEscapePressed: root.close()
 
-        Loader {
-            id: panelLoader
-
+        Flickable {
+            id: panelViewport
             anchors.fill: parent
             anchors.topMargin: root.panelPad + root.notchPad
             anchors.leftMargin: root.panelPad
             anchors.rightMargin: root.panelPad
             anchors.bottomMargin: root.panelPad
-            active: islandState.expanded
-            sourceComponent: root.panelComponents[islandState.openPanel] ?? controlsPanel
-            opacity: islandState.expanded ? 1 : 0
-
-            Behavior on opacity {
-                enabled: root.animated
-                NumberAnimation { duration: Theme.durationMedium; easing.type: Theme.easing }
+            clip: true
+            // Keep fixed-size games and grids usable on small displays.
+            contentWidth: Math.max(width, root.panelSize.width - 2 * root.panelPad)
+            contentHeight: Math.max(height, root.panelSize.height - 2 * root.panelPad)
+            boundsBehavior: Flickable.StopAtBounds
+            acceptedButtons: Qt.NoButton
+            QQC.ScrollBar.vertical: QQC.ScrollBar {}
+            QQC.ScrollBar.horizontal: QQC.ScrollBar {}
+            Loader {
+                id: panelLoader
+                width: panelViewport.contentWidth
+                height: panelViewport.contentHeight
+                active: islandState.expanded
+                sourceComponent: root.panelComponents[islandState.openPanel] ?? controlsPanel
+                opacity: islandState.expanded ? 1 : 0
+                Behavior on opacity {
+                    enabled: root.animated
+                    NumberAnimation { duration: Theme.durationMedium; easing.type: Theme.easing }
+                }
             }
         }
     }

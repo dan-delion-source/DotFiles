@@ -43,6 +43,28 @@ SettingsSection {
         ProfilesPart {}
 
         SettingGroup {
+            title: Tr.t("Library updates")
+            note: Tr.t("Refresh the logos available in Appearance → Greeting.")
+            hint: Tr.t("Add TXT, PNG, JPG, WebP or GIF files to your Fastfetch logos folder, then click Update Greeter. Wallpapers refresh automatically from ~/Pictures/Wallpapers and its animated subfolder.")
+
+            SettingRow {
+                label: Tr.t("Greeter")
+                reading: ThemeService.refreshingGreetings ? Tr.t("Scanning…")
+                    : ThemeService.greetingScanError || ThemeService.greetingScanStatus
+                        || Tr.t("Scan the Fastfetch logos folder")
+                alarm: ThemeService.greetingScanError !== ""
+
+                PillButton {
+                    text: Tr.t("Update Greeter")
+                    icon: "󰜉"
+                    implicitHeight: 30
+                    enabled: !ThemeService.refreshingGreetings
+                    onClicked: ThemeService.refreshGreetings()
+                }
+            }
+        }
+
+        SettingGroup {
             title: Tr.t("Reset")
             note: Tr.t("Only the profile in use. The others are left as they were.")
             hint: Tr.t("Reset returns every setting in this profile to its default, clears the compositor overrides and reloads Hyprland. Machine settings such as screens, name, picture and language are kept, and there is no undo.")

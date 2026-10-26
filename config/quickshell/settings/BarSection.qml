@@ -33,6 +33,13 @@ SettingsSection {
         precision: SystemClock.Seconds
     }
 
+    Loader {
+        Layout.fillWidth: true
+        active: root.tab === "preferences"
+        visible: active
+        sourceComponent: ModuleSettings {}
+    }
+
     // ── THE ISLAND ──────────────────────────────────────────────────────────
 
     ColumnLayout {
@@ -44,6 +51,23 @@ SettingsSection {
             title: Tr.t("Shape")
             note: Tr.t("How the bar is drawn, and where the island meets the top edge.")
             hint: Tr.t("The style keeps what is on the bar and only changes how it is drawn: grouped round the island, spread to the two edges, or all inside one capsule. What each side carries is arranged in The bar.")
+
+            SettingTiles {
+                label: Tr.t("Position")
+                reading: Tr.t("Side bars stack modules; panels open toward the screen.")
+                Repeater {
+                    model: ["top", "left", "right", "bottom"]
+                    PreviewTile {
+                        id: positionTile
+                        required property string modelData
+                        stageHeight: 84
+                        caption: Tr.t(positionTile.modelData.charAt(0).toUpperCase() + positionTile.modelData.slice(1))
+                        selected: SettingsService.barPosition === positionTile.modelData
+                        onPicked: SettingsService.set("barPosition", positionTile.modelData)
+                        BarPositionPreview { anchors.centerIn: parent; edge: positionTile.modelData }
+                    }
+                }
+            }
 
             SettingTiles {
                 label: Tr.t("Style")
@@ -64,8 +88,32 @@ SettingsSection {
 
                         BarPreview {
                             anchors.centerIn: parent
-                            attached: SettingsService.islandAttached
+                            attached: SettingsService.barPosition === "top" && SettingsService.islandAttached
                             barStyle: styleTile.modelData.id
+                            edge: SettingsService.barPosition
+                            spreadBand: SettingsService.spreadBand
+                        }
+                    }
+                }
+            }
+
+            SettingTiles {
+                visible: SettingsService.barStyle === "spread" && !SettingsService.barNotched
+                label: Tr.t("Spread background")
+                reading: Tr.t("Keep the modules at the ends and the clock in the centre.")
+                Repeater {
+                    model: [{ band: false, label: "Floating" }, { band: true, label: "Black band" }]
+                    PreviewTile {
+                        id: spreadTile
+                        required property var modelData
+                        caption: Tr.t(spreadTile.modelData.label)
+                        selected: SettingsService.spreadBand === spreadTile.modelData.band
+                        onPicked: SettingsService.set("spreadBand", spreadTile.modelData.band)
+                        BarPreview {
+                            anchors.centerIn: parent
+                            edge: SettingsService.barPosition
+                            barStyle: "spread"
+                            spreadBand: spreadTile.modelData.band
                         }
                     }
                 }
@@ -73,6 +121,7 @@ SettingsSection {
 
             SettingTiles {
                 label: Tr.t("Island")
+                visible: SettingsService.barPosition === "top"
                 reading: SettingsService.islandAttached
                     ? Tr.t("Cut into the top edge")
                     : Tr.t("Floating below the top edge")
@@ -136,8 +185,8 @@ SettingsSection {
                 reading: SettingsService.barSides === "bare"
                     ? Tr.t("The icons on the wallpaper")
                     : Tr.t("Each group in a capsule")
-                locked: SettingsService.barStyle === "island"
-                reason: Tr.t("In one island the sides sit on its band")
+                locked: SettingsService.barStyle === "island" || (SettingsService.barStyle === "spread" && SettingsService.spreadBand && !SettingsService.barNotched)
+                reason: Tr.t("With a shared background the modules sit on its band")
 
                 SegmentedControl {
                     options: [
@@ -303,7 +352,7 @@ SettingsSection {
         SettingGroup {
             title: Tr.t("Scale")
             note: Tr.t("The bar itself is the preview: it repaints over this window as the sliders move.")
-            hint: Tr.t("Everything on the bar scales with its height. The top margin is the gap to the screen edge (the island ignores it in notch mode), and the side margin is the inset from the left and right edges.")
+            hint: Tr.t("Module size follows bar height; side-bar width is independent. The edge margin is the gap to the selected screen edge (ignored by the top notch). The end margin is the inset from the two ends.")
 
             SettingSlider {
                 label: Tr.t("Bar height")
@@ -315,7 +364,17 @@ SettingsSection {
             }
 
             SettingSlider {
-                label: Tr.t("Top margin")
+                visible: SettingsService.barPosition === "left" || SettingsService.barPosition === "right"
+                label: Tr.t("Side bar width")
+                value: SettingsService.sideBarWidth
+                from: 30
+                to: 120
+                unit: " px"
+                onMoved: value => SettingsService.set("sideBarWidth", Math.round(value))
+            }
+
+            SettingSlider {
+                label: Tr.t("Edge margin")
                 value: SettingsService.barMargin
                 from: 0
                 to: 32
@@ -326,7 +385,7 @@ SettingsSection {
             // Applies in every style, including the spanning band: its full
             // width is the screen less this margin.
             SettingSlider {
-                label: Tr.t("Side margin")
+                label: Tr.t("End margin")
                 value: SettingsService.barSideMargin
                 from: 0
                 to: 48

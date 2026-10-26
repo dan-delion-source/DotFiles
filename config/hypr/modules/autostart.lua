@@ -9,22 +9,19 @@
 
 -- https://wiki.hypr.land/Configuring/Basics/Autostart/
 
--- Quickshell owns org.freedesktop.Notifications, so no separate notification
--- daemon runs: only one process can hold that bus name.
+-- Start only this installation's shell, including custom XDG config paths.
+-- QuickShell owns notifications; a separate notification daemon is not needed.
 hl.on("hyprland.start", function()
-    hl.exec_cmd(require("modules.shell").command .. " start")        -- · bar and notifications (quickshell)
-    hl.exec_cmd("awww-daemon")  -- · wallpaper
+    hl.exec_cmd(require("modules.shell").command .. " start")
+    hl.exec_cmd("awww query >/dev/null 2>&1 || awww-daemon")
 end)
 
--- Reload installed plugins without invoking an upstream installer.
+-- Reload only plugins already installed by the user.
 hl.on("hyprland.start", function()
     hl.exec_cmd('test ! -d "/var/cache/hyprpm/$USER" || hyprpm reload')
 end)
 
--- · polkit agent
---
--- Without one, privileged requests (mounting a disk, etc.) fail silently.
-local polkit_agent = "/usr/lib/polkit-kde-authentication-agent-1"
+-- Standard polkit dialog for mounting devices and privileged operations.
 hl.on("hyprland.start", function()
-    hl.exec_cmd("test -x " .. polkit_agent .. " && " .. polkit_agent)
+    hl.exec_cmd("test ! -x /usr/lib/polkit-kde-authentication-agent-1 || /usr/lib/polkit-kde-authentication-agent-1")
 end)

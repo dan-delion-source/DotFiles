@@ -26,6 +26,7 @@ Item {
     id: root
 
     property string moduleId: ""
+    property bool vertical: false
     property string shape: ModuleService.shapeOf(root.moduleId)
     property real reveal: 1
 
@@ -37,7 +38,7 @@ Item {
     readonly property bool ring: root.shape === "ring" && ModuleService.ringed.indexOf(root.moduleId) >= 0
     readonly property string value: ModuleService.valueOf(root.moduleId)
     readonly property bool figured: root.value !== ""
-    readonly property int size: Math.round(Theme.capsuleHeight * 0.44)
+    readonly property int size: Math.max(1, Math.min(Math.round(Theme.capsuleHeight * 0.44), root.vertical ? Theme.sideContentWidth : 100000))
     readonly property int pad: root.alone ? 11 : 8
     readonly property int spacing: 5
     readonly property int limit: ModuleService.figureLimit(root.moduleId)
@@ -54,22 +55,23 @@ Item {
 
     // A ring starts flush with the capsule edge; a symbol gets padding on both
     // sides. The padding after the figure grows with the reveal.
-    implicitWidth: root.ring
+    implicitWidth: root.vertical ? Theme.sideContentWidth : root.ring
         ? root.markWidth
             + (root.figured ? figure.width + 2 * root.gap - root.inset : 0) * root.reveal
         : root.pad + root.markWidth + root.figureRoom * root.reveal + root.pad
-    implicitHeight: Theme.capsuleHeight
+    implicitHeight: Theme.capsuleHeight + (root.vertical && root.figured ? (Theme.fontSizeSmall + 7) * (root.moduleId === "networkSpeed" ? 2 : 1) * root.reveal : 0)
 
     // ── MARK ────────────────────────────────────────────────────────────────
 
     Item {
         id: glyph
 
-        x: root.pad
-        anchors.verticalCenter: parent.verticalCenter
+        x: root.vertical ? (root.width - width) / 2 : root.pad
+        y: (Theme.capsuleHeight - height) / 2
         visible: !root.ring
-        width: root.moduleId === "pet" ? root.size + 2 : (symbol.visible ? symbol.implicitWidth : root.size)
-        height: root.size + 2
+        width: root.moduleId === "runningCat" ? Math.min(Math.max(1, Math.round(Theme.capsuleHeight * 35 / 30)), root.vertical ? Theme.sideContentWidth : 100000)
+            : root.moduleId === "pet" ? root.size + 2 : (symbol.visible ? symbol.implicitWidth : root.size)
+        height: root.moduleId === "runningCat" ? Theme.capsuleHeight : root.size + 2
 
         // Claude, Codex and the pet have no font glyph and draw their own
         // mark at glyph size.
@@ -103,11 +105,20 @@ Item {
             }
         }
 
+        Loader {
+            anchors.centerIn: parent
+            active: root.moduleId === "runningCat"
+            sourceComponent: RunningCatModule {
+                size: glyph.width
+            }
+        }
+
         Text {
             id: symbol
 
             anchors.centerIn: parent
-            visible: root.moduleId !== "claude" && root.moduleId !== "codex" && root.moduleId !== "pet"
+            visible: root.moduleId !== "claude" && root.moduleId !== "codex"
+                && root.moduleId !== "pet" && root.moduleId !== "runningCat"
             text: ModuleService.glyphOf(root.moduleId)
             font.family: Theme.fontMono
             font.pixelSize: root.size
@@ -122,9 +133,13 @@ Item {
 
         visible: root.ring
         width: Theme.capsuleHeight
-        height: Theme.capsuleHeight
-        anchors.verticalCenter: parent.verticalCenter
-        scale: root.alone ? 1 - 0.15 * (root.figured ? root.reveal : 0) : 0.85
+        height: width
+        x: root.vertical ? (root.width - width) / 2 : 0
+        y: 0
+        // Compact modules draw on a capsule-sized canvas internally. Scale
+        // that canvas as a whole so their icons and rings stay centred.
+        scale: (root.alone ? 1 - 0.15 * (root.figured ? root.reveal : 0) : 0.85)
+            * (root.vertical ? Math.min(1, Theme.sideContentWidth / Theme.capsuleHeight) : 1)
 
         Loader {
             anchors.fill: parent
@@ -142,26 +157,30 @@ Item {
     // reveal so a half-open chip never shows half a word.
 
     Item {
-        x: root.ring ? root.markWidth - root.inset + root.gap
+        x: root.vertical ? 1 : root.ring ? root.markWidth - root.inset + root.gap
             : root.pad + root.markWidth + root.spacing
-        width: Math.max(0, (root.figured ? figure.width : 0) * root.reveal)
-        height: parent.height
+        y: root.vertical ? Theme.capsuleHeight : 0
+        width: root.vertical ? Math.max(1, root.width - 2) : Math.max(0, (root.figured ? figure.width : 0) * root.reveal)
+        height: root.vertical ? (Theme.fontSizeSmall + 7) * (root.moduleId === "networkSpeed" ? 2 : 1) : parent.height
         visible: root.figured && root.reveal > 0
         clip: true
 
         Text {
             id: figure
+            objectName: "chipValue"
 
             anchors.verticalCenter: parent.verticalCenter
-            width: root.limit > 0
+            width: root.vertical ? parent.width : root.limit > 0
                 ? Math.min(root.limit, figure.implicitWidth)
                 : figure.implicitWidth
             opacity: Math.max(0, (root.reveal - 0.2) / 0.8)
-            horizontalAlignment: Text.AlignLeft
+            horizontalAlignment: root.vertical ? Text.AlignHCenter : Text.AlignLeft
             elide: Text.ElideRight
-            text: root.value
+            text: root.vertical && root.moduleId === "networkSpeed" ? root.value.replace("  ↑", "\n↑") : root.value
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeSmall
+            font.pixelSize: root.vertical ? Theme.sideFigureFontSize : Theme.fontSizeSmall
+            fontSizeMode: root.vertical ? Text.HorizontalFit : Text.FixedSize
+            minimumPixelSize: 6
             font.weight: Font.DemiBold
             font.features: { "tnum": 1 }
             color: Theme.text

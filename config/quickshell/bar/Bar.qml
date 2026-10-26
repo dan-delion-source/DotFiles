@@ -20,6 +20,7 @@ import "./modules"
 import "./island"
 import "./island/controls"
 import "../components"
+import "BarGeometry.js" as Geometry
 
 // The island in the middle and the two sides (`SettingsService.barZone`), in
 // one of three styles:
@@ -48,6 +49,12 @@ PanelWindow {
     // through a ground that is not solid.
     WlrLayershell.namespace: "danshell-bar"
     // What is drawn here takes the island's glass (`Theme.surfaceIn`).
+    readonly property string edge: SettingsService.barPosition
+    readonly property bool topEdge: root.edge === "top"
+    readonly property bool vertical: Geometry.vertical(root.edge)
+    readonly property real railThickness: Geometry.thickness(root.edge, Theme.capsuleHeight, SettingsService.sideBarWidth)
+    readonly property real edgeReserve: Theme.barTopMargin + root.railThickness
+    readonly property var popup: Geometry.popup(root.edge, root.width, root.height, island.width, island.height, root.edgeReserve, Theme.barTopMargin, root.vertical ? Theme.sidePopupGap : Theme.barTopMargin)
     readonly property bool glassy: true
     readonly property string groundStyle: Theme.surfaceStyle
 
@@ -81,7 +88,9 @@ PanelWindow {
     readonly property bool unified: root.barVisible && root.style === "island"
     // The sides on the wallpaper, without capsules; not in one capsule, whose
     // band is the sides' ground.
-    readonly property bool bare: !root.unified && SettingsService.barSides === "bare"
+    readonly property bool banded: root.spread && SettingsService.spreadBand && !SettingsService.barNotched
+    readonly property int bandInset: root.banded ? Theme.bandEndPadding : 0
+    readonly property bool bare: !root.unified && !root.banded && SettingsService.barSides === "bare"
     readonly property bool grouped: !root.spread && !root.unified
 
     // Stretch the band across the screen instead of fitting its contents.
@@ -92,8 +101,10 @@ PanelWindow {
 
     // Maximum panel width. Spread, the sides stay put, so a panel gets the room
     // between them; otherwise the sides move aside and it gets the whole bar.
-    readonly property int panelRoom: root.spread
-        ? root.width - 2 * (root.edgeMargin
+    readonly property int panelRoom: !root.topEdge
+        ? Math.max(1, root.width - (root.vertical ? root.edgeReserve : 0) - 2 * Theme.barTopMargin)
+        : root.spread
+        ? root.width - 2 * (root.edgeMargin + root.bandInset
             + Math.max(leftZone.width, rightZone.width) + Theme.capsuleSpacing)
         : root.width - 2 * root.edgeMargin
 
@@ -168,7 +179,7 @@ PanelWindow {
 
     // Attached (notch mode), only the island reaches the screen edge; the
     // sides stay capsules, centred on `laneY`.
-    readonly property int islandTopMargin: SettingsService.islandAttached ? 0 : Theme.barTopMargin
+    readonly property int islandTopMargin: root.topEdge && SettingsService.islandAttached ? 0 : Theme.barTopMargin
 
     // How far the glass's light from the top reaches down the notch
     // (`GlassSheen`), for the fillets that carry it on.
@@ -190,6 +201,7 @@ PanelWindow {
 
     anchors {
         top: true
+        bottom: true
         left: true
         right: true
     }
@@ -213,10 +225,7 @@ PanelWindow {
         ? Math.max(root.bandX + root.bandWidth, root.islandRight) : root.islandRight
     readonly property bool wholeScreen: root.holding && ControlsService.editing
 
-    // No input at all while desktop widgets are being arranged: dragging one
-    // over the bar would move the pointer to this surface, and the desktop
-    // would drop the widget. None either where nothing is painted.
-    readonly property bool inert: DesktopService.editing || !root.painted || root.away
+    readonly property bool inert: !root.painted || root.away
 
     // Zen (`barHidden`): the bar waits above the screen and the island comes
     // down only for what it has to show — a panel, a notification, a
@@ -227,16 +236,19 @@ PanelWindow {
     readonly property bool away: root.zen && !root.called
 
     mask: Region {
-        width: root.inert ? 0 : root.width
-        // In zen the band is empty, and only the island's shape takes input.
-        height: root.inert ? 0
-            : root.wholeScreen ? root.height
-            : root.zen ? 0 : root.collapsedHeight
-
         Region {
-            x: root.shapeLeft
-            width: root.inert ? 0 : root.shapeRight - root.shapeLeft
-            height: root.islandTopMargin + island.height + 12
+            x: root.wholeScreen ? 0 : root.edge === "right" ? root.width - root.edgeReserve - 8 : 0
+            y: root.wholeScreen ? 0 : root.edge === "bottom" ? root.height - root.edgeReserve - 8 : 0
+            width: root.inert || (root.zen && !root.wholeScreen) ? 0 : root.wholeScreen ? root.width
+                : root.vertical ? root.edgeReserve + 8 : root.width
+            height: root.inert ? 0 : root.wholeScreen ? root.height
+                : root.vertical ? root.height : root.edgeReserve + 8
+        }
+        Region {
+            x: island.x
+            y: island.y
+            width: root.inert || !island.visible ? 0 : island.width
+            height: root.inert || !island.visible ? 0 : island.height
         }
     }
 
@@ -270,6 +282,14 @@ PanelWindow {
 
     HoverHandler {
         onHoveredChanged: if (hovered) root.claimed()
+    }
+
+    Connections {
+        target: SettingsService
+        function onBarPositionChanged(): void {
+            root.dismiss()
+            if (root.live && ControlsService.editing) ControlsService.edit(false)
+        }
     }
 
     // ── OPENING A DETAIL ────────────────────────────────────────────────────
@@ -355,7 +375,7 @@ PanelWindow {
 
         width: parent.width
         height: parent.height
-        y: root.away ? -2 * root.collapsedHeight : 0
+        y: root.topEdge && root.away ? -2 * root.collapsedHeight : 0
         visible: root.painted || face.opacity > 0
         opacity: root.painted ? 1 : 0
 
@@ -383,7 +403,7 @@ PanelWindow {
         // does not work inside a Repeater.
         Loader {
             anchors.fill: parent
-            active: SettingsService.barShadow
+            active: root.topEdge && SettingsService.barShadow
             sourceComponent: shadowBody
         }
 
@@ -563,7 +583,7 @@ PanelWindow {
             id: body
 
             anchors.fill: parent
-            visible: root.unified
+            visible: root.topEdge && root.unified
 
             // Grows with the island; at rest both share height and radius.
             Rectangle {
@@ -597,18 +617,46 @@ PanelWindow {
             }
         }
 
+        Loader {
+            active: !root.topEdge && root.barVisible && !root.zen
+            x: root.edge === "right" ? root.width - root.edgeReserve : root.vertical ? Theme.barTopMargin : root.edgeMargin
+            y: root.edge === "bottom" ? root.height - root.edgeReserve : root.edgeMargin
+            width: root.vertical ? root.railThickness : root.width - 2 * root.edgeMargin
+            height: root.vertical ? root.height - 2 * root.edgeMargin : Theme.capsuleHeight
+            sourceComponent: EdgeRail {
+                anchors.fill: parent
+                onOpenRequested: island.toggle("controls")
+            }
+        }
+
+        Rectangle {
+            objectName: "spreadBackgroundBand"
+            visible: root.topEdge && root.banded && !root.zen
+            x: root.edgeMargin
+            y: Theme.barTopMargin
+            width: Math.max(1, root.width - 2 * root.edgeMargin)
+            height: Theme.capsuleHeight
+            radius: Math.min(width, height) / 2
+            color: "#000000"
+            MouseArea { anchors.fill: parent; onClicked: island.toggle("controls") }
+        }
+
         DynamicIsland {
             id: island
+            blackBand: root.banded
 
             active: root.live
-            hosted: root.unified
+            hosted: root.topEdge && root.unified
+            attached: root.topEdge && SettingsService.islandAttached
+            maximumHeight: Math.max(1, root.height - (root.edge === "bottom" ? root.edgeReserve : 0) - 2 * Theme.barTopMargin)
             roomForPanel: root.panelRoom
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: root.islandTopMargin
+            x: root.topEdge || root.edge === "bottom" ? (parent.width - width) / 2 : root.popup.x
+            y: root.topEdge ? root.islandTopMargin : root.edge === "bottom" && island.state.layer === island.state.layerModules
+                ? root.height - Theme.barTopMargin - height : root.popup.y
+            visible: !root.vertical || island.state.layer !== island.state.layerModules
 
-            Behavior on anchors.topMargin {
-                enabled: island.animated
+            Behavior on y {
+                enabled: root.topEdge && island.animated
                 NumberAnimation { duration: Theme.durationMedium; easing.type: Theme.easing }
             }
         }
@@ -626,7 +674,7 @@ PanelWindow {
             radius: band.radius
             topLeftRadius: band.topLeftRadius
             topRightRadius: band.topRightRadius
-            visible: root.unified && !island.paper && !SettingsService.islandAttached
+            visible: root.topEdge && root.unified && !island.paper && !SettingsService.islandAttached
             color: "transparent"
             border.width: 1
             border.color: root.islandTaken ? Theme.islandRim : "transparent"
@@ -649,7 +697,7 @@ PanelWindow {
                 id: arranging
 
                 x: (parent.width - width) / 2
-                y: root.islandTopMargin + island.height + Theme.desktopGutter
+                y: root.topEdge ? root.islandTopMargin + island.height + Theme.surfaceGutter : Theme.surfaceGutter
                 active: root.live && ControlsService.editing
                 sourceComponent: GridSize {}
             }
@@ -660,7 +708,7 @@ PanelWindow {
                 sourceComponent: ControlsTray {
                     host: overlay
                     homeTop: arranging.y + (arranging.item ? arranging.item.height : 0)
-                        + Theme.desktopGutter
+                        + Theme.surfaceGutter
                 }
             }
         }
@@ -673,7 +721,7 @@ PanelWindow {
 
             x: (root.unified ? Math.min(root.bandX, root.islandLeft) : root.islandLeft) - width
             anchors.top: parent.top
-            visible: SettingsService.islandAttached
+            visible: root.topEdge && SettingsService.islandAttached
             mirrored: true
             color: island.surfaceColor
             sheenReach: root.notchSheen
@@ -684,7 +732,7 @@ PanelWindow {
 
             x: root.unified ? Math.max(root.bandX + root.bandWidth, root.islandRight) : root.islandRight
             anchors.top: parent.top
-            visible: SettingsService.islandAttached
+            visible: root.topEdge && SettingsService.islandAttached
             color: island.surfaceColor
             sheenReach: root.notchSheen
         }
@@ -693,7 +741,7 @@ PanelWindow {
         // light from the top runs on into the fillets, and the thick edge
         // follows the outline below rather than the island's own rectangle.
         Repeater {
-            model: SettingsService.islandAttached && Theme.glass && !island.paper
+            model: root.topEdge && SettingsService.islandAttached && Theme.glass && !island.paper
                 ? [[1, 1], [2, 0.6], [3, 0.35], [4, 0.15]] : []
 
             NotchOutline {
@@ -712,7 +760,7 @@ PanelWindow {
         // not along the screen edge. In one capsule only while the island has
         // the band, as `outline` above.
         NotchOutline {
-            visible: SettingsService.islandAttached && !island.paper
+            visible: root.topEdge && SettingsService.islandAttached && !island.paper
             shapeLeft: root.shapeLeft
             shapeRight: root.shapeRight
             shapeHeight: root.unified ? band.height : island.height
@@ -747,7 +795,7 @@ PanelWindow {
             height: root.height
             clip: sides.cropped
             opacity: root.zen ? 0 : 1
-            visible: opacity > 0
+            visible: root.topEdge && opacity > 0
 
             Behavior on opacity {
                 NumberAnimation { duration: Theme.durationFast; easing.type: Theme.easing }
@@ -760,17 +808,19 @@ PanelWindow {
             layer.enabled: root.bare
             layer.effect: BareShadow {}
 
-            BarZone {
+            Loader {
                 id: leftZone
-
-                entries: SettingsService.barItems("left")
-                chromeless: root.unified || root.bare
-                overWallpaper: root.bare
+                active: root.topEdge
+                sourceComponent: BarZone {
+                    entries: SettingsService.barItems("left")
+                    chromeless: root.unified || root.banded || root.bare
+                    overWallpaper: root.bare
+                }
 
                 layer.enabled: root.bare
                 layer.effect: BareShadow {}
                 x: (root.unified ? root.bodyX + root.hostedInset
-                    : root.spread ? root.edgeMargin
+                    : root.spread ? root.edgeMargin + root.bandInset
                     : root.islandLeft - Theme.capsuleSpacing - leftZone.width) - sides.x
                 y: root.laneY
                 opacity: root.sidesAway ? 0 : 1
@@ -784,17 +834,19 @@ PanelWindow {
                 }
             }
 
-            BarZone {
+            Loader {
                 id: rightZone
-
-                entries: SettingsService.barItems("right")
-                chromeless: root.unified || root.bare
-                overWallpaper: root.bare
+                active: root.topEdge
+                sourceComponent: BarZone {
+                    entries: SettingsService.barItems("right")
+                    chromeless: root.unified || root.banded || root.bare
+                    overWallpaper: root.bare
+                }
 
                 layer.enabled: root.bare
                 layer.effect: BareShadow {}
                 x: (root.unified ? root.bodyX + root.bodyWidth - root.hostedInset - rightZone.width
-                    : root.spread ? root.width - root.edgeMargin - rightZone.width
+                    : root.spread ? root.width - root.edgeMargin - root.bandInset - rightZone.width
                     : root.islandRight + Theme.capsuleSpacing) - sides.x
                 y: root.laneY
                 opacity: root.sidesAway ? 0 : 1

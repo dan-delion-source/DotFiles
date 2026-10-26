@@ -11,3 +11,37 @@ Local modifications, 2026-10-22: use Matugen for adaptive palettes, retain
 selectable presets, use portable display defaults and the selected primary
 display for the bar, clarify unavailable hardware states, and add a
 dependency-aware installer with configuration backup and restore.
+
+Mainframe lock presentation, 2026-10-24: adapted from the visual direction of
+dhrruvsharma/shell. The CRT shader in lock/shaders/mainframe-crt.frag derives
+from quickshell/shaders/lock_crt.frag at commit
+4d08588e58c7d8e0f2bfbb087d0fa0f18fa23343.
+Copyright (C) 2026 dhrruvsharma. Licensed GPL-3.0-or-later.
+Source: https://github.com/dhrruvsharma/shell
+The existing lock service owns authentication; upstream XP/reward systems
+and authentication code are not included. Shader source is distributed
+alongside its compiled package.
+
+Running cat artwork, 2026-10-24: the four PNG sprites in assets/running-cat
+are unchanged copies from zaeemali272/zenith-shell at commit
+ce18f9b9c13dc01e96749ca391d9fad05ec635ac, linked by zenith-nixos.
+Source: https://github.com/zaeemali272/zenith-shell
+License: Unlicense; the upstream text is in assets/running-cat/LICENSE.
+The animation follows the frame order and power-profile timings of
+bar/Right/Resources.qml at that revision.
+
+Local modifications, 2026-10-24: remove desktop widget surfaces, faces,
+grid editor and edge-note decks; retain shared bar/control-centre settings.
+
+Local modifications, 2026-10-24: add persisted bar-edge selection, upright
+side rails and bounded inward-opening island panels.
+
+Workspace Kanji font, 2026-10-25: assets/fonts/workspace-kanji.otf is a
+renamed numeral subset of Noto Sans JP Regular from notofonts/noto-cjk,
+commit f8d157532fbfaeda587e826d4cd5b21a49186f7c.
+Copyright © 2014–2021 Adobe. Licensed under SIL OFL 1.1; see
+assets/fonts/OFL.txt and assets/fonts/README.md for source and rebuild details.
+
+Local modifications, 2026-10-26: name the rice Yozora, restore fixed
+workspace ownership and matching shell shortcuts. Existing storage/IPC
+identifiers are retained for compatibility with saved user data.

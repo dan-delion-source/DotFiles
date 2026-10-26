@@ -103,13 +103,25 @@ local function float_centred()
     hl.dispatch(hl.dsp.window.center())
 end
 
+-- The split is dwindle's. Master turns its stack to the next side instead;
+-- scrolling has no split, and the key does nothing there.
+local function flip_split()
+    local workspace = hl.get_active_workspace()
+    local layout = workspace and workspace.tiled_layout
+    if layout == "dwindle" then
+        hl.dispatch(hl.dsp.layout("togglesplit"))
+    elseif layout == "master" then
+        hl.dispatch(hl.dsp.layout("orientationnext"))
+    end
+end
+
 bind(mainMod .. " + Q",           hl.dsp.window.close(), { description = "Windows · Close the focused window" })
 bind(mainMod .. " + SHIFT + Q",   hl.dsp.window.kill(),  { description = "Windows · Kill the focused window" })
 bind(mainMod .. " + F",           hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }), { description = "Windows · Full screen" })
 bind(mainMod .. " + ALT + F",     hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }),  { description = "Windows · Maximise, keeping the bar" })
 bind(mainMod .. " + ALT + Space", float_centred,          { description = "Windows · Float or tile the window" })
 bind(mainMod .. " + P",           hl.dsp.window.pseudo(), { description = "Windows · Toggle pseudo-tiling" })
-bind(mainMod .. " + J",           hl.dsp.layout("togglesplit"), { description = "Windows · Flip the split direction" })
+bind(mainMod .. " + J",           flip_split,             { description = "Windows · Flip the split direction" })
 
 -- · move focus
 bind(mainMod .. " + left",  hl.dsp.focus({ direction = "l" }), { description = "Windows · Focus the window left" })
@@ -134,39 +146,21 @@ bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, descript
 
 -- ── WORKSPACES ──────────────────────────────────────────────────────────────
 
--- The workspace each screen was showing before the one it shows now.
--- `workspace_back_and_forth` only reaches the plain dispatcher, and the
--- numbers use `on_current_monitor`; Hyprland's own previous is one for the
--- whole desk, which on two screens is the wrong one.
+local workspace_map = require("modules.workspaces")
 
--- SUPER + [1-9,0] focuses the workspace on its assigned monitor.
--- Pressing the same number again stays on that workspace.
-local function to_workspace(index)
-    return function()
-        hl.dispatch(hl.dsp.focus({ workspace = index }))
-    end
-end
-
--- SHIFT moves the active window to the selected workspace.
+-- Global numbers are stable across both screens; 0 is workspace 10.
 for i = 1, 10 do
+    local index = i
     local key = i % 10
-    bind(mainMod .. " + " .. key, to_workspace(i),
+    bind(mainMod .. " + " .. key, function() workspace_map.focus(index) end,
          { description = "Workspaces · Go to workspace " .. i })
-    bind(mainMod .. " + SHIFT + " .. key,
-         hl.dsp.window.move({ workspace = i }),
+    bind(mainMod .. " + SHIFT + " .. key, function() workspace_map.move_window(index) end,
          { description = "Workspaces · Move the window to workspace " .. i })
 end
 
--- Scroll through workspaces on the current monitor.
-bind(mainMod .. " + mouse_down",
-     hl.dsp.focus({ workspace = "m+1" }),
-     { description = "Workspaces · Next workspace" })
-bind(mainMod .. " + mouse_up",
-     hl.dsp.focus({ workspace = "m-1" }),
-     { description = "Workspaces · Previous workspace" })
-
--- The number of the workspace already here goes back to the one before it.
-
+-- · scroll wheel to cycle through the ones on this screen
+bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "m+1" }), { description = "Workspaces · Next workspace" })
+bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "m-1" }), { description = "Workspaces · Previous workspace" })
 
 
 -- ── SCREENS ─────────────────────────────────────────────────────────────────
@@ -176,10 +170,8 @@ bind(mainMod .. " + mouse_up",
 -- · to the next screen.
 
 -- The two screens trade what they are showing, and the keyboard goes with the
--- workspace. Moving it instead buries the other screen's workspace behind
--- this one and leaves a new empty one where you were. The direction is
--- resolved by moving the keyboard first: nothing that way leaves it where it
--- was and changes nothing.
+-- workspace. Windows trade while workspace numbers keep their assigned
+-- monitors. A missing screen in that direction leaves everything in place.
 local function trade_workspace(direction)
     return function()
         local here = hl.get_active_monitor()
@@ -194,7 +186,18 @@ local function trade_workspace(direction)
             return
         end
 
-        hl.dispatch(hl.dsp.workspace.swap_monitors({ monitor1 = here.name, monitor2 = there.name }))
+        local from, to = here.active_workspace, there.active_workspace
+        if not from or not to then
+            return
+        end
+        local leaving  = hl.get_workspace_windows(from.id) or {}
+        local arriving = hl.get_workspace_windows(to.id) or {}
+        for _, window in ipairs(leaving) do
+            hl.dispatch(hl.dsp.window.move({ workspace = to.id, window = "address:" .. window.address, follow = false }))
+        end
+        for _, window in ipairs(arriving) do
+            hl.dispatch(hl.dsp.window.move({ workspace = from.id, window = "address:" .. window.address, follow = false }))
+        end
     end
 end
 
@@ -267,7 +270,6 @@ bind(mainMod .. " + H",         hl.dsp.global("danshell:keys"),       { descript
 
 -- · zen: the bar away and its band to the windows; and the widgets away
 bind(mainMod .. " + CTRL + B",  hl.dsp.global("danshell:zen"),        { description = "Shell · Hide or show the bar" })
-bind(mainMod .. " + CTRL + W",  hl.dsp.global("danshell:widgets"),    { description = "Shell · Hide or show the desktop widgets" })
 
 -- · packages panel (pacman + AUR); installs run in a terminal
 bind(mainMod .. " + I",         hl.dsp.global("danshell:packages"),   { description = "Shell · Open the packages" })
@@ -304,3 +306,7 @@ hl.bind("switch:on:Lid Switch",  hl.dsp.global("danshell:lidClosed"),
         { locked = true, description = "Session · The laptop lid was closed" })
 hl.bind("switch:off:Lid Switch", hl.dsp.global("danshell:lidOpened"),
         { locked = true, description = "Session · The laptop lid was opened" })
+
+-- Lid events go to the same monitor owner as settings and hotplug.
+hl.bind("switch:on:Lid Switch", hl.dsp.global("danshell:lidClosed"), { locked = true, description = "Session · Lid closed" })
+hl.bind("switch:off:Lid Switch", hl.dsp.global("danshell:lidOpened"), { locked = true, description = "Session · Lid opened" })

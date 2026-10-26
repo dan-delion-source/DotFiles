@@ -103,6 +103,7 @@ QtObject {
     Component.onCompleted: {
         root.pushTerminalFont()
         root.pushGreeting()
+        root.refreshGreetings()
     }
 
     // ── GREETING ────────────────────────────────────────────────────────────
@@ -110,15 +111,53 @@ QtObject {
     // Which scene `fa` shows. The palette push redraws all of them
     // (`greeting.py`); this only records the choice. `random` is resolved
     // by `fa`.
-    readonly property var greetings: [
-        { id: "lava", label: "Lava lamp" },
-        { id: "critters", label: "Critters" },
-        { id: "koi", label: "Koi" },
-        { id: "invaders", label: "Invaders" },
-        { id: "random", label: "Random" },
-        { id: "arch", label: "Arch" },
-        { id: "cat", label: "Cat" }
+    property var greetings: [
+        { id: "lava", label: "Lava lamp", kind: "scene" },
+        { id: "critters", label: "Critters", kind: "scene" },
+        { id: "koi", label: "Koi", kind: "scene" },
+        { id: "invaders", label: "Invaders", kind: "scene" },
+        { id: "random", label: "Random", kind: "scene" }
     ]
+    readonly property bool refreshingGreetings: greetingScan.running
+    property bool greetingsLoaded: false
+    property string greetingScanError: ""
+    property string greetingApplyError: ""
+    property string greetingScanStatus: ""
+    readonly property bool greetingUnavailable: root.greetingsLoaded &&
+        !root.greetings.some(entry => entry.id === SettingsService.greeting)
+
+    function refreshGreetings(): void {
+        if (!root.refreshingGreetings)
+            root.greetingScan.running = true
+    }
+
+    readonly property Process greetingScan: Process {
+        command: [root.greetingScript, "list"]
+        onStarted: {
+            root.greetingScanError = ""
+            root.greetingScanStatus = ""
+        }
+        onExited: exitCode => {
+            if (exitCode !== 0)
+                root.greetingScanError = "Could not scan greetings. Check access to the Fastfetch logos folder."
+        }
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.trim())
+                    console.warn(text.trim())
+            }
+        }
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const list = root.parseJson(text, "greeting library")
+                if (Array.isArray(list)) {
+                    root.greetings = list
+                    root.greetingsLoaded = true
+                    root.greetingScanStatus = `${list.filter(entry => entry.kind !== "scene").length} logo files available`
+                }
+            }
+        }
+    }
 
     readonly property string greetingScript: Quickshell.shellPath("scripts/greeting.py")
     readonly property string greeting: SettingsService.greeting
@@ -130,6 +169,8 @@ QtObject {
     property bool greetingPending: false
 
     function pushGreeting(): void {
+        if (!SettingsService.arrived)
+            return
         if (root.greetingProcess.running) {
             root.greetingPending = true
             return
@@ -138,7 +179,19 @@ QtObject {
         root.greetingProcess.running = true
     }
 
+    readonly property Connections greetingSettingsReady: Connections {
+        target: SettingsService
+        function onArrivedChanged(): void {
+            if (SettingsService.arrived)
+                root.pushGreeting()
+        }
+    }
+
     readonly property Process greetingProcess: Process {
+        onStarted: root.greetingApplyError = ""
+        stderr: StdioCollector {
+            onStreamFinished: root.greetingApplyError = text.trim()
+        }
         onExited: {
             if (root.greetingPending) {
                 root.greetingPending = false

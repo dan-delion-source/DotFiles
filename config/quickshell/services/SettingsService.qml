@@ -12,6 +12,8 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import "../lock/LockStyles.js" as LockStyles
+import "../bar/BarGeometry.js" as BarGeometry
 
 // Every user preference. Defaults are the initialisers in `Store`; changes go
 // to $XDG_STATE_HOME/danshell/settings.json, outside the files `./setup`
@@ -27,12 +29,16 @@ Singleton {
     readonly property alias clockFormat: config.clockFormat
     readonly property alias clockShowsDate: config.clockShowsDate
     readonly property alias clockShowsSeconds: config.clockShowsSeconds
-    readonly property alias barHeight: config.barHeight
+    readonly property int barHeight: BarGeometry.barHeight(config.barHeight)
+    readonly property int sideBarWidth: BarGeometry.sideWidth(config.sideBarWidth)
     readonly property alias barMargin: config.barMargin
     readonly property alias islandAttached: config.islandAttached
+    readonly property bool barNotched: root.barPosition === "top" && root.islandAttached
     readonly property alias barFullWidth: config.barFullWidth
     readonly property alias barSideMargin: config.barSideMargin
+    readonly property string barPosition: BarGeometry.normalize(config.barPosition)
     readonly property alias barStyle: config.barStyle
+    readonly property alias spreadBand: config.spreadBand
     readonly property alias barEverywhere: config.barEverywhere
     readonly property alias barHidden: config.barHidden
     readonly property alias barLeft: config.barLeft
@@ -41,10 +47,6 @@ Singleton {
     readonly property alias islandActivities: config.islandActivities
     readonly property alias chipShape: config.chipShape
     readonly property alias chipFigure: config.chipFigure
-    readonly property alias desktopWidgets: config.desktopWidgets
-    readonly property alias desktopTheme: config.desktopTheme
-    readonly property alias desktopOpacity: config.desktopOpacity
-    readonly property alias desktopHidden: config.desktopHidden
     readonly property alias centreButtons: config.centreButtons
     readonly property alias centreTop: config.centreTop
     readonly property alias centreBlocks: config.centreBlocks
@@ -64,6 +66,7 @@ Singleton {
     readonly property alias clipboardKeep: config.clipboardKeep
     readonly property alias clipboardImages: config.clipboardImages
     readonly property alias clipboardWipeOnLock: config.clipboardWipeOnLock
+    readonly property string lockStyle: LockStyles.normalize(config.lockStyle)
     readonly property alias lockBlur: config.lockBlur
     readonly property alias lockClock: config.lockClock
     readonly property alias userName: config.userName
@@ -73,8 +76,6 @@ Singleton {
     readonly property alias captureShape: config.captureShape
     readonly property alias captureKind: config.captureKind
     readonly property alias notesHandwriting: config.notesHandwriting
-    readonly property alias deckOnEmpty: config.deckOnEmpty
-    readonly property alias spectrumOnEmpty: config.spectrumOnEmpty
     readonly property alias workspaceCount: config.workspaceCount
     readonly property alias workspaceMax: config.workspaceMax
     readonly property alias workspaceStyle: config.workspaceStyle
@@ -83,10 +84,8 @@ Singleton {
     readonly property alias animationPreset: config.animationPreset
     readonly property alias windowShadow: config.windowShadow
     readonly property alias barShadow: config.barShadow
-    readonly property alias widgetShadow: config.widgetShadow
     readonly property alias windowGlass: config.windowGlass
     readonly property alias surfaceStyle: config.surfaceStyle
-    readonly property alias desktopGround: config.desktopGround
     readonly property alias barSides: config.barSides
     readonly property alias wallpaperTransition: config.wallpaperTransition
     readonly property alias greeting: config.greeting
@@ -287,7 +286,10 @@ Singleton {
             console.warn("Settings not read yet; refusing to write", key)
             return
         }
-        config[key] = value
+        config[key] = key === "lockStyle" ? LockStyles.normalize(value)
+            : key === "barPosition" ? BarGeometry.normalize(value)
+            : key === "sideBarWidth" ? BarGeometry.sideWidth(value)
+            : key === "barHeight" ? BarGeometry.barHeight(value) : value
     }
 
     // ── PROFILES ────────────────────────────────────────────────────────────
@@ -299,7 +301,7 @@ Singleton {
         "displays", "lidPolicy",
         "userName", "userAvatar", "language", "keyboard", "weatherPlace", "githubUser",
         "emojiTone",
-        "doNotDisturb", "nightLight", "nightTemperature", "barHidden", "desktopHidden",
+        "doNotDisturb", "nightLight", "nightTemperature", "barHidden",
         "recorderAudio", "captureShape", "captureKind"
     ]
 
@@ -355,6 +357,9 @@ Singleton {
             const taken = Object.prototype.hasOwnProperty.call(given, key)
                 && root.accepts(key, given[key])
             out[key] = root.copy(taken ? given[key] : root.pristine[key])
+            if (key === "barPosition") out[key] = BarGeometry.normalize(out[key])
+            if (key === "sideBarWidth") out[key] = BarGeometry.sideWidth(out[key])
+            if (key === "barHeight") out[key] = BarGeometry.barHeight(out[key])
         }
         return out
     }
@@ -421,8 +426,11 @@ Singleton {
         onAdapterUpdated: saver.restart()
         onLoaded: {
             root.arrived = true
+            config.barPosition = BarGeometry.normalize(config.barPosition)
+            config.sideBarWidth = BarGeometry.sideWidth(config.sideBarWidth)
+            config.barHeight = BarGeometry.barHeight(config.barHeight)
             // A ground named "frosted" is read as glass.
-            for (const key of ["surfaceStyle", "desktopGround"])
+            for (const key of ["surfaceStyle"])
                 if (config[key] === "frosted")
                     config[key] = "glass"
         }
@@ -458,6 +466,8 @@ Singleton {
         // Capsule height and distance from the top edge. Every other bar
         // metric derives from `barHeight`.
         property int barHeight: 32
+        // Independent cross-axis size for left and right bars.
+        property int sideBarWidth: 56
         property int barMargin: 16
 
         // A notch flush with the top edge instead of a floating capsule.
@@ -480,7 +490,6 @@ Singleton {
 
         property bool windowShadow: false
         property bool barShadow: false
-        property bool widgetShadow: false
 
         // hyprglass. Dimmed in the settings when the plugin is not built;
         // `CompositorService` pushes it at login and after every reload.
@@ -491,8 +500,6 @@ Singleton {
         // (`Theme.islandGround`).
         property string surfaceStyle: "classic"
 
-        // The desktop widgets' ground, as above, or "" for the bar's.
-        property string desktopGround: ""
 
         // The bar's sides: "capsule", each group in a capsule, or "bare",
         // the icons on the wallpaper. The one-capsule style has its band.
@@ -508,6 +515,8 @@ Singleton {
 
         // One of `barStyles`.
         property string barStyle: "grouped"
+        property bool spreadBand: false
+        property string barPosition: "top"
 
         // Ids either side of the island; null means `barDefaults`.
         property var barLeft: null
@@ -557,6 +566,9 @@ Singleton {
         // (`clipboard.py`).
         property bool clipboardWipeOnLock: false
 
+        // Presentation choice; profile snapshots include it automatically.
+        property string lockStyle: "classic"
+
         // Enough to make text unreadable, no more.
         property int lockBlur: 32
 
@@ -582,11 +594,7 @@ Singleton {
         // Note bodies in the handwriting font instead of the UI font.
         property bool notesHandwriting: true
 
-        // Show edge note decks only on empty workspaces.
-        property bool deckOnEmpty: false
 
-        // Show the spectrum only on empty workspaces.
-        property bool spectrumOnEmpty: false
 
 
         // Dots always shown, and the total number of workspaces. Workspaces
@@ -652,47 +660,6 @@ Singleton {
         // Launcher sigil overrides, keyed by mode id; absent means the
         // default in `launcherPrefixDefaults`.
         property var launcherPrefixes: ({})
-
-        // ── DESKTOP ─────────────────────────────────────────────────────
-        //
-        // Desktop widgets in placement order; a module may appear more than
-        // once:
-        //
-        //   key      this widget — "clock-1"; a row without one is keyed
-        //            by its module on the way in
-        //   id       the module, the same id the catalogue uses
-        //   screen   the monitor's description; absent means the main screen
-        //   col, row the square its top left corner is on
-        //   family   "2x2", "4x2", "4x4" or "8x2" — which face it wears
-        //   theme    "modern", "analogue" or "sticker"; absent means the
-        //            desktop's
-        //   style    how its capsule is drawn; absent means the desktop's
-        //   opacity  how solid it is; absent means the desktop's
-        //   note     for a notes widget, which note; absent means the
-        //            front of the deck
-        //
-        // Or a deck of notes on a screen edge:
-        //
-        //   key      "notes-2"
-        //   id       "notes"
-        //   screen   as above
-        //   edge     "left", "right" or "bottom"
-        //   notes    the note keys on it, in order along the edge
-        //   along    where on the edge, 0 to 1 from its first corner
-        //   takesNew true on the one deck new notes land on
-        property var desktopWidgets: []
-
-        // The theme for widgets without their own, from
-        // `DesktopService.themes`. Colours always come from the palette, and
-        // the capsule's ground is the island's (`surfaceStyle`).
-        property string desktopTheme: "modern"
-
-        // Capsule opacity in percent; below 100 the desktop layer's blur
-        // rule (`windowrules.lua`) shows through. Widgets may override it.
-        property int desktopOpacity: 100
-
-        // Every widget off the picture for a while; arranging shows them.
-        property bool desktopHidden: false
 
         // ── CONTROL CENTRE ──────────────────────────────────────────────
         //

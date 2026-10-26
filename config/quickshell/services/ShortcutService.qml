@@ -49,7 +49,6 @@ Singleton {
         { name: "board",          label: "Task board",           description: "Shell · Open the task board" },
         { name: "keys",           label: "Keys",                 description: "Shell · Show every key" },
         { name: "zen",            label: "Zen",                  description: "Shell · Hide or show the bar" },
-        { name: "widgets",        label: "Hide the widgets",     description: "Shell · Hide or show the desktop widgets" },
         { name: "packages",       label: "Packages",             description: "Shell · Open the packages" },
         { name: "clipboard",      label: "Clipboard history",    description: "Shell · Open the clipboard history" },
         { name: "emoji",          label: "Emoji",                description: "Shell · Pick an emoji" },
@@ -125,10 +124,10 @@ Singleton {
     }
 
     // Writes the whole table, since a profile built from defaults has no keys
-    // stored yet. Refused until the bind list has been read.
+    // stored yet. An empty combination explicitly unbinds the action rather
+    // than restoring its fallback. Refused until the bind list has been read.
     function rebind(description: string, combination: string): void {
-        if (combination === "" || !root.index[description]
-                || HyprlandService.binds.length === 0)
+        if (!root.index[description] || HyprlandService.binds.length === 0)
             return
         const next = ({})
         for (const row of root.table)

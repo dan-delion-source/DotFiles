@@ -36,7 +36,7 @@ Singleton {
     //   height   lives only on the desktop, on the grid or along an edge
     //
     // The chip look is global (`SettingsService.chipShape`, `chipFigure`);
-    // desktop faces are listed per theme in `DesktopService.faces`.
+    // modules share their settings with the control centre.
     readonly property var catalogue: [
         { id: "media",         name: "Media",         bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(1, Theme.cardRowGap + 34) },
         { id: "timer",         name: "Timer",         bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(2, 0) },
@@ -53,6 +53,8 @@ Singleton {
         { id: "github",        name: "GitHub",        bar: false, width: Theme.cardWidth, height: Theme.cardHeight(0, GithubService.cardGrid) },
         { id: "stats",         name: "System",        bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(2, Theme.cardRowGap + 36) },
         { id: "updates",       name: "Updates",       bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(4, 0) },
+        { id: "runningCat", name: "Running Cat", bar: true, desk: false, detail: false,
+          width: Theme.capsuleHeight * 2, height: Theme.capsuleHeight },
         { id: "pet",           name: "Pet",           bar: true,  width: Theme.cardWidth, height: Theme.cardHeight(2, Theme.cardRowGap + 32) },
         { id: "games",         name: "Games",         bar: false, width: Theme.cardWidth, height: Theme.cardHeight(4, 0) },
         { id: "calendar",      name: "Calendar",      bar: true,  width: 340, height: 330 },
@@ -388,11 +390,10 @@ Singleton {
     // the cover, the controls and the time large beside them; without one,
     // the time large, the weather under it and five days of the week.
     //
-    // The weather only where it is already being asked for, on the bar or
-    // on the desktop: touching the service builds it, and building it makes
+    // The weather only where it is already being asked for, on the bar:
+    // touching the service builds it, and building it makes
     // a network request.
-    readonly property bool summaryWeather: (SettingsService.onBar("weather")
-            || DesktopService.placed("weather"))
+    readonly property bool summaryWeather: (SettingsService.onBar("weather"))
         && WeatherService.available
 
     // The widths fit a 24-hour time; a longer format (seconds, AM/PM) widens
@@ -468,6 +469,8 @@ Singleton {
     signal activationRequested(string id)
 
     function activate(id: string): void {
+        if (root.entry(id).detail === false)
+            return
         root.activationRequested(id)
     }
 
@@ -492,6 +495,7 @@ Singleton {
         case "clock":
         case "calendar":
         case "timer":
+        case "runningCat":
         case "workspaces":
         case "tray":
         case "notifications":

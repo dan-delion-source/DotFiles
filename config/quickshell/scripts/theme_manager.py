@@ -42,7 +42,7 @@ XDG_DATA_HOME = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/
 XDG_STATE_HOME = os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state")
 XDG_CACHE_HOME = os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache")
 
-WALLPAPERS_DIR = os.path.join(XDG_DATA_HOME, "wallpapers")
+WALLPAPERS_DIR = os.path.expanduser("~/Pictures/Wallpapers")
 # Animated wallpapers: videos, played by mpvpaper over the still awww shows.
 ANIMATED_DIR = os.path.join(WALLPAPERS_DIR, "animated")
 # One frame of each video, for the palette and for everything that draws the
@@ -466,7 +466,7 @@ def get_current_wallpaper():
                 return match.group(1)
         except (OSError, subprocess.SubprocessError):
             pass
-    # Fresh machines get the first bundled image; a user selection overrides it.
+    # Fresh machines get the first library image; a user selection overrides it.
     wallpapers = list_wallpapers()
     return wallpapers[0]["path"] if wallpapers else ""
 
@@ -485,10 +485,7 @@ def list_wallpapers():
 
 
 def list_animated():
-    # Made here so there is a folder to drop the first video into.
-    try:
-        os.makedirs(ANIMATED_DIR, exist_ok=True)
-    except OSError:
+    if not os.path.isdir(ANIMATED_DIR):
         return []
     entries = []
     for name in sorted(os.listdir(ANIMATED_DIR)):
@@ -3928,6 +3925,19 @@ WALLPAPER_TRANSITIONS = ("none", "simple", "fade", "left", "right", "top", "bott
                          "wipe", "wave", "grow", "center", "any", "outer")
 
 
+def run_awww(arguments, timeout=15):
+    """Return the command result only if the daemon accepted it."""
+    try:
+        result = subprocess.run(["awww", *arguments], capture_output=True, text=True, timeout=timeout)
+        if result.returncode == 0:
+            return result
+        detail = result.stderr.strip() or result.stdout.strip() or f"exit {result.returncode}"
+    except (OSError, subprocess.SubprocessError) as error:
+        detail = str(error)
+    sys.stderr.write(f"Wallpaper service failed: {detail}. Check awww query; if unavailable, run awww-daemon in a terminal.\n")
+    return None
+
+
 def set_wallpaper(chosen, transition="wipe"):
     """Show a picture, or a video over its poster.
 
@@ -3937,30 +3947,33 @@ def set_wallpaper(chosen, transition="wipe"):
     if not os.path.isfile(chosen):
         sys.stderr.write(f"Wallpaper not found: {chosen}\n")
         return False
+    if run_awww(["query"], timeout=5) is None:
+        return False
 
     motion = ""
     image_path = chosen
     if is_motion(chosen):
+        if not shutil.which("mpvpaper"):
+            sys.stderr.write("Animated wallpaper needs mpvpaper; install the animated group.\n")
+            return False
         image_path = poster_of(chosen)
         if not image_path:
             return False
         motion = chosen
 
-    # The old video goes first, so the transition runs from its poster.
+    if transition not in WALLPAPER_TRANSITIONS:
+        transition = "wipe"
+    if run_awww(["img", image_path, "--transition-type", transition,
+                 "--transition-duration", "1"]) is None:
+        return False
+
+    # Keep the old video playing until the new still has been accepted.
     stop_motion()
 
-    if shutil.which("awww"):
-        if transition not in WALLPAPER_TRANSITIONS:
-            transition = "wipe"
-        command = ["awww", "img", image_path, "--transition-type", transition,
-                   "--transition-duration", "1"]
-        try:
-            subprocess.run(command, capture_output=True, timeout=15)
-        except (OSError, subprocess.SubprocessError) as error:
-            sys.stderr.write(f"awww failed: {error}\n")
-
-    if motion:
-        start_motion(motion, delay=1)
+    if motion and not start_motion(motion, delay=1):
+        # The still is already displayed; record that rather than a video
+        # which failed to launch. A later selection can retry playback.
+        motion = ""
 
     state = load_state()
     state["currentWallpaper"] = image_path
@@ -3983,13 +3996,10 @@ def restore_wallpaper():
     (the caller retries; at login this races awww-daemon's startup).
     """
     if not shutil.which("awww"):
-        return 0
-    try:
-        result = subprocess.run(["awww", "query"],
-                                capture_output=True, text=True, timeout=5)
-    except (OSError, subprocess.SubprocessError):
-        return 3
-    if result.returncode != 0:
+        sys.stderr.write("Wallpaper service missing: install awww.\n")
+        return 1
+    result = run_awww(["query"], timeout=5)
+    if result is None:
         return 3
 
     # Example daemon output: ": DP-2: 1920x1200, scale: 1, currently displaying: image: /path"
@@ -4012,12 +4022,8 @@ def restore_wallpaper():
     current = get_current_wallpaper()
     if not current:
         return 0
-    try:
-        subprocess.run(["awww", "img", current, "--transition-type", "none",
-                        "--outputs", ",".join(blank)],
-                       capture_output=True, timeout=15)
-    except (OSError, subprocess.SubprocessError) as error:
-        sys.stderr.write(f"awww failed: {error}\n")
+    if run_awww(["img", current, "--transition-type", "none",
+                 "--outputs", ",".join(blank)]) is None:
         return 1
     return 0
 
@@ -4029,7 +4035,7 @@ def set_theme(theme_id):
 
 
 def main():
-    actions = ("list-wallpapers | list-animated | get-current | get-state | "
+    actions = ("list-library [selected-path] | list-wallpapers | list-animated | get-current | get-state | "
                "set-wallpaper <path> [transition] | "
                "restore | extract-colors [path] | set-theme <id> | "
                "push-terminal-palette <json> | push-terminal-font <family> | "
@@ -4041,7 +4047,14 @@ def main():
     action = sys.argv[1]
     argument = sys.argv[2] if len(sys.argv) >= 3 else None
 
-    if action == "list-wallpapers":
+    if action == "list-library":
+        try:
+            print(json.dumps({"wallpapers": list_wallpapers(), "animated": list_animated(),
+                              "missingChosen": argument if argument and not os.path.isfile(argument) else ""}))
+        except OSError as error:
+            sys.stderr.write(f"Cannot scan wallpaper library: {error}\n")
+            sys.exit(1)
+    elif action == "list-wallpapers":
         print(json.dumps(list_wallpapers()))
     elif action == "list-animated":
         print(json.dumps(list_animated()))

@@ -57,13 +57,6 @@ QtObject {
     readonly property color islandSurfaceHover: "#1f1f1f"
     readonly property color islandBorder: "#262626"
 
-    // The desk's widgets have a ground of their own, or the bar's
-    // (`SettingsService.desktopGround`, empty to follow).
-    readonly property string deskStyle: SettingsService.desktopGround || root.surfaceStyle
-    readonly property bool deskSolid: root.deskStyle !== "glass"
-    readonly property bool deskGlass: root.deskStyle === "glass"
-
-
     function veilOf(style: string): color {
         return style === "glass" ? Qt.rgba(1, 1, 1, 0.08) : root.islandSurface
     }
@@ -158,15 +151,6 @@ QtObject {
     readonly property color paperLine: "#261c1c1e"
     readonly property int paperRadius: 10
 
-    // Sticker widgets: a die-cut edge of vinyl white, fixed like the island's
-    // black, around a palette hue washed towards it; what is printed on one
-    // is the same hue darkened. The edge is a share of the sticker's short
-    // side, the lean a sticker's largest tilt in degrees.
-    readonly property color stickerPaper: "#fbf7ee"
-    readonly property real stickerWash: 0.45
-    readonly property real stickerDeep: 0.62
-    readonly property real stickerEdge: 0.028
-    readonly property real stickerLean: 5
 
     // Contribution graph, empty to busiest. GitHub's dark ramp, fixed across
     // palettes; the empty step is lifted off black so it reads as a cell.
@@ -190,7 +174,12 @@ QtObject {
 
     // The bar's scale. Ring chips, the resting island and the one-capsule
     // band are all one capsule tall.
+    readonly property int bandEndPadding: 12
+    readonly property int sidePopupGap: 4
     readonly property int capsuleHeight: SettingsService.barHeight
+    readonly property int sideContentWidth: Math.max(1, SettingsService.sideBarWidth - 8)
+    readonly property int sideFigureFontSize: Math.min(root.fontSizeSmall, Math.max(8, Math.floor(root.sideContentWidth / 2.8)))
+    readonly property int sideClockFontSize: Math.min(root.fontSizeRegular, root.sideFigureFontSize + 1)
     readonly property int barTopMargin: SettingsService.barMargin
     readonly property int capsuleSpacing: 8
 
@@ -202,18 +191,8 @@ QtObject {
     // Where the bar's input region ends: 8 px of slack under the capsules.
     readonly property int barBand: root.barReserve + 8
 
-    // ── DESKTOP GRID ────────────────────────────────────────────────────────
-    //
-    // Widgets span whole cells. The gutter matches Hyprland's `gaps_out`.
-    // A square is at least `desktopCell` and grows up to `desktopCellLargest`
-    // so the board's margin is the same on all four sides
-    // (`DesktopService.gridFor`). At the least, a 4 × 2 widget is 398 × 190,
-    // which fits a two-row module card with one gutter around it; a larger
-    // detail needs a larger cell.
-    readonly property int desktopCell: 86
-    readonly property int desktopCellLargest: 108
-    readonly property int desktopGutter: 18
-    readonly property int desktopStride: root.desktopCell + root.desktopGutter
+    // Margin shared by the bar panels and control-centre editor.
+    readonly property int surfaceGutter: 18
 
     // ── CONTROL CENTRE GRID ─────────────────────────────────────────────────
     //
@@ -281,9 +260,6 @@ QtObject {
     readonly property int menuRow: 30
     readonly property int menuPadding: 6
 
-    // Matches Hyprland's `rounding`: widgets sit among windows.
-    readonly property int desktopRadius: 22
-
     readonly property int radiusSmall: 8
     readonly property int radiusMedium: 12
     readonly property int radiusLarge: 18
@@ -311,24 +287,6 @@ QtObject {
         { id: "#8b5cf6", label: "Purple" },
         { id: "#e93d82", label: "Pink" }
     ]
-
-    // ── SPECTRUM ────────────────────────────────────────────────────────────
-    //
-    // Sound bars along a screen edge, as they are placed: a bar
-    // `spectrumBar` wide with `spectrumGap` between, reaching `spectrumReach`
-    // in from the edge at full level and `spectrumFloor` in silence. Each strip
-    // can change the three. Solid at the edge, fading to `spectrumTip` at the
-    // end.
-    readonly property int spectrumBar: 10
-    readonly property int spectrumGap: 6
-    readonly property int spectrumReach: 170
-    readonly property int spectrumFloor: 3
-    readonly property real spectrumBase: 0.95
-    readonly property real spectrumTip: 0.25
-
-    // cava reports linear amplitude; a fractional power keeps quiet passages
-    // visible.
-    readonly property real spectrumCurve: 0.55
 
     // ── SHADOW ──────────────────────────────────────────────────────────────
     //
@@ -371,7 +329,6 @@ QtObject {
 
     readonly property string fontFamily: "Liberation Sans"
     readonly property string fontMono: "Liberation Mono"
-
 
     // Type drawn very large: Inter's display cut, tighter and finer at that
     // size, when the family is Inter; any other family as it is.
@@ -434,7 +391,6 @@ QtObject {
     // How long anything that screenshots the screen (lock, picker, capture)
     // waits after closing the island: the morph plus a couple of frames.
     readonly property int durationIslandGone: root.durationMorph + 40
-
 
     // ── CAPTURE ─────────────────────────────────────────────────────────────
 

@@ -1,7 +1,7 @@
 // ╭──────────────────────────────────────────────────────────────────────────╮
 // │                                                                          │
 // │   C A R O U S E L                                                        │
-// │   horizontal carousel · the centred tile enlarged                        │
+// │   horizontal or vertical carousel · enlarged centre tile                        │
 // │                                                                          │
 // │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
@@ -11,7 +11,7 @@ import QtQuick
 
 import "../theme"
 
-// A horizontal strip of tiles with the current one centred and enlarged.
+// A strip of tiles with the current one centred and enlarged, along either axis.
 //
 // Only `position` animates; each tile derives its offset and scale from its
 // distance to it, so a step is one animation and a held arrow key retargets
@@ -23,6 +23,7 @@ Item {
     property alias model: repeater.model
     property alias delegate: repeater.delegate
 
+    property bool vertical: false
     property int current: 0
     readonly property int count: repeater.count
 
@@ -44,15 +45,17 @@ Item {
         NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing }
     }
 
+    implicitWidth: Math.ceil(root.tileWidth * root.centreScale)
     implicitHeight: Math.ceil(root.tileHeight * root.centreScale)
     clip: true
 
     // Offset of a tile `distance` steps from the centre. The first step spans
     // half the large tile and half a small one; later steps a small one.
     // Linear in between, so sliding is continuous.
+    readonly property real tileExtent: root.vertical ? root.tileHeight : root.tileWidth
     readonly property real firstStep:
-        root.tileWidth * root.centreScale / 2 + root.gap + root.tileWidth / 2
-    readonly property real stride: root.tileWidth + root.gap
+        root.tileExtent * root.centreScale / 2 + root.gap + root.tileExtent / 2
+    readonly property real stride: root.tileExtent + root.gap
 
     function offsetOf(distance: real): real {
         const away = Math.abs(distance)
@@ -92,7 +95,9 @@ Item {
 
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
         onWheel: event => {
-            const delta = event.angleDelta.x !== 0 ? event.angleDelta.x : event.angleDelta.y
+            const delta = root.vertical
+                ? (event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x)
+                : (event.angleDelta.x !== 0 ? event.angleDelta.x : event.angleDelta.y)
             turned += delta
             while (Math.abs(turned) >= 120) {
                 root.step(turned < 0 ? 1 : -1)

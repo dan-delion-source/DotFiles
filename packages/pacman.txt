@@ -1,0 +1,104 @@
+# Yozora package inventory. Groups other than core are opt-in.
+# One package per line. Alternatives share their primary dependency ID.
+# Providers are checked against your configured repositories before AUR.
+
+# group: core
+# QuickShell desktop, wallpaper colours, terminal and standard controls
+hyprland
+quickshell
+python
+qt6-declarative
+qt6-svg
+qt6-imageformats
+kitty
+thunar
+xdg-utils
+xdg-user-dirs
+awww
+imagemagick
+fastfetch
+cava
+networkmanager
+bluez
+bluez-utils
+upower
+pipewire
+pipewire-audio
+pipewire-pulse
+wireplumber
+brightnessctl
+playerctl
+hyprsunset
+hyprpicker
+grim
+wl-clipboard
+curl
+inotify-tools
+fontconfig
+libnotify
+polkit
+polkit-kde-agent
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+accountsservice
+qt6ct
+papirus-icon-theme
+adwaita-cursors
+ttf-jetbrains-mono-nerd
+inter-font
+noto-fonts-emoji
+unicode-emoji
+unicode-cldr-annotations
+iso-codes
+pacman-contrib
+pacman
+systemd
+dbus
+procps-ng
+coreutils
+bash
+grep
+ttf-iosevka-nerd
+qt6-shadertools
+gtk3
+libpulse
+
+# group: capture
+# Screenshot editor, OCR and recording
+satty
+tesseract
+tesseract-data-eng
+wf-recorder
+
+# group: animated
+# Animated wallpapers
+mpvpaper
+ffmpeg
+
+# group: hardware
+# External monitor brightness and power profiles
+ddcutil
+power-profiles-daemon
+
+# group: terminal-apps
+# Optional themed terminal applications
+btop
+yazi
+neovim
+imv
+git
+fzf
+ripgrep
+mpv
+
+# group: kde
+# Optional KDE application theme tools
+kconfig
+
+# group: thunar
+# Optional Thunar settings integration
+xfconf
+
+# group: wallpapers
+# Optional external wallpaper download
+git

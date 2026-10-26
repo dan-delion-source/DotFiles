@@ -15,6 +15,7 @@ import Quickshell.Io
 import Quickshell.Services.Pam
 
 import "../theme"
+import "../lock/LockStyles.js" as LockStyles
 
 // Locks the session through ext-session-lock instead of an external locker,
 // so the desktop can stay on screen behind the lock, blurred.
@@ -31,6 +32,12 @@ Singleton {
     id: root
 
     property bool locked: false
+
+    // Freeze the presentation for the whole lock, including hotplugged screens.
+    // A settings/profile change during locking applies to the following lock.
+    property string activeStyle: "classic"
+    property real activeMotion: 1
+    readonly property int exitDuration: LockStyles.exitMs(root.activeStyle, root.activeMotion)
 
     // `locked` is the request; this is the compositor confirming the screen
     // is covered.
@@ -114,8 +121,10 @@ Singleton {
     property bool pendingCapture: false
 
     function lock(): void {
-        if (root.locked)
+        if (root.locked || root.pendingCapture || root.capture.running)
             return
+        root.activeStyle = LockStyles.normalize(SettingsService.lockStyle)
+        root.activeMotion = LockStyles.motionFactor(Theme.motion)
         root.message = ""
         root.failed = false
         root.leaving = false
@@ -361,7 +370,7 @@ Singleton {
     }
 
     readonly property Timer leave: Timer {
-        interval: Theme.durationMorph
+        interval: root.exitDuration
         onTriggered: {
             if (root.pam.active)
                 root.pam.abort()

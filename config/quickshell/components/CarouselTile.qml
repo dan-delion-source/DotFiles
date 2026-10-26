@@ -26,8 +26,8 @@ Item {
 
     width: root.strip.tileWidth
     height: root.strip.tileHeight
-    x: (root.strip.width - root.width) / 2 + root.strip.offsetOf(root.distance)
-    y: (root.strip.height - root.height) / 2
+    x: (root.strip.width - root.width) / 2 + (root.strip.vertical ? 0 : root.strip.offsetOf(root.distance))
+    y: (root.strip.height - root.height) / 2 + (root.strip.vertical ? root.strip.offsetOf(root.distance) : 0)
     scale: root.strip.scaleOf(root.distance)
     visible: Math.abs(root.distance) < root.strip.reach
     // Tiles nearer the centre stack on top, so a sliding neighbour never

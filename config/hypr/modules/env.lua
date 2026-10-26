@@ -10,8 +10,9 @@
 hl.env("XCURSOR_SIZE",    "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
--- Portable XCursor fallback; optional generated cursors are selected in settings.
-hl.env("XCURSOR_THEME",    "Adwaita")
+-- Use the cursor theme installed by the core dependency set.
+hl.env("HYPRCURSOR_THEME", "Adwaita")
+hl.env("XCURSOR_THEME", "Adwaita")
 
 -- · Qt platform theme; the palette push writes qt6ct's colour scheme.
 -- · Quickshell draws from its own Theme.qml and is unaffected.
@@ -37,11 +38,14 @@ local function user_dirs()
     return dirs
 end
 
--- · capture folders, shared by the shell and hyprshot. XDG_SCREENSHOTS_DIR
--- · and XDG_SCREENCASTS_DIR in user-dirs.dirs override the defaults.
+-- · capture folders, shared by the shell and hyprshot. XDG_SCREENSHOTS_DIR,
+-- · XDG_SCREENCASTS_DIR and XDG_CAMERA_DIR in user-dirs.dirs override the
+-- · defaults; the camera's is where GNOME's camera puts its photos.
 local dirs       = user_dirs()
 local captures   = dirs.SCREENSHOTS or (dirs.PICTURES or home) .. "/Screenshots"
 local recordings = dirs.SCREENCASTS or (dirs.VIDEOS or home) .. "/Screencasts"
-hl.env("DANSHELL_CAPTURES",   captures)
+local camera     = dirs.CAMERA or (dirs.PICTURES or home) .. "/Camera"
+hl.env("IMPASTO_CAPTURES",   captures)
 hl.env("HYPRSHOT_DIR",       captures)
-hl.env("DANSHELL_RECORDINGS", recordings)
+hl.env("IMPASTO_RECORDINGS", recordings)
+hl.env("IMPASTO_CAMERA",     camera)

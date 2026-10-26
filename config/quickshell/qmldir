@@ -38,12 +38,10 @@ singleton ModuleService      1.0 services/ModuleService.qml
 singleton ShortcutService    1.0 services/ShortcutService.qml
 singleton AccountService     1.0 services/AccountService.qml
 singleton MachineService     1.0 services/MachineService.qml
-singleton DesktopService     1.0 services/DesktopService.qml
 singleton ControlsService    1.0 services/ControlsService.qml
 singleton GamesService       1.0 services/GamesService.qml
 singleton NotesService       1.0 services/NotesService.qml
 singleton TasksService       1.0 services/TasksService.qml
-singleton DeckService        1.0 services/DeckService.qml
 singleton PickerService      1.0 services/PickerService.qml
 singleton CaptureService     1.0 services/CaptureService.qml
 singleton RecorderService    1.0 services/RecorderService.qml
@@ -109,7 +107,6 @@ Sticky           1.0 components/Sticky.qml
 PopMenu          1.0 components/PopMenu.qml
 
 Bar              1.0 bar/Bar.qml
-Deck             1.0 deck/Deck.qml
 DynamicIsland    1.0 bar/widgets/DynamicIsland.qml
 WorkspacesWidget 1.0 bar/widgets/WorkspacesWidget.qml
 TrayWidget       1.0 bar/widgets/TrayWidget.qml
@@ -154,6 +151,7 @@ SettingsWindow        1.0 settings/SettingsWindow.qml
 SettingsPanel         1.0 settings/SettingsPanel.qml
 SettingsSection       1.0 settings/SettingsSection.qml
 BarSection            1.0 settings/BarSection.qml
+ModuleSettings        1.0 settings/ModuleSettings.qml
 ModulesPart           1.0 settings/ModulesPart.qml
 LayoutEditor          1.0 settings/LayoutEditor.qml
 AppearanceSection     1.0 settings/AppearanceSection.qml
@@ -213,3 +211,11 @@ NetworkSpeedModule 1.0 bar/modules/NetworkSpeedModule.qml
 NetworkSpeedBlock 1.0 bar/island/controls/NetworkSpeedBlock.qml
 NetworkBlock 1.0 bar/island/controls/NetworkBlock.qml
 NetworkRates 1.0 components/NetworkRates.qml
+
+RunningCat 1.0 components/RunningCat.qml
+RunningCatModule 1.0 bar/modules/RunningCatModule.qml
+
+EdgeRail 1.0 bar/EdgeRail.qml
+BarPositionPreview 1.0 components/BarPositionPreview.qml
+
+StackedClock 1.0 components/StackedClock.qml

@@ -1,12 +1,14 @@
 import contextlib
+import errno
 import importlib.util
 import io
 import json
 from pathlib import Path
 import subprocess
 import tempfile
+import threading
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 SPEC = importlib.util.spec_from_file_location("installer", Path(__file__).parents[1] / "installer.py")
 installer = importlib.util.module_from_spec(SPEC)
@@ -63,6 +65,31 @@ class DeploymentTests(unittest.TestCase):
         self.deployment.restore()
         self.assertEqual((self.config / "hypr/original").read_text(), "original")
 
+    def test_target_shader_rebuild_keeps_reinstall_repeatable(self):
+        def bake(staged):
+            (staged / "native-shader.qsb").write_text("target Qt package")
+        with patch.object(installer, "bake_lock_shader", side_effect=bake) as compiler:
+            self.deployment.install()
+            self.deployment.install()
+        compiler.assert_called_once()
+        entry = next(e for e in self.deployment.load()["entries"]
+                     if e["destination"] == str(self.config / "quickshell"))
+        self.assertNotEqual(entry["source"], entry["installed"])
+        self.assertEqual(entry["installed"], installer.fingerprint(self.config / "quickshell"))
+        self.deployment.restore()
+        self.assertFalse((self.config / "quickshell").exists())
+
+    def test_shader_build_failure_leaves_existing_target_untouched(self):
+        # Arrange the shell first to isolate this pre-replacement failure.
+        self.deployment.targets.sort(key=lambda item: item[0].name != "quickshell")
+        (self.config / "quickshell").mkdir(parents=True)
+        (self.config / "quickshell/original").write_text("original")
+        with patch.object(installer, "bake_lock_shader", side_effect=OSError("compiler failed")):
+            with self.assertRaises(OSError):
+                self.deployment.install()
+        self.assertEqual((self.config / "quickshell/original").read_text(), "original")
+        self.assertFalse(self.deployment.record.exists())
+
     def test_existing_symlink_restored_without_changing_target(self):
         other = Path(self.temp.name) / "other"
         other.mkdir()
@@ -89,14 +116,10 @@ class DeploymentTests(unittest.TestCase):
     def test_failed_replacement_is_recoverable(self):
         (self.config / "hypr").mkdir(parents=True)
         (self.config / "hypr/original").write_text("original")
-        replace = Path.replace
-        def fail_stage(path, target):
-            if path.name == "config" and path.parent.name.startswith(".danshell-"):
-                raise OSError("simulated disk failure")
-            return replace(path, target)
-        with patch.object(Path, "replace", fail_stage):
+        with patch.object(installer, "publish_config", side_effect=OSError("simulated disk failure")):
             with self.assertRaises(OSError):
                 self.deployment.install()
+        self.assertEqual((self.config / "hypr/original").read_text(), "original")
         self.deployment.restore()
         self.assertEqual((self.config / "hypr/original").read_text(), "original")
 
@@ -109,6 +132,61 @@ class DeploymentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Backup missing"):
             self.deployment.restore()
         self.assertTrue((self.config / "hypr/config.txt").exists())
+
+
+class AtomicPublishTests(unittest.TestCase):
+    def test_watched_entry_never_disappears_during_repeated_directory_swaps(self):
+        with tempfile.TemporaryDirectory(prefix="hypr config swap ") as temporary:
+            root = Path(temporary)
+            staged, live = root / "staged", root / "hypr"
+            for path, text in ((staged, "new config"), (live, "old config")):
+                path.mkdir()
+                (path / "hyprland.lua").write_text(text)
+                (path / "modules").mkdir()
+            stopped, started = threading.Event(), threading.Event()
+            errors, observed = [], []
+
+            def read_entry():
+                started.set()
+                while not stopped.is_set():
+                    try:
+                        value = (live / "hyprland.lua").read_text()
+                        if value not in ("old config", "new config"):
+                            errors.append(value)
+                        observed.append(value)
+                    except OSError as error:
+                        errors.append(str(error))
+
+            reader = threading.Thread(target=read_entry)
+            reader.start()
+            self.assertTrue(started.wait(timeout=2))
+            try:
+                for _ in range(300):
+                    installer.publish_config(staged, live)
+            finally:
+                stopped.set()
+                reader.join(timeout=2)
+            self.assertFalse(reader.is_alive())
+            self.assertTrue(observed)
+            self.assertEqual(errors, [])
+            self.assertEqual((live / "hyprland.lua").read_text(), "old config")
+            self.assertEqual((staged / "hyprland.lua").read_text(), "new config")
+
+    def test_failed_atomic_exchange_keeps_both_trees_intact(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            staged, live = root / "staged", root / "hypr"
+            for path, text in ((staged, "new"), (live, "old")):
+                path.mkdir()
+                (path / "hyprland.lua").write_text(text)
+            before = installer.fingerprint(root)
+            libc = Mock()
+            libc.renameat2.return_value = -1
+            with patch.object(installer.ctypes, "CDLL", return_value=libc), \
+                    patch.object(installer.ctypes, "get_errno", return_value=errno.EOPNOTSUPP):
+                with self.assertRaisesRegex(OSError, "existing config kept"):
+                    installer.publish_config(staged, live)
+            self.assertEqual(installer.fingerprint(root), before)
 
 
 class DependencyTests(unittest.TestCase):

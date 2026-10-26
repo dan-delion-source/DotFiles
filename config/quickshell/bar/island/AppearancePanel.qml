@@ -33,6 +33,7 @@ FocusScope {
     // `wallpaper` or `palette`: the name the panel was opened under, so the
     // shortcut slides a panel that is already open. `shown` is the page on
     // screen, which can also be `animated`, a page with no name of its own.
+    readonly property bool sideLayout: SettingsService.barPosition === "left" || SettingsService.barPosition === "right"
     property string page: "wallpaper"
     property string shown: root.page
     onPageChanged: root.shown = root.page
@@ -117,10 +118,10 @@ FocusScope {
             : [Theme.accent, Theme.green, Theme.yellow, Theme.red, Theme.blue]
     }
 
-    Keys.onLeftPressed: root.strip.step(-1)
-    Keys.onRightPressed: root.strip.step(1)
-    Keys.onDownPressed: root.turn(1)
-    Keys.onUpPressed: root.turn(-1)
+    Keys.onLeftPressed: root.sideLayout ? root.turn(-1) : root.strip.step(-1)
+    Keys.onRightPressed: root.sideLayout ? root.turn(1) : root.strip.step(1)
+    Keys.onDownPressed: root.sideLayout ? root.strip.step(1) : root.turn(1)
+    Keys.onUpPressed: root.sideLayout ? root.strip.step(-1) : root.turn(-1)
     Keys.onReturnPressed: root.apply()
     Keys.onEnterPressed: root.apply()
     Keys.onPressed: event => {
@@ -143,13 +144,26 @@ FocusScope {
 
         Text {
             Layout.fillWidth: true
-            visible: ThemeService.error !== ""
-            text: ThemeService.error
+            visible: WallpaperService.error !== "" || ThemeService.error !== ""
+            text: WallpaperService.error || ThemeService.error
             textFormat: Text.PlainText
             wrapMode: Text.Wrap
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.red
+        }
+
+        SegmentedControl {
+            Layout.fillWidth: true
+            visible: root.sideLayout
+            options: [{id: "animated", label: Tr.t("Animated")},
+                      {id: "wallpaper", label: Tr.t("Wallpaper")},
+                      {id: "palette", label: Tr.t("Palette")}]
+            current: root.shown
+            onSelected: id => {
+                root.shown = id
+                if (id !== "animated") root.panelRequested(id === "palette" ? "palette" : "appearance")
+            }
         }
 
         // ── STRIPS ──────────────────────────────────────────────────────────
@@ -164,11 +178,14 @@ FocusScope {
             clip: true
 
             Carousel {
+                vertical: root.sideLayout
                 id: wallpapers
+                objectName: "wallpaperCarousel"
 
                 width: pages.width
                 height: pages.height
-                y: (1 - root.shownIndex) * pages.height
+                x: root.sideLayout ? (1 - root.shownIndex) * pages.width : 0
+                y: root.sideLayout ? 0 : (1 - root.shownIndex) * pages.height
                 opacity: root.shownIndex === 1 ? 1 : 0
                 current: root.appliedWallpaper
                 model: WallpaperService.wallpapers
@@ -178,6 +195,7 @@ FocusScope {
                 gap: root.gap
                 onActivated: root.apply()
 
+                Behavior on x { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
                 Behavior on y { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
                 Behavior on opacity { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
 
@@ -204,7 +222,8 @@ FocusScope {
                         Image {
                             anchors.fill: parent
                             source: Math.abs(tile.distance) <= root.loadReach
-                                ? `file://${tile.modelData.path}` : ""
+                                ? "file://" + tile.modelData.path.split("/").map(encodeURIComponent).join("/")
+                                    + "?" + WallpaperService.libraryVersion : ""
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
                             sourceSize.width: 320
@@ -217,11 +236,14 @@ FocusScope {
             }
 
             Carousel {
+                vertical: root.sideLayout
                 id: animations
+                objectName: "animatedCarousel"
 
                 width: pages.width
                 height: pages.height
-                y: (0 - root.shownIndex) * pages.height
+                x: root.sideLayout ? (0 - root.shownIndex) * pages.width : 0
+                y: root.sideLayout ? 0 : (0 - root.shownIndex) * pages.height
                 opacity: root.onAnimated ? 1 : 0
                 current: root.appliedAnimation
                 model: WallpaperService.animated
@@ -231,6 +253,7 @@ FocusScope {
                 gap: root.gap
                 onActivated: root.apply()
 
+                Behavior on x { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
                 Behavior on y { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
                 Behavior on opacity { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
 
@@ -254,7 +277,7 @@ FocusScope {
                         Image {
                             anchors.fill: parent
                             source: Math.abs(clip.distance) <= root.loadReach
-                                ? `file://${clip.modelData.poster}` : ""
+                                ? "file://" + clip.modelData.poster.split("/").map(encodeURIComponent).join("/") : ""
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
                             sourceSize.width: 320
@@ -275,18 +298,21 @@ FocusScope {
                 opacity: animations.opacity
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
-                text: Tr.t("No animated wallpapers yet. Videos in ~/.local/share/wallpapers/animated show up here.")
+                text: Tr.t("No animated wallpapers yet. Videos in ~/Pictures/Wallpapers/animated show up here automatically.")
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.textMuted
             }
 
             Carousel {
+                vertical: root.sideLayout
                 id: palettes
+                objectName: "paletteCarousel"
 
                 width: pages.width
                 height: pages.height
-                y: (2 - root.shownIndex) * pages.height
+                x: root.sideLayout ? (2 - root.shownIndex) * pages.width : 0
+                y: root.sideLayout ? 0 : (2 - root.shownIndex) * pages.height
                 opacity: root.onPalette ? 1 : 0
                 current: root.activePalette
                 model: ThemeService.availableThemes
@@ -296,6 +322,7 @@ FocusScope {
                 gap: root.gap
                 onActivated: root.apply()
 
+                Behavior on x { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
                 Behavior on y { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
                 Behavior on opacity { NumberAnimation { duration: Theme.durationMorph; easing.type: Theme.easing } }
 
@@ -364,7 +391,9 @@ FocusScope {
 
             Text {
                 Layout.fillWidth: true
-                text: root.onPalette ? (root.centredPalette?.badge ?? "")
+                text: !root.onPalette && WallpaperService.scanError ? WallpaperService.scanError
+                    : !root.onPalette && WallpaperService.chosenUnavailable ? "Selected wallpaper is unavailable"
+                    : root.onPalette ? (root.centredPalette?.badge ?? "")
                     : root.onAnimated ? (root.centredAnimation?.name ?? "")
                     : (root.centredWallpaper?.name ?? "")
                 elide: Text.ElideRight
@@ -386,13 +415,13 @@ FocusScope {
 
             // Switch pages with the pointer: up, and down, where there is one.
             Door {
-                glyph: "󰅃"
+                glyph: root.sideLayout ? "󰅁" : "󰅃"
                 visible: root.shownIndex > 0
                 onClicked: root.turn(-1)
             }
 
             Door {
-                glyph: "󰅀"
+                glyph: root.sideLayout ? "󰅂" : "󰅀"
                 visible: root.shownIndex < root.pages.length - 1
                 onClicked: root.turn(1)
             }

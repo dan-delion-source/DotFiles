@@ -14,7 +14,7 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 
-// Lists the bundled wallpapers and the animated ones, and applies them. Emits
+// Lists the Pictures wallpaper library and its animated folder, and applies them. Emits
 // `applied` instead of calling ThemeService, so the dependency only runs one
 // way.
 //
@@ -34,7 +34,16 @@ QtObject {
     property var animated: []
     property string currentWallpaper: ""
     property string currentMotion: ""
-    property bool scanning: false
+    readonly property bool scanning: scanProcess.running
+    property bool scanPending: false
+    property string scanError: ""
+    property string error: ""
+    property string restoreDetail: ""
+    property int libraryVersion: 0
+    property string missingChosen: ""
+    readonly property string libraryDirectory: Quickshell.env("HOME") + "/Pictures/Wallpapers"
+    readonly property bool chosenUnavailable: root.chosen !== "" && root.chosen === root.missingChosen
+    onChosenChanged: root.rescan.restart()
 
     // What was picked: the video while one plays, else the picture. What a
     // profile keeps, and what the picker marks as applied.
@@ -47,29 +56,56 @@ QtObject {
     }
 
     readonly property Process scanProcess: Process {
-        command: [root.script, "list-wallpapers"]
+        command: [root.script, "list-library", root.chosen]
         running: true
-        onExited: root.scanning = false
+        onStarted: root.scanError = ""
+        onExited: exitCode => {
+            if (exitCode !== 0)
+                root.scanError = "Could not scan wallpapers. Check folder access."
+            if (root.scanPending) {
+                root.scanPending = false
+                root.rescan.restart()
+            }
+        }
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.trim())
+                    console.warn(text.trim())
+            }
+        }
         stdout: StdioCollector {
             onStreamFinished: {
                 const list = root.parseJson(text)
-                if (Array.isArray(list))
-                    root.wallpapers = list
+                if (list && Array.isArray(list.wallpapers) && Array.isArray(list.animated)) {
+                    root.wallpapers = list.wallpapers
+                    root.animated = list.animated
+                    root.missingChosen = list.missingChosen ?? ""
+                    root.libraryVersion += 1
+                }
             }
         }
     }
 
-    // Posters are made on the first listing, so this one can take a second.
-    readonly property Process animatedProcess: Process {
-        command: [root.script, "list-animated"]
+    readonly property Process libraryWatcher: Process {
+        command: ["python3", Quickshell.shellPath("scripts/watch_wallpapers.py"), root.libraryDirectory]
         running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const list = root.parseJson(text)
-                if (Array.isArray(list))
-                    root.animated = list
+        stdout: SplitParser {
+            onRead: line => {
+                if (line === "changed")
+                    root.rescan.restart()
             }
         }
+        onExited: root.watchRetry.restart()
+    }
+
+    readonly property Timer watchRetry: Timer {
+        interval: 3000
+        onTriggered: root.libraryWatcher.running = true
+    }
+
+    readonly property Timer rescan: Timer {
+        interval: 500
+        onTriggered: root.scan()
     }
 
     readonly property Process currentProcess: Process {
@@ -83,7 +119,7 @@ QtObject {
                         root.currentWallpaper = state.currentWallpaper
                     root.currentMotion = state.currentMotion ?? ""
                 }
-                if (root.asked !== "") {
+                if (state && root.asked !== "") {
                     root.asked = ""
                     root.applied(root.currentWallpaper)
                 }
@@ -96,14 +132,22 @@ QtObject {
     property string asked: ""
 
     readonly property Process applyProcess: Process {
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.trim()) {
+                    root.error = text.trim()
+                    console.warn(root.error)
+                }
+            }
+        }
         onExited: exitCode => {
             if (exitCode === 0) {
                 root.currentProcess.running = true
             } else {
                 console.warn("Could not apply wallpaper:", root.asked)
-                // `apply` named it already: read back what is really up
+                if (!root.error)
+                    root.error = "Could not apply wallpaper. Check awww query; if unavailable, run awww-daemon in a terminal."
                 root.asked = ""
-                root.currentProcess.running = true
             }
         }
     }
@@ -118,10 +162,16 @@ QtObject {
     readonly property Process restoreProcess: Process {
         command: [root.script, "restore"]
         running: true
+        onStarted: root.restoreDetail = ""
+        stderr: StdioCollector {
+            onStreamFinished: root.restoreDetail = text.trim()
+        }
         onExited: exitCode => {
             if (exitCode === 3 && restoreRetry.tries < 8) {
                 restoreRetry.tries += 1
                 restoreRetry.restart()
+            } else if (exitCode !== 0) {
+                root.error = root.restoreDetail || "Wallpaper restore failed. Check awww query; if unavailable, run awww-daemon in a terminal."
             }
         }
     }
@@ -167,9 +217,11 @@ QtObject {
     }
 
     function scan(): void {
-        root.scanning = true
+        if (root.scanning) {
+            root.scanPending = true
+            return
+        }
         root.scanProcess.running = true
-        root.animatedProcess.running = true
     }
 
     // ── TRANSITIONS ─────────────────────────────────────────────────────────
@@ -196,14 +248,9 @@ QtObject {
     }
 
     function apply(path: string): void {
-        if (!path)
+        if (!path || root.applyProcess.running || root.currentProcess.running)
             return
-        if (root.isMotion(path)) {
-            root.currentMotion = path
-        } else {
-            root.currentMotion = ""
-            root.currentWallpaper = path
-        }
+        root.error = ""
         root.asked = path
         root.applyProcess.command = [root.script, "set-wallpaper", path,
                                      root.transitionType(SettingsService.wallpaperTransition)]

@@ -318,16 +318,16 @@ Singleton {
             action: () => SettingsService.set("islandAttached", !SettingsService.islandAttached)
         },
         Toggle {
-            // All three at once; the settings set them one by one.
+            // Both at once; the settings set them one by one.
             readonly property int count: [SettingsService.windowShadow,
-                SettingsService.barShadow, SettingsService.widgetShadow].filter(on => on).length
+                SettingsService.barShadow].filter(on => on).length
 
             key: "shadow"; icon: "󰘷"; label: "Shadows"
-            detail: count === 3 ? "On" : count === 0 ? "Off" : `${count} of 3`
+            detail: count === 2 ? "On" : count === 0 ? "Off" : `${count} of 2`
             active: count > 0
             action: () => {
                 const on = count === 0
-                for (const key of ["windowShadow", "barShadow", "widgetShadow"])
+                for (const key of ["windowShadow", "barShadow"])
                     SettingsService.set(key, on)
             }
         },
@@ -825,7 +825,7 @@ Singleton {
 
     // Size selected by the resize handle, given the dragged extent in cells:
     // the smallest offered footprint containing the pointer pulled back by
-    // `handleInset`, else the nearest corner. Same rule as `DesktopService`.
+    // `handleInset`, else the nearest corner.
     readonly property real handleInset: 0.35
 
     function sizeNearest(id: string, cols: real, rows: real): string {

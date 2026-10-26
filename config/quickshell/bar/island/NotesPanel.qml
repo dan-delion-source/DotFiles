@@ -116,11 +116,6 @@ FocusScope {
                     NotesService.archive(card.key, true)
             }
 
-            // Where a note is shown, for the mark in the card's corner.
-            function placement(key: string): string {
-                return DesktopService.placementOf(key)
-            }
-
             GridView {
                 id: grid
 
@@ -238,10 +233,7 @@ FocusScope {
                                     return ""
                                 if (slot.card.archived)
                                     return "󰁫"
-                                const place = page.placement(slot.card.key)
-                                if (place === "grid")
-                                    return "󰕰"
-                                return place !== "" ? "󰞘" : ""
+                                return ""
                             }
                             font.family: Theme.fontMono
                             font.pixelSize: 11

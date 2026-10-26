@@ -731,6 +731,47 @@ FASTFETCH_CONFIG = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              "../../fastfetch/config.jsonc"))
 LOGO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                        "../../fastfetch/logos"))
+LOGO_EXTENSIONS = (".txt", ".png", ".jpg", ".jpeg", ".webp", ".gif")
+
+
+def file_choice(filename):
+    for choice, (_, supplied) in EXTRA_LOGOS.items():
+        if filename == supplied:
+            return choice
+    return "logo:" + filename
+
+
+def list_greetings():
+    entries = [{"id": key, "label": label, "kind": "scene"}
+               for key, label in (("lava", "Lava lamp"), ("critters", "Critters"),
+                                  ("koi", "Koi"), ("invaders", "Invaders"),
+                                  ("random", "Random"))]
+    if not os.path.isdir(LOGO_DIR):
+        return entries
+    for filename in sorted(os.listdir(LOGO_DIR), key=str.casefold):
+        source = os.path.join(LOGO_DIR, filename)
+        if (filename.startswith(".") or not filename.lower().endswith(LOGO_EXTENSIONS)
+                or not os.path.isfile(source)):
+            continue
+        status = os.stat(source)
+        entries.append({"id": file_choice(filename),
+                        "label": os.path.splitext(filename)[0].replace("_", " ").replace("-", " ").title(),
+                        "kind": "text" if filename.lower().endswith(".txt") else "image",
+                        "path": source,
+                        "version": f"{status.st_mtime_ns}-{status.st_size}"})
+    return entries
+
+
+def external_source(choice):
+    if choice in EXTRA_LOGOS:
+        return os.path.join(LOGO_DIR, EXTRA_LOGOS[choice][1])
+    if choice.startswith("logo:"):
+        filename = choice[5:]
+        if (filename and filename == os.path.basename(filename)
+                and not filename.startswith(".")
+                and filename.lower().endswith(LOGO_EXTENSIONS)):
+            return os.path.join(LOGO_DIR, filename)
+    return None
 
 
 def scene_file(scene):
@@ -824,9 +865,52 @@ def read_choice():
     try:
         with open(CHOICE_FILE, encoding="utf-8") as handle:
             choice = handle.read().strip()
-        return choice if choice in CHOICES else "random"
+        return choice if choice in CHOICES or external_source(choice) else "random"
     except OSError:
         return "random"
+
+
+def ensure_scenes():
+    """Make scene choices usable even before the first wallpaper push."""
+    if all(os.path.isfile(scene_file(scene)) for scene in SCENES):
+        return True
+    os.makedirs(STATE_DIR, exist_ok=True)
+    if read_paint() is None:
+        replace_text(PAINT_FILE, json.dumps(SAMPLE_PAINT))
+    return draw()
+
+
+def logo_source(choice):
+    """Resolve a choice together with its required Fastfetch renderer."""
+    source = external_source(choice)
+    if source:
+        logo_type = "file" if source.lower().endswith(".txt") else "kitty-icat"
+        if not os.path.isfile(source):
+            raise ValueError(f"Fastfetch logo is missing: {source}")
+        return logo_type, source
+    if choice not in CHOICES:
+        raise ValueError(f"Unknown greeting: {choice}")
+    if not ensure_scenes():
+        raise ValueError("Could not generate the greeting scenes; check greeting.log")
+    scene = random.choice(tuple(SCENES)) if choice == "random" else choice
+    return "kitty-icat", scene_file(scene)
+
+
+def show(arguments):
+    """Run Fastfetch without confusing a scene file with the saved logo type.
+
+    An explicit choice only affects this invocation; the Settings selection
+    and the Fastfetch config remain unchanged.
+    """
+    arguments = list(arguments)
+    choice = arguments.pop(0) if arguments and not arguments[0].startswith("-") else read_choice()
+    try:
+        logo_type, source = logo_source(choice)
+        return subprocess.call(["fastfetch", "--config", FASTFETCH_CONFIG,
+                                "--logo-type", logo_type, "--logo", source, *arguments])
+    except (OSError, ValueError) as error:
+        sys.stderr.write(f"Cannot show Fastfetch greeting: {error}\n")
+        return 1
 
 
 def choose(choice):
@@ -836,26 +920,20 @@ def choose(choice):
     for fastfetch run by its own name, which cannot deal anything, and gets
     one scene drawn now.
     """
-    if choice not in CHOICES:
-        sys.stderr.write(f"Unknown greeting: {choice}\n")
+    try:
+        logo_type, resolved = logo_source(choice)
+    except ValueError as error:
+        sys.stderr.write(f"{error}\n")
         return False
-    if choice in EXTRA_LOGOS:
-        logo_type, filename = EXTRA_LOGOS[choice]
-        source = os.path.join(LOGO_DIR, filename)
-        if not os.path.isfile(source):
-            sys.stderr.write(f"Fastfetch logo is missing: {source}\n")
-            return False
-    else:
-        logo_type = "kitty-icat"
-        source = LINK
+    source = resolved if external_source(choice) else LINK
     # Only the logo block changes; all the user's Fastfetch modules stay as-is.
     # The installer links this config into ~/.config/fastfetch when installed.
     try:
         with open(FASTFETCH_CONFIG, encoding="utf-8") as handle:
             config = handle.read()
-        pattern = r'("logo"\s*:\s*\{[^}]*?"type"\s*:\s*")[^"]+("[^}]*?"source"\s*:\s*")[^"]+("[^}]*?"width")'
+        pattern = r'("logo"\s*:\s*\{[^}]*?"type"\s*:\s*")[^"]+("[^}]*?"source"\s*:\s*")(?:\\.|[^"\\])*("[^}]*?"width")'
         updated, count = re.subn(pattern, lambda match: match.group(1) + logo_type +
-                                 match.group(2) + source + match.group(3), config, count=1,
+                                 match.group(2) + json.dumps(source, ensure_ascii=False)[1:-1] + match.group(3), config, count=1,
                                  flags=re.DOTALL)
         if count != 1:
             raise ValueError("Fastfetch logo block not found")
@@ -866,10 +944,9 @@ def choose(choice):
         return False
     os.makedirs(STATE_DIR, exist_ok=True)
     replace_text(CHOICE_FILE, choice + "\n")
-    if choice not in EXTRA_LOGOS:
-        scene = random.choice(tuple(SCENES)) if choice == "random" else choice
+    if not external_source(choice):
         staging = f"{LINK}.{os.getpid()}.part"
-        os.symlink(os.path.basename(scene_file(scene)), staging)
+        os.symlink(os.path.basename(resolved), staging)
         os.replace(staging, LINK)
     return True
 
@@ -880,12 +957,8 @@ def seed():
     The scenes in a fixed palette, and random, each only if missing — a push
     or a choice made in the settings always wins over this.
     """
-    if not all(os.path.isfile(scene_file(scene)) for scene in SCENES):
-        os.makedirs(STATE_DIR, exist_ok=True)
-        if read_paint() is None:
-            replace_text(PAINT_FILE, json.dumps(SAMPLE_PAINT))
-        if not draw():
-            return False
+    if not ensure_scenes():
+        return False
     if not os.path.isfile(CHOICE_FILE):
         choose("random")
     return True
@@ -898,7 +971,7 @@ SAMPLE_PAINT = {"accent": "#597cce", "green": "#a6e3a1", "yellow": "#f9e2af",
                 "text": "#eef2f7", "muted": "#94a1b2"}
 
 
-USAGE = ("greeting.py draw | choose <" + "|".join(CHOICES) + "> | seed"
+USAGE = ("greeting.py list | draw | choose <id from list> | seed | show [choice] [fastfetch options]"
          " | <" + "|".join(SCENES) + "> <out.gif>")
 
 
@@ -906,10 +979,19 @@ if __name__ == "__main__":
     verb = sys.argv[1] if len(sys.argv) > 1 else ""
     if verb == "draw" and len(sys.argv) == 2:
         sys.exit(0 if draw() else 1)
+    elif verb == "list" and len(sys.argv) == 2:
+        try:
+            print(json.dumps(list_greetings()))
+        except OSError as error:
+            sys.stderr.write(f"Cannot scan Fastfetch logos: {error}\n")
+            sys.exit(1)
+        sys.exit(0)
     elif verb == "choose" and len(sys.argv) == 3:
         sys.exit(0 if choose(sys.argv[2]) else 1)
     elif verb == "seed" and len(sys.argv) == 2:
         sys.exit(0 if seed() else 1)
+    elif verb == "show":
+        sys.exit(show(sys.argv[2:]))
     elif verb in SCENES and len(sys.argv) == 3:
         magick = shutil.which("magick") or shutil.which("convert")
         if not magick:

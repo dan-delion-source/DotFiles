@@ -27,6 +27,7 @@ FocusScope {
 
     signal closed()
 
+    readonly property bool sideLayout: SettingsService.barPosition === "left" || SettingsService.barPosition === "right"
     readonly property string playing: GamesService.playing
     readonly property var game: GamesService.entry(root.playing)
 
@@ -77,6 +78,8 @@ FocusScope {
 
             Keys.onLeftPressed: strip.step(-1)
             Keys.onRightPressed: strip.step(1)
+            Keys.onUpPressed: event => { if (root.sideLayout) strip.step(-1); else event.accepted = false }
+            Keys.onDownPressed: event => { if (root.sideLayout) strip.step(1); else event.accepted = false }
             Keys.onReturnPressed: page.play()
             Keys.onEnterPressed: page.play()
             Keys.onSpacePressed: page.play()
@@ -96,6 +99,8 @@ FocusScope {
 
                 Carousel {
                     id: strip
+                    objectName: "gameCarousel"
+                    vertical: root.sideLayout
 
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -354,8 +359,12 @@ FocusScope {
 
                 GameBoard {
                     id: board
+                    objectName: "activeGameBoard"
 
-                    anchors.fill: parent
+                    anchors.centerIn: parent
+                    width: root.sideLayout && root.game ? root.game.width : parent.width
+                    height: root.sideLayout && root.game ? root.game.height : parent.height
+                    scale: root.sideLayout ? Math.min(1, parent.width / width, parent.height / height) : 1
                     gameId: root.playing
                     tint: GamesService.tintOf(root.playing)
                 }

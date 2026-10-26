@@ -17,9 +17,18 @@ import "../bar/modules"
 
 // The "The bar" part of Bar & Island: how every chip reads (one setting for
 // the whole bar), then the bar layout itself (`LayoutEditor`). Settings that
-// belong to individual modules are on the Desktop page.
+// belong to individual modules are in Module settings.
 ColumnLayout {
     id: root
+
+    Text {
+        Layout.fillWidth: true
+        visible: SettingsService.barPosition === "left" || SettingsService.barPosition === "right"
+        text: Tr.t("On a side bar, the editor's left group goes above the clock and its right group goes below it. Scroll the bar if a group is longer than the screen.")
+        wrapMode: Text.WordWrap
+        color: Theme.textMuted
+        font.pixelSize: Theme.fontSizeSmall
+    }
 
     // ── HOW A CHIP READS ────────────────────────────────────────────────────
 

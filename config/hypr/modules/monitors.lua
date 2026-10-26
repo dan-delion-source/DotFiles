@@ -20,6 +20,9 @@ hl.monitor({
 })
 
 
+-- Workspace ownership: 1–5 on eDP-1, 6–10 on HDMI-A-5.
+require("modules.workspaces")
+
 -- ── LID ─────────────────────────────────────────────────────────────────────
 
 -- The lid switch binds are in keybinds.lua: a `switch:` bind declared in the

@@ -23,7 +23,6 @@ import Quickshell.Io
 
 import "./bar"
 import "./capture"
-import "./desktop"
 import "./lock"
 import "./services"
 import "./settings"
@@ -243,30 +242,6 @@ ShellRoot {
         }
     }
 
-    // Widgets under the windows, on every screen: a row carries the screen it
-    // is on, and every board has a grid of its own.
-    Variants {
-        model: Quickshell.screens
-
-        Desktop {
-            required property var modelData
-
-            screen: modelData
-        }
-    }
-
-    // Notes docked on the screen edges, on every screen, for the desktop's
-    // reason. A deck is a row like a widget and carries its screen too.
-    Variants {
-        model: Quickshell.screens
-
-        Deck {
-            required property var modelData
-
-            screen: modelData
-        }
-    }
-
     // A normal window rather than an island panel, so the island stays
     // visible while its settings change.
     SettingsWindow {
@@ -281,15 +256,6 @@ ShellRoot {
         target: root.island
 
         function onSettingsRequested(): void {
-            settingsWindow.open()
-        }
-    }
-
-    Connections {
-        target: DesktopService
-
-        function onSettingsRequested(): void {
-            root.island?.close()
             settingsWindow.open()
         }
     }
@@ -487,13 +453,6 @@ ShellRoot {
 
     GlobalShortcut {
         appid: "danshell"
-        name: "widgets"
-        description: "Hide or show the desktop widgets"
-        onPressed: SettingsService.set("desktopHidden", !SettingsService.desktopHidden)
-    }
-
-    GlobalShortcut {
-        appid: "danshell"
         name: "packages"
         description: "Open the packages"
         onPressed: root.togglePanel("packages")
@@ -653,14 +612,6 @@ ShellRoot {
 
         function toggle(): void {
             SettingsService.set("barHidden", !SettingsService.barHidden)
-        }
-    }
-
-    IpcHandler {
-        target: "widgets"
-
-        function toggle(): void {
-            SettingsService.set("desktopHidden", !SettingsService.desktopHidden)
         }
     }
 

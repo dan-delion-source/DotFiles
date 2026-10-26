@@ -1,0 +1,5 @@
+# Core AUR dependency only. Prefer the configured repository if available.
+# Use the main package; no binary alternatives or optional applications.
+
+# group: core
+matugen

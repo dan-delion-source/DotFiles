@@ -31,7 +31,7 @@ WlSessionLock {
     WlSessionLockSurface {
         id: surface
 
-        LockSurface {
+        LockStyleHost {
             anchors.fill: parent
             output: surface.screen?.name ?? ""
 

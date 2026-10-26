@@ -28,6 +28,7 @@ Item {
     id: root
 
     property string moduleId: ""
+    property bool vertical: false
 
     property bool alone: false
 
@@ -65,17 +66,18 @@ Item {
     // Hidden when the machine lacks the module, or when it is set to show only
     // while running and is not; the Row closes up.
     visible: ModuleService.shows(root.moduleId, root.ownWhen)
-    implicitWidth: root.button ? Theme.capsuleHeight : face.implicitWidth
-    implicitHeight: Theme.capsuleHeight
+    implicitWidth: root.vertical ? Theme.sideContentWidth : root.button ? Theme.capsuleHeight : face.implicitWidth
+    implicitHeight: root.vertical && !root.button ? face.implicitHeight : Theme.capsuleHeight
     width: root.implicitWidth
     height: root.implicitHeight
+    clip: root.vertical || Theme.capsuleHeight < 16
 
     // Highlight on hover and while its detail or panel is open. Alone, it
     // fills the capsule less its outline.
     Rectangle {
         anchors.centerIn: parent
-        width: parent.width - (root.alone ? 2 : 4)
-        height: root.alone ? parent.height - 2 : Theme.capsuleHeight - 8
+        width: Math.max(1, parent.width - (root.alone ? 2 : 4))
+        height: Math.max(1, root.vertical ? parent.height - 4 : root.alone ? parent.height - 2 : Theme.capsuleHeight - 8)
         radius: height / 2
         color: Theme.surfaceHoverIn(QsWindow.window)
         opacity: mouse.containsMouse || root.open ? 1 : 0
@@ -88,13 +90,14 @@ Item {
         visible: root.button
         text: root.door ? root.door.glyph : ""
         font.family: Theme.fontMono
-        font.pixelSize: Math.round(Theme.capsuleHeight * 0.44)
+        font.pixelSize: Math.max(1, Math.round(Theme.capsuleHeight * 0.44))
         color: Theme.text
     }
 
     ChipFace {
         id: face
 
+        vertical: root.vertical
         visible: !root.button
         moduleId: root.button || !ModuleService.shows(root.moduleId, root.ownWhen) ? "" : root.moduleId
         shape: ModuleService.shapeOf(root.moduleId, root.ownShape)
@@ -107,7 +110,8 @@ Item {
 
         anchors.fill: parent
         hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
+        cursorShape: ModuleService.entry(root.moduleId).detail === false
+            ? Qt.ArrowCursor : Qt.PointingHandCursor
         onClicked: {
             if (root.button && root.door.panel)
                 ModuleService.togglePanel(root.door.panel)

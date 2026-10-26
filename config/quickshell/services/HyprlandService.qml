@@ -77,13 +77,10 @@ QtObject {
         return root.visibleIds.indexOf(workspaceId) >= 0
     }
 
-    // Brings the workspace to the screen being worked on rather than taking
-    // the keyboard to the screen it is on, which is what the number keys do
-    // (`keybinds.lua`). A dot on a bar and a cell in the overview are both
-    // drawn on one screen and mean it.
+    // Select the workspace on its assigned monitor, just like the number keys.
     function focus(workspaceId: int): void {
         Hyprland.dispatch(
-            `hl.dsp.focus({ workspace = ${workspaceId}, on_current_monitor = true })`)
+            `hl.dsp.focus({ workspace = ${workspaceId} })`)
     }
 
     // The screen a workspace is on, or "" for one nobody has made yet.

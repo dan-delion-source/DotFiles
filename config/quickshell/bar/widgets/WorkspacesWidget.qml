@@ -32,6 +32,7 @@ Rectangle {
 
     // Inside the one capsule it drops its own capsule and padding.
     property bool chromeless: false
+    property bool vertical: false
     property bool overWallpaper: false
     readonly property color dim: root.overWallpaper ? Theme.barInkDim : Theme.indicatorDim
     // `SettingsService.workspaceStyle` unless a picker draws another.
@@ -39,6 +40,16 @@ Rectangle {
     // A still strip for the settings: five, the second focused, the first and
     // third occupied, and nothing to click.
     property bool preview: false
+
+    // The interface font may not contain Japanese glyphs. Load just the
+    // workspace numerals locally, independent of system font packages.
+    FontLoader {
+        id: kanjiFont
+        source: root.style === "kanji" ? Qt.resolvedUrl("../../assets/fonts/workspace-kanji.otf") : ""
+    }
+    readonly property bool kanjiFontReady: kanjiFont.status === FontLoader.Ready
+    readonly property string labelFamily: root.style === "kanji" && root.kanjiFontReady
+        ? kanjiFont.name : Theme.fontFamily
 
     readonly property bool written: ["numbers", "roman", "kanji", "greek"]
         .indexOf(root.style) >= 0
@@ -57,7 +68,7 @@ Rectangle {
     readonly property int slotSpacing: root.written ? 2 : 8
     // Around a number, inside its pill.
     readonly property int glyphPad: 6
-    readonly property int pillHeight: Math.min(20, Theme.capsuleHeight - 10)
+    readonly property int pillHeight: Math.max(1, Math.min(20, Theme.capsuleHeight - 10))
 
     // The number a workspace is written as, in the written styles.
     function glyphOf(n: int): string {
@@ -70,6 +81,7 @@ Rectangle {
             return out
         }
         case "kanji": {
+            if (n < 1 || n > 99) return String(n)
             const digits = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九"]
             if (n < 10)
                 return digits[n]
@@ -90,10 +102,10 @@ Rectangle {
         return root.preview ? n === 1 || n === 3 : HyprlandService.isOccupied(n)
     }
 
-    implicitHeight: Theme.capsuleHeight
+    implicitHeight: root.vertical ? layout.implicitHeight + (root.chromeless ? 0 : 12) : Theme.capsuleHeight
     // Each slot carries its own gap, so a collapsed one takes no space; the
     // spare gap is subtracted here.
-    implicitWidth: layout.implicitWidth - root.slotSpacing
+    implicitWidth: root.vertical ? Theme.sideContentWidth : layout.implicitWidth - root.slotSpacing
         + (root.chromeless ? 0 : (root.written ? 12 : 20))
     radius: Theme.radiusPill
 
@@ -115,10 +127,10 @@ Rectangle {
         }
 
         visible: root.written && slot !== null && slot.shown
-        x: slot ? layout.x + slot.x + root.slotSpacing / 2 : 0
-        width: slot ? Math.max(0, slot.width - root.slotSpacing) : 0
+        x: root.vertical ? (root.width - width) / 2 : slot ? layout.x + slot.x + root.slotSpacing / 2 : 0
+        y: root.vertical && slot ? layout.y + slot.y : (root.height - height) / 2
+        width: root.vertical ? root.pillHeight + 8 : slot ? Math.max(0, slot.width - root.slotSpacing) : 0
         height: root.pillHeight
-        anchors.verticalCenter: parent.verticalCenter
         radius: height / 2
         color: Theme.accent
 
@@ -131,11 +143,13 @@ Rectangle {
         }
     }
 
-    RowLayout {
+    GridLayout {
         id: layout
+        columns: root.vertical ? 1 : Math.max(1, repeater.count)
         anchors.centerIn: parent
         // Row spacing would still surround a collapsed slot.
-        spacing: 0
+        rowSpacing: 0
+        columnSpacing: 0
 
         // A slot per workspace, shown or not, so arrivals and departures both
         // animate. A Repeater over only the visible ones would destroy items
@@ -165,8 +179,8 @@ Rectangle {
                     }
                 }
 
-                Layout.preferredWidth: slot.shown ? slot.mark + root.slotSpacing : 0
-                Layout.preferredHeight: Theme.capsuleHeight
+                Layout.preferredWidth: root.vertical ? Theme.sideContentWidth : slot.shown ? slot.mark + root.slotSpacing : 0
+                Layout.preferredHeight: root.vertical ? (slot.shown ? Math.max(16, slot.mark + root.slotSpacing) : 0) : Theme.capsuleHeight
                 Layout.alignment: Qt.AlignVCenter
                 // A collapsed slot is no width, but a bar, a ring or a number
                 // keeps its own and would draw over its neighbour.
@@ -185,9 +199,9 @@ Rectangle {
                 Rectangle {
                     visible: root.style === "dots" || root.style === "bars"
                     anchors.centerIn: parent
-                    width: root.style === "bars" ? root.barWidth
+                    width: root.vertical && root.style === "dots" ? root.dotSize : root.style === "bars" ? root.barWidth
                         : Math.max(0, parent.width - root.slotSpacing)
-                    height: root.style === "dots" ? root.dotSize
+                    height: root.vertical && root.style === "dots" ? (slot.focused ? root.activeWidth : root.dotSize) : root.style === "dots" ? root.dotSize
                         : slot.focused ? 14 : slot.occupied ? 9 : 5
                     radius: Math.min(width, height) / 2
 
@@ -226,7 +240,7 @@ Rectangle {
                     visible: root.written && root.overWallpaper
                     anchors.centerIn: parent
                     width: Math.max(0, parent.width - root.slotSpacing)
-                    height: Theme.capsuleHeight - 8
+                    height: Math.max(1, Theme.capsuleHeight - 8)
                     radius: height / 2
                     color: Theme.surfaceHoverIn(QsWindow.window)
                     opacity: slot.hovered && !slot.focused ? 1 : 0
@@ -238,11 +252,12 @@ Rectangle {
                 // when occupied, grey when empty.
                 Text {
                     id: glyph
+                    objectName: "workspaceLabel" + slot.workspaceId
 
                     visible: root.written
                     anchors.centerIn: parent
                     text: root.written ? root.glyphOf(slot.workspaceId) : ""
-                    font.family: Theme.fontFamily
+                    font.family: root.labelFamily
                     font.pixelSize: Theme.fontSizeSmall
                     font.weight: Font.DemiBold
                     font.features: { "tnum": 1 }

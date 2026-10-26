@@ -19,8 +19,10 @@ import "../../components"
 // the tray get a capsule of their own; everything else shares one until a
 // `split` starts the next. A capsule holding a single item takes that item's shape
 // (`BarChip.alone`). Clicks open in the island (`Bar.qml`).
-Row {
+Grid {
     id: root
+    property bool vertical: false
+    columns: root.vertical ? 1 : Math.max(1, root.groups.length)
 
     // The layout's pieces, `{ id, shape, figure }`
     // (`SettingsService.barItems`).
@@ -63,6 +65,7 @@ Row {
         Group {
             required property var modelData
 
+            vertical: root.vertical
             kind: modelData.kind
             items: modelData.items
             chromeless: root.chromeless
@@ -73,6 +76,7 @@ Row {
     component Group: Item {
         id: group
 
+        property bool vertical: false
         property string kind: "chips"
         property var items: []
         property bool chromeless: false
@@ -110,7 +114,10 @@ Row {
         width: group.own
             ? (strip.item ? strip.item.implicitWidth : 0)
             : chips.implicitWidth + 2 * group.pad
-        height: Theme.capsuleHeight
+        clip: Theme.capsuleHeight < 16 || (group.vertical && SettingsService.sideBarWidth < 16)
+        height: group.vertical
+            ? (group.own ? (strip.item ? strip.item.implicitHeight : 0) : chips.implicitHeight + 2 * group.pad)
+            : Theme.capsuleHeight
 
         // Per-capsule shadow. In the one-capsule style the bar casts a single
         // flattened one instead (`Bar.qml`). Under a ground that lets the
@@ -187,6 +194,7 @@ Row {
         Component {
             id: workspaceStrip
             WorkspacesWidget {
+                vertical: group.vertical
                 chromeless: group.chromeless
                 overWallpaper: group.overWallpaper
             }
@@ -194,7 +202,7 @@ Row {
 
         Component {
             id: trayCapsule
-            TrayWidget { chromeless: group.chromeless }
+            TrayWidget { vertical: group.vertical; chromeless: group.chromeless }
         }
 
         Rectangle {
@@ -210,11 +218,12 @@ Row {
                 visible: Theme.glass && !group.chromeless && !group.bare
             }
 
-            Row {
+            Grid {
                 id: chips
+                columns: group.vertical ? 1 : Math.max(1, group.items.length)
 
                 x: group.pad
-                height: Theme.capsuleHeight
+                y: group.vertical ? group.pad : 0
 
                 Repeater {
                     model: ScriptModel {
@@ -224,7 +233,7 @@ Row {
                     BarChip {
                         required property var modelData
 
-                        anchors.verticalCenter: parent.verticalCenter
+                        vertical: group.vertical
                         moduleId: modelData.id
                         ownShape: modelData.shape
                         ownFigure: modelData.figure

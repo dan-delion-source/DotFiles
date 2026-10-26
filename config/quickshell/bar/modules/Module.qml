@@ -42,6 +42,7 @@ Item {
         stats: statsModule,
         updates: updatesModule,
         pet: petModule,
+        runningCat: runningCatModule,
         games: gamesModule,
         notes: notesModule,
         tasks: tasksModule,
@@ -74,6 +75,7 @@ Item {
     Component { id: githubModule;     GithubModule {} }
     Component { id: statsModule;      StatsModule { compact: root.compact } }
     Component { id: updatesModule;    UpdatesModule {} }
+    Component { id: runningCatModule; RunningCatModule {} }
     Component { id: petModule;        PetModule { compact: root.compact } }
     Component { id: gamesModule;      GamesModule {} }
     Component { id: notesModule;      NotesModule {} }

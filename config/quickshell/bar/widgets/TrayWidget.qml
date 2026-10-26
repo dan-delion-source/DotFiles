@@ -23,6 +23,7 @@ Item {
 
     // Inside the one capsule, where the band is already the ground.
     property bool chromeless: false
+    property bool vertical: false
 
     // A preview for the layout editor: drawn, never clicked.
     property bool still: false
@@ -35,14 +36,14 @@ Item {
     readonly property var shown: root.folds && !root.unfolded
         ? root.items.slice(0, root.fold - 1) : root.items
 
-    readonly property int slot: Theme.capsuleHeight - 6
+    readonly property int slot: Math.max(1, root.vertical ? Math.min(Theme.capsuleHeight - 6, Theme.sideContentWidth) : Theme.capsuleHeight - 6)
     // The box a glyph gets on the bar (`ChipFace`), so a tray icon's drawing
     // is as tall as the glyphs beside it.
-    readonly property int mark: Math.round(Theme.capsuleHeight * 0.44)
+    readonly property int mark: Math.max(1, Math.min(root.slot, Math.round(Theme.capsuleHeight * 0.44)))
     readonly property int pad: root.chromeless ? 0 : 3
 
-    implicitWidth: row.implicitWidth + 2 * root.pad
-    implicitHeight: Theme.capsuleHeight
+    implicitWidth: root.vertical ? Theme.sideContentWidth : row.implicitWidth + 2 * root.pad
+    implicitHeight: root.vertical ? row.implicitHeight + 2 * root.pad : Theme.capsuleHeight
 
     Rectangle {
         id: ground
@@ -59,10 +60,11 @@ Item {
         visible: Theme.glass && !root.chromeless
     }
 
-    Row {
+    Grid {
         id: row
+        columns: root.vertical ? 1 : Math.max(1, root.shown.length + (root.folds ? 1 : 0))
 
-        x: root.pad
+        x: root.vertical ? (root.width - width) / 2 : root.pad
         anchors.verticalCenter: parent.verticalCenter
 
         Repeater {

@@ -18,8 +18,7 @@ import "../theme"
 // Sticky notes: a title, a body and a tint. No state or date; those are tasks
 // (`TasksService`), and the two are independent.
 //
-// Shown by the bar chip, its detail, the notes panel, desktop widgets and edge
-// decks. Placement belongs to `DesktopService`. Notes are only edited in the
+// Shown by the bar chip, its detail and the notes panel. Notes are edited in the
 // island, since the desktop never takes the keyboard.
 //
 // Stored in `notes.json` in the state directory, written after a short
@@ -141,7 +140,6 @@ Singleton {
             edited: now,
             archived: false
         }]))
-        DesktopService.noteAdded(key)
         root.added(key)
         return key
     }
@@ -173,19 +171,16 @@ Singleton {
             root.update(key, { tint: tint })
     }
 
-    // An archived note also leaves the desktop and the edge decks.
+    // Archive notes without deleting their contents.
     function archive(key: string, on = true): void {
         if (!root.entry(key))
             return
         root.update(key, { archived: on })
-        if (on)
-            DesktopService.removeNote(key)
     }
 
     function remove(key: string): void {
         if (!root.entry(key))
             return
-        DesktopService.removeNote(key)
         root.write(root.notes.filter(note => note.key !== key))
         if (root.opened === key)
             root.opened = ""

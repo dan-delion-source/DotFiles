@@ -20,9 +20,12 @@ Item {
     id: root
 
     property bool attached: false
+    property string edge: "top"
+    readonly property bool vertical: root.edge === "left" || root.edge === "right"
 
     // One of `SettingsService.barStyles`.
     property string barStyle: "grouped"
+    property bool spreadBand: false
 
     readonly property bool grouped: root.barStyle !== "spread" && root.barStyle !== "island"
     readonly property bool unified: root.barStyle === "island"
@@ -35,8 +38,9 @@ Item {
         id: screen
 
         anchors.centerIn: parent
-        width: root.width - 12
-        height: root.height - 14
+        width: root.vertical ? root.height - 14 : root.width - 12
+        height: root.vertical ? root.width - 12 : root.height - 14
+        rotation: root.edge === "left" ? -90 : root.edge === "right" ? 90 : root.edge === "bottom" ? 180 : 0
         radius: 5
         color: Theme.island
         border.color: Theme.borderIn(QsWindow.window)
@@ -48,15 +52,25 @@ Item {
         // Only the island reaches the top edge; notch mode moves nothing else.
         readonly property int inset: 4
 
-        readonly property int islandWidth: 22
+        readonly property int islandWidth: root.vertical ? 14 : 22
         readonly property int gap: 3
+
+        Rectangle {
+            visible: root.barStyle === "spread" && root.spreadBand && !root.attached
+            x: 4
+            y: screen.inset
+            width: screen.width - 8
+            height: screen.band
+            radius: height / 2
+            color: "#000000"
+        }
 
         // Single-capsule style, island in the middle.
         Rectangle {
             visible: root.unified
             anchors.horizontalCenter: parent.horizontalCenter
             y: root.attached ? 0 : screen.inset
-            width: 66
+            width: Math.min(66, screen.width - 8)
             height: screen.band + (root.attached ? screen.inset : 0)
             radius: height / 2
             topLeftRadius: root.attached ? 0 : radius
@@ -72,7 +86,7 @@ Item {
                 ? (screen.width - screen.islandWidth) / 2 - screen.gap - width
                 : 6
             y: screen.inset
-            width: 12
+            width: root.vertical ? 8 : 12
             height: screen.band
             radius: height / 2
             color: Theme.surfaceIn(QsWindow.window)

@@ -153,13 +153,13 @@ Item {
     }
 
     function clampX(x: real): real {
-        return Math.max(Theme.desktopGutter,
-            Math.min(root.width - card.width - Theme.desktopGutter, x))
+        return Math.max(Theme.surfaceGutter,
+            Math.min(root.width - card.width - Theme.surfaceGutter, x))
     }
 
     function clampY(y: real): real {
-        return Math.max(Theme.desktopGutter,
-            Math.min(root.height - card.height - Theme.desktopGutter, y))
+        return Math.max(Theme.surfaceGutter,
+            Math.min(root.height - card.height - Theme.surfaceGutter, y))
     }
 
     // ── CARD ────────────────────────────────────────────────────────────────
@@ -173,7 +173,7 @@ Item {
         // No taller than the room; the mosaic scrolls inside when it is.
         width: mosaic.width + 2 * root.pad
         height: Math.min(root.span(root.shownRows, root.strideY) + 2 * root.pad,
-            Math.max(2 * root.pad, root.height - 2 * Theme.desktopGutter))
+            Math.max(2 * root.pad, root.height - 2 * Theme.surfaceGutter))
         radius: Theme.radiusLarge
         color: Theme.island
         border.color: root.receiving ? Theme.accent : Theme.borderIn(QsWindow.window)
@@ -203,10 +203,10 @@ Item {
                 && !gripHover.hovered && !carry.active
                 && !railHover.hovered && !scrub.active
             target: card
-            xAxis.minimum: Theme.desktopGutter
-            xAxis.maximum: root.width - card.width - Theme.desktopGutter
-            yAxis.minimum: Theme.desktopGutter
-            yAxis.maximum: root.height - card.height - Theme.desktopGutter
+            xAxis.minimum: Theme.surfaceGutter
+            xAxis.maximum: root.width - card.width - Theme.surfaceGutter
+            yAxis.minimum: Theme.surfaceGutter
+            yAxis.maximum: root.height - card.height - Theme.surfaceGutter
 
             onActiveChanged: {
                 if (!mover.active)
@@ -395,10 +395,10 @@ Item {
 
                 target: card
                 grabPermissions: PointerHandler.CanTakeOverFromAnything
-                xAxis.minimum: Theme.desktopGutter
-                xAxis.maximum: root.width - card.width - Theme.desktopGutter
-                yAxis.minimum: Theme.desktopGutter
-                yAxis.maximum: root.height - card.height - Theme.desktopGutter
+                xAxis.minimum: Theme.surfaceGutter
+                xAxis.maximum: root.width - card.width - Theme.surfaceGutter
+                yAxis.minimum: Theme.surfaceGutter
+                yAxis.maximum: root.height - card.height - Theme.surfaceGutter
 
                 onActiveChanged: {
                     if (!carry.active)
@@ -493,8 +493,8 @@ Item {
                         return
                     const dx = stretch.centroid.scenePosition.x - stretch.centroid.scenePressPosition.x
                     const dy = stretch.centroid.scenePosition.y - stretch.centroid.scenePressPosition.y
-                    const roomX = root.width - Theme.desktopGutter - card.x - 2 * root.pad
-                    const roomY = root.height - Theme.desktopGutter - card.y - 2 * root.pad
+                    const roomX = root.width - Theme.surfaceGutter - card.x - 2 * root.pad
+                    const roomY = root.height - Theme.surfaceGutter - card.y - 2 * root.pad
                     const most = Math.max(root.widest, Math.floor((roomX + root.street) / root.strideX))
                     const deepest = Math.max(1, Math.floor((roomY + root.street) / root.strideY))
                     const across = Math.round((stretch.fromWidth + dx + root.street) / root.strideX)

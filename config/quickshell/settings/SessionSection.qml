@@ -18,6 +18,7 @@ import "../theme"
 import "../services"
 import "../components"
 import "../lock"
+import "../lock/LockStyles.js" as LockStyles
 
 // The lock screen and the idle policy. The shell locks through
 // ext-session-lock and shows the blurred desktop behind the lock. The blur
@@ -206,9 +207,40 @@ SettingsSection {
             }
         }
 
+        SettingGroup {
+            title: Tr.t("Lock screen style")
+            note: Tr.t("Choose a design for the next lock. Your choice is saved automatically.")
+
+            SettingTiles {
+                label: Tr.t("Style")
+                reading: Tr.t("Applies the next time you lock")
+
+                Repeater {
+                    model: LockStyles.choices
+                    PreviewTile {
+                        id: styleTile
+                        required property var modelData
+                        stageHeight: 150
+                        caption: Tr.t(styleTile.modelData.label)
+                        selected: SettingsService.lockStyle === styleTile.modelData.id
+                        enabled: SettingsService.arrived
+                        onPicked: SettingsService.set("lockStyle", styleTile.modelData.id)
+
+                        LockStylePreview {
+                            anchors.fill: parent
+                            style: styleTile.modelData.id
+                            wallpaper: WallpaperService.currentWallpaper
+                                ? `file://${WallpaperService.currentWallpaper}` : ""
+                        }
+                    }
+                }
+            }
+        }
+
         // Each tile is the lock's own clock, drawn small over the wallpaper.
         SettingGroup {
             title: Tr.t("Clock")
+            visible: SettingsService.lockStyle === "classic"
             note: Tr.t("The login screen always draws it stacked.")
             hint: Tr.t("The login screen runs before anyone has signed in, so it cannot read your settings.")
 
@@ -265,6 +297,7 @@ SettingsSection {
 
         SettingGroup {
             title: Tr.t("Background")
+            visible: SettingsService.lockStyle === "classic"
             note: Tr.t("Just enough to make the text underneath unreadable.")
             hint: Tr.t("The preview uses the wallpaper, since the lock screen's own capture is taken when it locks. It applies the same blur with the capsule on top, so you can judge how it reads.")
 

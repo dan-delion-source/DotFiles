@@ -13,6 +13,7 @@ import Quickshell.Wayland
 
 import "../theme"
 import "../services"
+import "BarGeometry.js" as Geometry
 
 // One strip per screen, a pixel tall and painting nothing, whose only job is
 // the exclusive zone. The bars reserve nothing themselves, so a bar replaced
@@ -22,15 +23,18 @@ PanelWindow {
     id: root
 
     anchors {
-        top: true
-        left: true
-        right: true
+        top: SettingsService.barPosition !== "bottom"
+        bottom: SettingsService.barPosition !== "top"
+        left: SettingsService.barPosition !== "right"
+        right: SettingsService.barPosition !== "left"
     }
 
     implicitHeight: 1
+    implicitWidth: 1
     color: "transparent"
     // Nothing in zen, so the windows take the band.
-    exclusiveZone: SettingsService.barHidden ? 0 : Theme.barReserve
+    exclusiveZone: SettingsService.barHidden ? 0
+        : Theme.barTopMargin + Geometry.thickness(SettingsService.barPosition, Theme.capsuleHeight, SettingsService.sideBarWidth)
 
     // Under everything, and deaf.
     WlrLayershell.layer: WlrLayer.Background

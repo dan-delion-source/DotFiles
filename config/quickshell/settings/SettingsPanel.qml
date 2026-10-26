@@ -1,7 +1,7 @@
 // ╭──────────────────────────────────────────────────────────────────────────╮
 // │                                                                          │
 // │   S E T T I N G S   P A N E L                                            │
-// │   sections on the left, one page at a time on the right                  │
+// │   grouped navigation, fixed header, and scrollable settings pages        │
 // │                                                                          │
 // │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
@@ -9,17 +9,15 @@
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls as QQC
 
 import "../theme"
-import "../services"
-import "../components"
 
-// Sidebar and page. `SettingsWindow` owns the window; this owns the sections.
+// Navigation and page. `SettingsWindow` owns the window; this owns the sections.
 //
-// Settings are filed by what they change, not by how they are applied, so the
-// window rounding is under Appearance rather than on a compositor page. The
-// sidebar is grouped into categories and a long section is split into parts
-// (`TabStrip`): two levels of navigation, no more.
+// Settings are filed by what they change, not by how they are applied. The
+// grouped index selects a page, and SettingsTabs keeps its existing parts
+// visible above the scrollable controls.
 //
 // Where an option is a shape, the control is a live miniature built from the
 // real components (`PreviewTile`), so it follows the palette and cannot go
@@ -35,9 +33,9 @@ Item {
     // ── THE GROUPS ──────────────────────────────────────────────────────────
 
     readonly property var categories: [
-        { id: "shell",   label: Tr.t("THE SHELL") },
-        { id: "desk",    label: Tr.t("THE DESK") },
-        { id: "session", label: Tr.t("THE SESSION") }
+        { id: "shell",   label: Tr.t("Shell") },
+        { id: "desk",    label: Tr.t("Desktop") },
+        { id: "session", label: Tr.t("Session") }
     ]
 
     // ── THE SECTIONS ────────────────────────────────────────────────────────
@@ -48,17 +46,11 @@ Item {
           blurb: Tr.t("The top bar, the island and notifications."),
           tabs: [{ id: "island", label: Tr.t("The island") },
                  { id: "modules", label: Tr.t("The bar") },
+                 { id: "preferences", label: Tr.t("Module settings") },
                  { id: "workspaces", label: Tr.t("Workspaces") },
                  { id: "notifications", label: Tr.t("Notifications") }],
-          keywords: "bar island notch height margin width full span workspaces unified layout island bar band notification toast do not disturb silence timeout clock time date seconds format beside running modules layout left right split drag catalogue chip icon ring figure hover shape media claude battery timer volume brightness network wifi bluetooth weather stats cpu updates pet capture record screenshot buttons every screen monitors ground glass classic blur transparent translucent codex",
+          keywords: "bar position edge top bottom left right vertical horizontal island notch height margin width full span workspaces unified layout island bar band notification toast do not disturb silence timeout clock time date seconds format beside running modules layout left right split drag catalogue running cat animation weather location city github username pet style notes handwriting chip icon ring figure hover shape media claude battery timer volume brightness network wifi bluetooth weather stats cpu updates pet capture record screenshot buttons every screen monitors ground glass classic blur transparent translucent codex",
           page: barPage },
-
-        { id: "widgets", category: "shell", icon: "󰕮", label: Tr.t("Desktop"),
-          blurb: Tr.t("What sits on the wallpaper, under the windows."),
-          tabs: [{ id: "modules", label: Tr.t("Module settings") },
-                 { id: "widgets", label: Tr.t("The widgets") }],
-          keywords: "widgets desktop wallpaper widget place drag size shape capsule ground glass classic blur palette ink tray edit arrange clock calendar notes note sticky theme analogue modern opacity weather location place city github contributions username handwriting edges deck pet creature plush paper pixel egg species style spectrum cava visualiser visualizer bars audio music",
-          page: widgetsPage },
 
         { id: "controls", category: "shell", icon: "󰕰", label: Tr.t("Control Centre"),
           blurb: Tr.t("What the island opens onto when you click it."),
@@ -111,14 +103,14 @@ Item {
           blurb: Tr.t("Your account, the lock screen and idle behaviour."),
           tabs: [{ id: "lock", label: Tr.t("Lock screen") },
                  { id: "idle", label: Tr.t("When you leave") }],
-          keywords: "session lock blur password suspend security idle timeout sleep screen off dpms away never lock after avatar picture name account clock stacked inline face unlock howdy camera infrared enrol enroll scan faces recognise",
+          keywords: "session lock style classic mainframe crt terminal blur password suspend security idle timeout sleep screen off dpms away never lock after avatar picture name account clock stacked inline face unlock howdy camera infrared enrol enroll scan faces recognise",
           page: sessionPage },
 
         { id: "system", category: "session", icon: "󰍛", label: Tr.t("System"),
           blurb: Tr.t("Profiles, language, this machine and reset."),
           tabs: [{ id: "profiles", label: Tr.t("Profiles") },
                  { id: "machine", label: Tr.t("This machine") }],
-          keywords: "system about cpu memory uptime reset defaults language spanish english profile profiles switch rename duplicate delete import export backup json wallpapers config",
+          keywords: "system about cpu memory uptime reset defaults language spanish english profile profiles switch rename duplicate delete import export backup json wallpapers config library update greeter greeting fastfetch logos refresh scan",
           page: systemPage }
     ]
 
@@ -197,290 +189,327 @@ Item {
 
     readonly property var shown: root.sections.filter(entry => root.matches(entry))
 
-    // Flattened: a heading per non-empty group followed by its sections, so a
-    // single ListView and scroll position covers the whole sidebar.
-    readonly property var sidebar: {
-        const rows = []
-        for (const group of root.categories) {
-            const members = root.shown.filter(entry => entry.category === group.id)
-            if (members.length === 0)
-                continue
-            rows.push({ heading: true, label: group.label, id: `head:${group.id}` })
-            for (const entry of members)
-                rows.push({ heading: false, label: entry.label,
-                            icon: entry.icon, id: entry.id })
+    function entriesFor(category: string): var {
+        return root.shown.filter(entry => entry.category === category)
+    }
+
+    function selectCategory(category: string): void {
+        const entries = root.entriesFor(category)
+        if (entries.length === 0)
+            return
+        const current = entries.find(entry => entry.id === root.section)
+        root.go((current ?? entries[0]).id, "")
+    }
+
+    readonly property var navigation: {
+        const result = []
+        for (const category of root.categories) {
+            const entries = root.entriesFor(category.id)
+            if (entries.length === 0) continue
+            result.push({ heading: true, id: "group:" + category.id, label: category.label, icon: "" })
+            for (const entry of entries)
+                result.push({ heading: false, id: entry.id, label: entry.label, icon: entry.icon })
         }
-        return rows
+        return result
+    }
+
+    onShownChanged: {
+        if (root.filter.trim() !== "" && root.shown.length > 0
+                && !root.shown.some(entry => entry.id === root.section))
+            root.go(root.shown[0].id, "")
+    }
+
+    Shortcut {
+        sequence: "Ctrl+F"
+        onActivated: { search.forceActiveFocus(); search.selectAll() }
+    }
+
+    Keys.onEscapePressed: {
+        if (root.filter !== "") search.clear()
+        else root.closed()
     }
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: 14
-        spacing: root.gap
+        spacing: 0
 
-        // ── SIDEBAR ─────────────────────────────────────────────────────────
-
+        // One persistent index keeps every page findable without stacked rails.
         Rectangle {
-            Layout.preferredWidth: 206
-            Layout.maximumWidth: 206
-            Layout.fillWidth: false
+            Layout.preferredWidth: root.width < 850 ? 176 : 208
             Layout.fillHeight: true
-            radius: Theme.radiusLarge
-            color: Theme.islandSurface
-            border.color: Theme.islandBorder
-            border.width: 1
+            color: "#080808"
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 8
-                spacing: 8
+                anchors.margins: 14
+                spacing: 12
 
-                Rectangle {
+                Text {
+                    Layout.topMargin: 8
+                    Layout.bottomMargin: 6
+                    text: "Yozora · " + Tr.t("Settings")
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 22
+                    font.weight: Font.DemiBold
+                    color: Theme.text
+                }
+
+                QQC.TextField {
+                    id: search
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 30
-                    radius: Theme.radiusSmall
-                    color: Theme.island
-                    border.color: search.activeFocus ? Theme.accent : Theme.islandBorder
-                    border.width: 1
-
-                    Behavior on border.color { ColorAnimation { duration: Theme.durationFast } }
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: 9
-                        anchors.rightMargin: 9
-                        spacing: 8
-
-                        Text {
-                            text: "󰍉"
-                            font.family: Theme.fontMono
-                            font.pixelSize: 12
-                            color: Theme.textMuted
-                        }
-
-                        TextInput {
-                            id: search
-
-                            Layout.fillWidth: true
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.text
-                            selectByMouse: true
-                            selectionColor: Theme.accent
-                            selectedTextColor: Theme.accentText
-                            clip: true
-                            focus: true
-
-                            onTextEdited: root.filter = text
-
-                            // Escape clears the field first, and closes the
-                            // window only once it is empty.
-                            Keys.onEscapePressed: event => {
-                                if (search.text === "") {
-                                    event.accepted = false
-                                    return
-                                }
-                                search.text = ""
-                                root.filter = ""
-                            }
-
-                            // Enter opens the first match.
-                            Keys.onReturnPressed: {
-                                if (root.shown.length > 0)
-                                    root.go(root.shown[0].id, "")
-                            }
-
-                            Text {
-                                anchors.verticalCenter: parent.verticalCenter
-                                visible: search.text === ""
-                                text: Tr.t("Search settings")
-                                font: search.font
-                                color: Theme.textMuted
-                            }
-                        }
+                    Layout.preferredHeight: 36
+                    placeholderText: Tr.t("Search settings")
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.text
+                    placeholderTextColor: Theme.textMuted
+                    selectionColor: Theme.accent
+                    selectedTextColor: Theme.accentText
+                    leftPadding: 10
+                    rightPadding: 10
+                    selectByMouse: true
+                    focus: true
+                    onTextChanged: root.filter = text
+                    Accessible.name: Tr.t("Search settings")
+                    background: Rectangle {
+                        radius: 8
+                        color: Theme.islandSurface
+                        border.width: 1
+                        border.color: search.activeFocus ? Theme.accent : Theme.islandBorder
+                    }
+                    Keys.onReturnPressed: {
+                        if (root.shown.length > 0) root.go(root.shown[0].id, "")
+                    }
+                    Keys.onEscapePressed: {
+                        if (search.text !== "") search.clear()
+                        else root.closed()
                     }
                 }
 
                 ListView {
+                    id: navigationList
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     clip: true
-                    spacing: 1
-                    model: root.sidebar
+                    spacing: 3
+                    model: root.navigation
                     boundsBehavior: Flickable.StopAtBounds
+                    QQC.ScrollBar.vertical: QQC.ScrollBar { width: 3 }
 
-                    delegate: Item {
-                        id: entry
-
+                    delegate: QQC.AbstractButton {
+                        id: navEntry
                         required property var modelData
+                        readonly property bool selected: !modelData.heading && root.section === modelData.id
+                        width: navigationList.width
+                        height: modelData.heading ? 27 : 40
+                        enabled: !modelData.heading
+                        focusPolicy: modelData.heading ? Qt.NoFocus : Qt.StrongFocus
+                        leftPadding: 10
+                        rightPadding: 10
+                        Accessible.name: modelData.label
+                        onClicked: root.go(modelData.id, "")
 
-                        readonly property bool active:
-                            !entry.modelData.heading
-                            && entry.modelData.id === root.section
-
-                        width: ListView.view.width
-                        height: entry.modelData.heading ? 24 : 30
-
-                        // Group heading; not clickable.
-                        Text {
-                            visible: entry.modelData.heading
-                            anchors.left: parent.left
-                            anchors.leftMargin: 12
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 3
-                            text: entry.modelData.label
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeLabel
-                            font.weight: Font.DemiBold
-                            font.letterSpacing: 0.8
-                            color: Theme.textMuted
-                            opacity: 0.7
+                        background: Rectangle {
+                            radius: 8
+                            color: navEntry.selected
+                                ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.14)
+                                : navEntry.hovered && !navEntry.modelData.heading ? Theme.islandSurface : "transparent"
+                            border.width: navEntry.visualFocus ? 1 : 0
+                            border.color: Theme.accent
                         }
 
-                        Rectangle {
-                            visible: !entry.modelData.heading
-                            anchors.fill: parent
-                            radius: Theme.radiusSmall
-                            color: entry.active ? Theme.islandSurfaceHover
-                                : (entryMouse.containsMouse ? Theme.island : "transparent")
-                            border.color: entry.active ? Theme.accent : "transparent"
-                            border.width: 1
-
-                            Behavior on color { ColorAnimation { duration: Theme.durationFast } }
-                            Behavior on border.color { ColorAnimation { duration: Theme.durationFast } }
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.leftMargin: 11
-                                anchors.rightMargin: 11
-                                spacing: 11
-
-                                Text {
-                                    text: entry.modelData.icon ?? ""
-                                    font.family: Theme.fontMono
-                                    font.pixelSize: 13
-                                    color: entry.active ? Theme.accent : Theme.textMuted
-                                }
-
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: entry.modelData.label
-                                    elide: Text.ElideRight
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    font.weight: entry.active ? Font.DemiBold : Font.Normal
-                                    color: entry.active ? Theme.accent : Theme.text
-                                }
+                        contentItem: RowLayout {
+                            spacing: 10
+                            Text {
+                                visible: !navEntry.modelData.heading
+                                text: navEntry.modelData.icon
+                                font.family: Theme.fontMono
+                                font.pixelSize: 15
+                                color: navEntry.selected ? Theme.accent : Theme.textMuted
                             }
-
-                            MouseArea {
-                                id: entryMouse
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: root.go(entry.modelData.id, "")
+                            Text {
+                                Layout.fillWidth: true
+                                text: navEntry.modelData.label
+                                elide: Text.ElideRight
+                                font.family: Theme.fontFamily
+                                font.pixelSize: navEntry.modelData.heading ? 11 : Theme.fontSizeSmall
+                                font.weight: navEntry.selected ? Font.DemiBold : Font.Normal
+                                color: navEntry.modelData.heading ? Theme.textMuted : Theme.text
                             }
                         }
                     }
+
+                    Text {
+                        anchors.centerIn: parent
+                        width: parent.width - 12
+                        visible: root.shown.length === 0
+                        text: Tr.t("No matching settings")
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.textMuted
+                    }
+                }
+
+                Rectangle { Layout.fillWidth: true; implicitHeight: 1; color: Theme.islandBorder }
+                Text {
+                    text: "Ctrl+F  ·  " + Tr.t("Search") + "\nEsc  ·  " + Tr.t("Close")
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 11
+                    lineHeight: 1.4
+                    color: Theme.textMuted
                 }
             }
         }
 
-        // ── PAGE ────────────────────────────────────────────────────────────
+        Rectangle { Layout.fillHeight: true; implicitWidth: 1; color: Theme.islandBorder }
 
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: root.gap
+            Layout.margins: 20
+            spacing: 14
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 6
+                Layout.preferredHeight: 48
+                spacing: 12
 
-                IconButton {
-                    icon: "󰅁"
-                    iconSize: 13
-                    opacity: root.cursor > 0 ? 1 : 0.3
-                    onClicked: root.back()
+                Rectangle {
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    radius: 10
+                    color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12)
+                    Text {
+                        anchors.centerIn: parent
+                        text: root.current.icon
+                        font.family: Theme.fontMono
+                        font.pixelSize: 19
+                        color: Theme.accent
+                    }
                 }
 
-                IconButton {
-                    icon: "󰅂"
-                    iconSize: 13
-                    opacity: root.cursor < root.trail.length - 1 ? 1 : 0.3
-                    onClicked: root.forward()
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 3
+                    Text {
+                        Layout.fillWidth: true
+                        text: root.current.label
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 23
+                        font.weight: Font.DemiBold
+                        color: Theme.text
+                        elide: Text.ElideRight
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        text: root.current.blurb
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.textMuted
+                        elide: Text.ElideRight
+                    }
                 }
 
-                Item { Layout.fillWidth: true }
-
-
-                IconButton {
-                    icon: "󰅖"
-                    iconSize: 13
-                    onClicked: root.closed()
+                Repeater {
+                    model: [
+                        { id: "back", glyph: "󰅁", hint: Tr.t("Back"), available: root.cursor > 0 },
+                        { id: "forward", glyph: "󰅂", hint: Tr.t("Forward"), available: root.cursor < root.trail.length - 1 },
+                        { id: "close", glyph: "󰅖", hint: Tr.t("Close"), available: true }
+                    ]
+                    delegate: QQC.AbstractButton {
+                        id: action
+                        required property var modelData
+                        implicitWidth: 30
+                        implicitHeight: 30
+                        enabled: action.modelData.available
+                        focusPolicy: Qt.StrongFocus
+                        Accessible.name: action.modelData.hint
+                        QQC.ToolTip.visible: action.hovered
+                        QQC.ToolTip.text: action.modelData.hint
+                        onClicked: {
+                            if (action.modelData.id === "back") root.back()
+                            else if (action.modelData.id === "forward") root.forward()
+                            else root.closed()
+                        }
+                        background: Rectangle {
+                            radius: 7
+                            color: action.hovered ? Theme.islandSurface : "transparent"
+                            border.width: action.visualFocus ? 1 : 0
+                            border.color: Theme.accent
+                        }
+                        contentItem: Text {
+                            text: action.modelData.glyph
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.family: Theme.fontMono
+                            font.pixelSize: 15
+                            color: action.enabled ? Theme.text : Theme.textMuted
+                            opacity: action.enabled ? 1 : 0.35
+                        }
+                    }
                 }
             }
 
-            // One scroll area for the whole page, hero and strip included;
-            // sections never scroll on their own.
+            Loader {
+                id: tabsLoader
+                Layout.fillWidth: true
+                Layout.preferredHeight: 36
+                visible: root.current.tabs.length > 1
+                source: Qt.resolvedUrl("SettingsTabs.qml")
+                onLoaded: {
+                    item.tabs = Qt.binding(() => root.current.tabs)
+                    item.current = Qt.binding(() => root.tab)
+                }
+                Connections {
+                    target: tabsLoader.item
+                    function onPicked(id: string): void { root.show(id) }
+                }
+            }
+
+            Rectangle { Layout.fillWidth: true; implicitHeight: 1; color: Theme.islandBorder }
+
             Flickable {
                 id: page
-
+                objectName: "settingsContent"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
                 contentWidth: width
-                contentHeight: body.implicitHeight
+                contentHeight: body.implicitHeight + 12
                 boundsBehavior: Flickable.StopAtBounds
+                QQC.ScrollBar.vertical: QQC.ScrollBar { policy: QQC.ScrollBar.AsNeeded; width: 4 }
 
                 ColumnLayout {
                     id: body
-
-                    width: page.width
+                    width: Math.max(0, page.width - 12)
                     spacing: root.gap
-
-                    SettingsHero {
-                        Layout.fillWidth: true
-                        icon: root.current.icon
-                        title: root.current.label
-                    }
-
-                    TabStrip {
-                        Layout.fillWidth: true
-                        tabs: root.current.tabs
-                        current: root.tab
-                        onPicked: id => root.show(id)
-                    }
 
                     Loader {
                         id: pageLoader
-
+                        objectName: "settingsPageLoader"
                         Layout.fillWidth: true
                         sourceComponent: root.current.page
-
                         onLoaded: pageLoader.item.tab = Qt.binding(() => root.tab)
-
-                        onSourceComponentChanged: pageFade.restart()
-
-                        NumberAnimation {
-                            id: pageFade
-                            target: pageLoader
-                            property: "opacity"
-                            from: 0
-                            to: 1
-                            duration: Theme.durationFast
-                            easing.type: Theme.easing
-                        }
                     }
                 }
+            }
+
+            Text {
+                Layout.fillWidth: true
+                text: (root.categories.find(entry => entry.id === root.current.category) ?? { label: "" }).label
+                    + "  /  " + root.current.label
+                    + (root.tab !== "" ? "  /  " + (root.current.tabs.find(entry => entry.id === root.tab) ?? { label: "" }).label : "")
+                font.family: Theme.fontFamily
+                font.pixelSize: 11
+                color: Theme.textMuted
+                elide: Text.ElideRight
             }
         }
     }
 
     Component { id: barPage;        BarSection {} }
-    // Widgets are arranged on the desktop itself, behind this window.
-    Component { id: widgetsPage;    WidgetsSection {
-        onArranging: root.closed() } }
     // Open the control centre before closing, while this panel still exists
     // to emit the request.
     Component { id: controlsPage;   ControlsSection {

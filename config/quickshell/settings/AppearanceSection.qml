@@ -84,8 +84,8 @@ SettingsSection {
 
         Text {
             Layout.fillWidth: true
-            visible: ThemeService.error !== ""
-            text: ThemeService.error
+            visible: WallpaperService.error !== "" || ThemeService.error !== ""
+            text: WallpaperService.error || ThemeService.error
             textFormat: Text.PlainText
             wrapMode: Text.Wrap
             font.family: Theme.fontFamily
@@ -128,7 +128,16 @@ SettingsSection {
         SettingGroup {
             title: Tr.t("Greeting")
             note: Tr.t("Choose the logo shown beside Fastfetch in the terminal.")
-            hint: Tr.t("The four scenes follow your palette. Random uses the existing scene rotation. Arch is text art; Cat is an animated GIF.")
+            hint: Tr.t("The four scenes follow your palette. Random rotates those scenes. Add files to the Fastfetch logos folder, then use System → Profiles → Update Greeter to refresh this list.")
+
+            SettingRow {
+                visible: ThemeService.greetingUnavailable || ThemeService.greetingApplyError !== ""
+                label: Tr.t("Greeting unavailable")
+                reading: ThemeService.greetingUnavailable
+                    ? Tr.t("The selected logo is missing. Restore it and update the greeter, or choose another logo.")
+                    : ThemeService.greetingApplyError
+                alarm: true
+            }
 
             SettingTiles {
                 label: Tr.t("Logo")
@@ -154,8 +163,7 @@ SettingsSection {
 
                             Loader {
                                 anchors.centerIn: parent
-                                active: greetingTile.modelData.id !== "arch"
-                                    && greetingTile.modelData.id !== "cat"
+                                active: greetingTile.modelData.kind === "scene"
                                 sourceComponent: GreetingPreview {
                                     scene: greetingTile.modelData.id
                                     version: ThemeService.greetingStamp
@@ -164,10 +172,11 @@ SettingsSection {
 
                             Loader {
                                 anchors.centerIn: parent
-                                active: greetingTile.modelData.id === "arch"
-                                    || greetingTile.modelData.id === "cat"
+                                active: greetingTile.modelData.kind !== "scene"
                                 sourceComponent: FastfetchLogoPreview {
-                                    logo: greetingTile.modelData.id
+                                    path: greetingTile.modelData.path ?? ""
+                                    kind: greetingTile.modelData.kind
+                                    version: greetingTile.modelData.version ?? ""
                                 }
                             }
                         }
@@ -423,8 +432,7 @@ SettingsSection {
             Repeater {
                 model: [
                     { key: "windowShadow", label: "Windows" },
-                    { key: "barShadow", label: "Bar" },
-                    { key: "widgetShadow", label: "Desktop widgets" }
+                    { key: "barShadow", label: "Bar" }
                 ]
 
                 SettingRow {

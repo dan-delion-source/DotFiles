@@ -40,9 +40,6 @@ Item {
 
     function summary(values: var, palette: string): string {
         const parts = [root.barPhrases[values.barStyle] ?? root.barPhrases.grouped]
-        const widgets = (values.desktopWidgets ?? []).filter(row => !row.edge).length
-        parts.push(widgets === 0 ? Tr.t("nothing on the desk")
-            : `${widgets} ${Tr.t(widgets === 1 ? "widget" : "widgets")}`)
         const fixed = palette !== "" && palette !== "adaptive" ? Palettes.byId(palette) : null
         if (fixed)
             parts.push(fixed.name)
@@ -77,7 +74,7 @@ Item {
         width: root.width
         title: Tr.t("Profiles")
         note: Tr.t("Changes are saved to the profile in use as you make them.")
-        hint: Tr.t("A profile holds the bar, widgets, launcher, control centre, look, keys and wallpaper with its palette. Screens, your name and picture, language, weather location, GitHub user, Do not disturb and night light stay with the machine, and notes, tasks and clipboard are shared by every profile.")
+        hint: Tr.t("A profile holds the bar, launcher, control centre, look, keys and wallpaper with its palette. Screens, your name and picture, language, weather location, GitHub user, Do not disturb and night light stay with the machine, and notes, tasks and clipboard are shared by every profile.")
 
         Repeater {
             model: ProfileService.profiles

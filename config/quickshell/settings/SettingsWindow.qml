@@ -11,8 +11,6 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-import "../theme"
-
 // Settings is a window rather than an island panel, so the bar and island stay
 // visible and react live while their own settings change.
 //
@@ -22,6 +20,7 @@ import "../theme"
 // the scoped helper covers sessions using another Hyprland config.
 FloatingWindow {
     id: root
+    reloadableId: "danshell-settings"
 
     // Kept in sync with `visible` both ways, so closing the window from the
     // compositor resets it and it can be opened again.
@@ -39,15 +38,19 @@ FloatingWindow {
 
     implicitWidth: 980
     implicitHeight: 680
+    minimumSize: Qt.size(760, 520)
 
-    color: Theme.island
+    color: "#000000"
+    surfaceFormat.opaque: true
+    mask: null
     visible: root.shown
 
     onVisibleChanged: {
-        if (!root.visible && root.shown)
-            root.shown = false
-        if (root.visible && !floatProcess.running)
-            floatProcess.running = true
+        if (!root.visible) {
+            if (root.shown) root.shown = false
+        } else {
+            if (!floatProcess.running) floatProcess.running = true
+        }
     }
 
     Process {
@@ -58,6 +61,8 @@ FloatingWindow {
     // Built on open and destroyed on close, so pages query state when created
     // and release their subscriptions when gone.
     Loader {
+        id: panelLoader
+        objectName: "settingsPanelLoader"
         anchors.fill: parent
         active: root.visible
         sourceComponent: panel
@@ -71,4 +76,5 @@ FloatingWindow {
             onPanelRequested: name => root.panelRequested(name)
         }
     }
+
 }

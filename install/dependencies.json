@@ -5,402 +5,291 @@
       "description": "QuickShell desktop, wallpaper colours, terminal and standard controls",
       "dependencies": [
         {
-          "packages": [
-            "hyprland"
-          ],
           "commands": [
             "Hyprland",
             "hyprctl"
-          ]
+          ],
+          "id": "hyprland"
         },
         {
-          "packages": [
-            "quickshell"
-          ],
           "commands": [
             "qs"
-          ]
+          ],
+          "id": "quickshell"
         },
         {
-          "packages": [
-            "matugen",
-            "matugen-bin"
-          ],
           "commands": [
             "matugen"
-          ]
+          ],
+          "id": "matugen"
         },
         {
-          "packages": [
-            "python"
-          ],
           "commands": [
             "python3"
-          ]
+          ],
+          "id": "python"
         },
         {
-          "packages": [
-            "qt6-declarative"
-          ],
           "commands": [
             "/usr/lib/qt6/bin/qmlformat"
-          ]
+          ],
+          "id": "qt6-declarative"
         },
         {
-          "packages": [
-            "qt6-svg"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "qt6-svg"
         },
         {
-          "packages": [
-            "qt6-imageformats"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "qt6-imageformats"
         },
         {
-          "packages": [
-            "kitty"
-          ],
           "commands": [
             "kitty",
             "kitten"
-          ]
+          ],
+          "id": "kitty"
         },
         {
-          "packages": [
-            "thunar"
-          ],
           "commands": [
             "thunar"
-          ]
+          ],
+          "id": "thunar"
         },
         {
-          "packages": [
-            "xdg-utils"
-          ],
           "commands": [
-            "gtk-launch",
             "xdg-settings",
             "xdg-open"
-          ]
+          ],
+          "id": "xdg-utils"
         },
         {
-          "packages": [
-            "xdg-user-dirs"
-          ],
           "commands": [
             "xdg-user-dir"
-          ]
+          ],
+          "id": "xdg-user-dirs"
         },
         {
-          "packages": [
-            "awww"
-          ],
           "commands": [
             "awww",
             "awww-daemon"
-          ]
+          ],
+          "id": "awww"
         },
         {
-          "packages": [
-            "imagemagick"
-          ],
           "commands": [
             "magick"
-          ]
+          ],
+          "id": "imagemagick"
         },
         {
-          "packages": [
-            "fastfetch"
-          ],
           "commands": [
             "fastfetch"
-          ]
+          ],
+          "id": "fastfetch"
         },
         {
-          "packages": [
-            "cava"
-          ],
           "commands": [
             "cava"
-          ]
+          ],
+          "id": "cava"
         },
         {
-          "packages": [
-            "networkmanager"
-          ],
           "commands": [
             "nmcli"
-          ]
+          ],
+          "id": "networkmanager"
         },
         {
-          "packages": [
-            "bluez"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "bluez"
         },
         {
-          "packages": [
-            "bluez-utils"
-          ],
           "commands": [
             "bluetoothctl"
-          ]
+          ],
+          "id": "bluez-utils"
         },
         {
-          "packages": [
-            "upower"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "upower"
         },
         {
-          "packages": [
-            "pipewire"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "pipewire"
         },
         {
-          "packages": [
-            "pipewire-audio"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "pipewire-audio"
         },
         {
-          "packages": [
-            "pipewire-pulse"
-          ],
-          "commands": [
-            "pactl"
-          ]
+          "commands": [],
+          "id": "pipewire-pulse"
         },
         {
-          "packages": [
-            "wireplumber"
-          ],
           "commands": [
             "wpctl"
-          ]
+          ],
+          "id": "wireplumber"
         },
         {
-          "packages": [
-            "brightnessctl"
-          ],
           "commands": [
             "brightnessctl"
-          ]
+          ],
+          "id": "brightnessctl"
         },
         {
-          "packages": [
-            "playerctl"
-          ],
           "commands": [
             "playerctl"
-          ]
+          ],
+          "id": "playerctl"
         },
         {
-          "packages": [
-            "hyprsunset"
-          ],
           "commands": [
             "hyprsunset"
-          ]
+          ],
+          "id": "hyprsunset"
         },
         {
-          "packages": [
-            "hyprpicker"
-          ],
           "commands": [
             "hyprpicker"
-          ]
+          ],
+          "id": "hyprpicker"
         },
         {
-          "packages": [
-            "grim"
-          ],
           "commands": [
             "grim"
-          ]
+          ],
+          "id": "grim"
         },
         {
-          "packages": [
-            "wl-clipboard"
-          ],
           "commands": [
             "wl-copy",
             "wl-paste"
-          ]
+          ],
+          "id": "wl-clipboard"
         },
         {
-          "packages": [
-            "curl"
-          ],
           "commands": [
             "curl"
-          ]
+          ],
+          "id": "curl"
         },
         {
-          "packages": [
-            "inotify-tools"
-          ],
           "commands": [
             "inotifywait"
-          ]
+          ],
+          "id": "inotify-tools"
         },
         {
-          "packages": [
-            "fontconfig"
-          ],
           "commands": [
             "fc-list"
-          ]
+          ],
+          "id": "fontconfig"
         },
         {
-          "packages": [
-            "libnotify"
-          ],
           "commands": [
             "notify-send"
-          ]
+          ],
+          "id": "libnotify"
         },
         {
-          "packages": [
-            "polkit"
-          ],
           "commands": [
             "pkexec"
-          ]
+          ],
+          "id": "polkit"
         },
         {
-          "packages": [
-            "polkit-kde-agent"
-          ],
           "commands": [
             "/usr/lib/polkit-kde-authentication-agent-1"
-          ]
+          ],
+          "id": "polkit-kde-agent"
         },
         {
-          "packages": [
-            "xdg-desktop-portal-hyprland"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "xdg-desktop-portal-hyprland"
         },
         {
-          "packages": [
-            "xdg-desktop-portal-gtk"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "xdg-desktop-portal-gtk"
         },
         {
-          "packages": [
-            "accountsservice"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "accountsservice"
         },
         {
-          "packages": [
-            "qt6ct"
-          ],
           "commands": [
             "qt6ct"
-          ]
+          ],
+          "id": "qt6ct"
         },
         {
-          "packages": [
-            "papirus-icon-theme"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "papirus-icon-theme"
         },
         {
-          "packages": [
-            "adwaita-cursors"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "adwaita-cursors"
         },
         {
-          "packages": [
-            "ttf-jetbrains-mono-nerd"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "ttf-jetbrains-mono-nerd"
         },
         {
-          "packages": [
-            "inter-font"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "inter-font"
         },
         {
-          "packages": [
-            "noto-fonts-emoji"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "noto-fonts-emoji"
         },
         {
-          "packages": [
-            "unicode-emoji"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "unicode-emoji"
         },
         {
-          "packages": [
-            "unicode-cldr-annotations"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "unicode-cldr-annotations"
         },
         {
-          "packages": [
-            "iso-codes"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "iso-codes"
         },
         {
-          "packages": [
-            "pacman-contrib"
-          ],
           "commands": [
             "checkupdates"
-          ]
+          ],
+          "id": "pacman-contrib"
         },
         {
-          "packages": [
-            "pacman"
-          ],
           "commands": [
             "pacman"
-          ]
+          ],
+          "id": "pacman"
         },
         {
-          "packages": [
-            "systemd"
-          ],
           "commands": [
             "systemctl",
             "systemd-inhibit",
             "busctl"
-          ]
+          ],
+          "id": "systemd"
         },
         {
-          "packages": [
-            "dbus"
-          ],
           "commands": [
             "dbus-monitor",
             "dbus-update-activation-environment"
-          ]
+          ],
+          "id": "dbus"
         },
         {
-          "packages": [
-            "procps-ng"
-          ],
           "commands": [
             "pgrep",
             "pkill"
-          ]
+          ],
+          "id": "procps-ng"
         },
         {
-          "packages": [
-            "coreutils"
-          ],
           "commands": [
             "readlink",
             "dirname",
@@ -410,31 +299,42 @@
             "ls",
             "head",
             "sort"
-          ]
+          ],
+          "id": "coreutils"
         },
         {
-          "packages": [
-            "bash"
-          ],
           "commands": [
             "sh"
-          ]
+          ],
+          "id": "bash"
         },
         {
-          "packages": [
-            "grep"
-          ],
           "commands": [
             "grep"
-          ]
+          ],
+          "id": "grep"
         },
         {
-          "packages": [
-            "ffmpeg"
-          ],
+          "commands": [],
+          "id": "ttf-iosevka-nerd"
+        },
+        {
           "commands": [
-            "ffmpeg"
-          ]
+            "/usr/lib/qt6/bin/qsb"
+          ],
+          "id": "qt6-shadertools"
+        },
+        {
+          "commands": [
+            "gtk-launch"
+          ],
+          "id": "gtk3"
+        },
+        {
+          "commands": [
+            "pactl"
+          ],
+          "id": "libpulse"
         }
       ]
     },
@@ -442,34 +342,26 @@
       "description": "Screenshot editor, OCR and recording",
       "dependencies": [
         {
-          "packages": [
-            "satty"
-          ],
           "commands": [
             "satty"
-          ]
+          ],
+          "id": "satty"
         },
         {
-          "packages": [
-            "tesseract"
-          ],
           "commands": [
             "tesseract"
-          ]
+          ],
+          "id": "tesseract"
         },
         {
-          "packages": [
-            "tesseract-data-eng"
-          ],
-          "commands": []
+          "commands": [],
+          "id": "tesseract-data-eng"
         },
         {
-          "packages": [
-            "wf-recorder"
-          ],
           "commands": [
             "wf-recorder"
-          ]
+          ],
+          "id": "wf-recorder"
         }
       ]
     },
@@ -477,12 +369,16 @@
       "description": "Animated wallpapers",
       "dependencies": [
         {
-          "packages": [
-            "mpvpaper"
-          ],
           "commands": [
             "mpvpaper"
-          ]
+          ],
+          "id": "mpvpaper"
+        },
+        {
+          "commands": [
+            "ffmpeg"
+          ],
+          "id": "ffmpeg"
         }
       ]
     },
@@ -490,20 +386,16 @@
       "description": "External monitor brightness and power profiles",
       "dependencies": [
         {
-          "packages": [
-            "ddcutil"
-          ],
           "commands": [
             "ddcutil"
-          ]
+          ],
+          "id": "ddcutil"
         },
         {
-          "packages": [
-            "power-profiles-daemon"
-          ],
           "commands": [
             "powerprofilesctl"
-          ]
+          ],
+          "id": "power-profiles-daemon"
         }
       ]
     },
@@ -511,98 +403,51 @@
       "description": "Optional themed terminal applications",
       "dependencies": [
         {
-          "packages": [
-            "btop"
-          ],
           "commands": [
             "btop"
-          ]
+          ],
+          "id": "btop"
         },
         {
-          "packages": [
-            "yazi"
-          ],
           "commands": [
             "yazi"
-          ]
+          ],
+          "id": "yazi"
         },
         {
-          "packages": [
-            "neovim"
-          ],
           "commands": [
             "nvim"
+          ],
+          "id": "neovim"
+        },
+        {
+          "commands": [
+            "imv"
+          ],
+          "id": "imv"
+        },
+        {
+          "id": "git",
+          "commands": [
+            "git"
           ]
         },
         {
-          "packages": [
-            "imv"
-          ],
+          "id": "fzf",
           "commands": [
-            "imv"
-          ]
-        }
-      ]
-    },
-    "chat": {
-      "description": "Optional chat application",
-      "dependencies": [
-        {
-          "packages": [
-            "vesktop",
-            "vesktop-bin"
-          ],
-          "commands": [
-            "vesktop"
-          ]
-        }
-      ]
-    },
-    "music": {
-      "description": "Optional Spotify and Spicetify integration",
-      "dependencies": [
-        {
-          "packages": [
-            "spotify"
-          ],
-          "commands": [
-            "spotify"
+            "fzf"
           ]
         },
         {
-          "packages": [
-            "spicetify-cli"
-          ],
+          "id": "ripgrep",
           "commands": [
-            "spicetify"
+            "rg"
           ]
-        }
-      ]
-    },
-    "editor": {
-      "description": "Optional VSCodium theme integration",
-      "dependencies": [
+        },
         {
-          "packages": [
-            "vscodium",
-            "vscodium-bin"
-          ],
+          "id": "mpv",
           "commands": [
-            "codium"
-          ]
-        }
-      ]
-    },
-    "browser": {
-      "description": "Optional Zen browser theme integration",
-      "dependencies": [
-        {
-          "packages": [
-            "zen-browser",
-            "zen-browser-bin"
-          ],
-          "commands": [
-            "zen-browser"
+            "mpv"
           ]
         }
       ]
@@ -611,12 +456,10 @@
       "description": "Optional KDE application theme tools",
       "dependencies": [
         {
-          "packages": [
-            "kconfig"
-          ],
           "commands": [
             "kreadconfig6"
-          ]
+          ],
+          "id": "kconfig"
         }
       ]
     },
@@ -624,12 +467,21 @@
       "description": "Optional Thunar settings integration",
       "dependencies": [
         {
-          "packages": [
-            "xfconf"
-          ],
           "commands": [
             "xfconf-query"
-          ]
+          ],
+          "id": "xfconf"
+        }
+      ]
+    },
+    "wallpapers": {
+      "description": "Optional external wallpaper download",
+      "dependencies": [
+        {
+          "commands": [
+            "git"
+          ],
+          "id": "git"
         }
       ]
     }
@@ -673,7 +525,7 @@
     }
   ],
   "external_integrations": [
-    "A default browser must already be selected with xdg-settings, or select the browser group.",
+    "A default browser must already be selected with xdg-settings; browsers are not installed here.",
     "Face unlock and shared system avatars require existing upstream PAM/polkit helpers; this installer does not create them or change PAM.",
     "Hyprglass and dynamic cursor plugins are optional, guarded integrations. No plugin is built or installed.",
     "yay or paru is required only for selected packages absent from configured repositories; the installer does not bootstrap an AUR helper.",

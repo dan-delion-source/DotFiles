@@ -261,6 +261,18 @@ Item {
                 }
 
                 PillButton {
+                    text: Tr.t("Delete")
+                    icon: "󰆴"
+                    implicitWidth: 92
+                    implicitHeight: 28
+                    enabled: root.current !== ""
+                    onClicked: {
+                        ShortcutService.rebind(root.description, "")
+                        root.editing = false
+                    }
+                }
+
+                PillButton {
                     text: Tr.t("Cancel")
                     implicitWidth: 84
                     implicitHeight: 28
