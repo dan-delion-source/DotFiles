@@ -70,9 +70,15 @@ if hl.plugin.dynamic_cursors ~= nil then
     })
 end
 
--- · three-finger horizontal swipe switches workspace
+-- · swipes skip unused slots, offering one empty workspace before wrapping.
+local workspace_map = require("modules.workspaces")
 hl.gesture({
     fingers   = 3,
-    direction = "horizontal",
-    action    = "workspace",
+    direction = "left",
+    action    = function() workspace_map.cycle_used(1, true) end,
+})
+hl.gesture({
+    fingers   = 3,
+    direction = "right",
+    action    = function() workspace_map.cycle_used(-1, true) end,
 })

@@ -37,9 +37,10 @@ ClippingRectangle {
         anchors.fill: parent
         source: WallpaperService.currentWallpaper !== ""
             ? `file://${WallpaperService.currentWallpaper}` : ""
-        visible: source != "" && status === Image.Ready
+        visible: source != "" && status !== Image.Error
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
+        retainWhileLoading: true
         sourceSize.width: 560
         sourceSize.height: 320
         scale: mouse.containsMouse ? 1.04 : 1

@@ -471,6 +471,15 @@ def get_current_wallpaper():
     return wallpapers[0]["path"] if wallpapers else ""
 
 
+def wallpaper_revision(path):
+    """Invalidate a thumbnail only when its own file changes, not on a scan."""
+    try:
+        status = os.stat(path)
+    except OSError:
+        return ""
+    return f"{status.st_mtime_ns}-{status.st_ctime_ns}-{status.st_size}-{status.st_ino}"
+
+
 def list_wallpapers():
     if not os.path.isdir(WALLPAPERS_DIR):
         return []
@@ -480,7 +489,9 @@ def list_wallpapers():
             continue
         path = os.path.join(WALLPAPERS_DIR, name)
         if os.path.isfile(path) and name.lower().endswith(IMAGE_EXTENSIONS):
-            entries.append({"name": pretty_name(name), "path": path})
+            revision = wallpaper_revision(path)
+            if revision:
+                entries.append({"name": pretty_name(name), "path": path, "revision": revision})
     return entries
 
 
@@ -496,7 +507,8 @@ def list_animated():
             continue
         poster = poster_of(path)
         if poster:
-            entries.append({"name": pretty_name(name), "path": path, "poster": poster})
+            entries.append({"name": pretty_name(name), "path": path, "poster": poster,
+                            "revision": wallpaper_revision(path)})
     return entries
 
 

@@ -223,9 +223,10 @@ FocusScope {
                             anchors.fill: parent
                             source: Math.abs(tile.distance) <= root.loadReach
                                 ? "file://" + tile.modelData.path.split("/").map(encodeURIComponent).join("/")
-                                    + "?" + WallpaperService.libraryVersion : ""
+                                    + "?" + (tile.modelData.revision ?? "") : ""
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
+                            retainWhileLoading: true
                             sourceSize.width: 320
                             sourceSize.height: 200
                         }
@@ -277,9 +278,11 @@ FocusScope {
                         Image {
                             anchors.fill: parent
                             source: Math.abs(clip.distance) <= root.loadReach
-                                ? "file://" + clip.modelData.poster.split("/").map(encodeURIComponent).join("/") : ""
+                                ? "file://" + clip.modelData.poster.split("/").map(encodeURIComponent).join("/")
+                                    + "?" + (clip.modelData.revision ?? "") : ""
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
+                            retainWhileLoading: true
                             sourceSize.width: 320
                             sourceSize.height: 200
                         }

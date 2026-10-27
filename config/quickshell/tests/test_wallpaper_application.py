@@ -94,6 +94,111 @@ class WallpaperApplicationTests(unittest.TestCase):
 
 @unittest.skipUnless(shutil.which('qs'), 'QuickShell is required')
 class WallpaperPickerIntegrationTests(unittest.TestCase):
+    def test_selection_and_unchanged_scans_keep_thumbnail_delegates(self):
+        with tempfile.TemporaryDirectory(prefix='wallpaper-stability-') as temporary:
+            root = Path(temporary)
+            for folder in ('services', 'scripts', 'runtime', 'state', 'cache', 'data'):
+                (root / folder).mkdir(mode=0o700)
+            shutil.copy2(SCRIPTS.parent / 'services/WallpaperService.qml', root / 'services/WallpaperService.qml')
+            (root / 'services/SettingsService.qml').write_text('''pragma Singleton
+import QtQuick
+QtObject { readonly property string wallpaperTransition: "wipe" }
+''')
+            backend = root / 'scripts/theme_manager.py'
+            backend.write_text('#!/usr/bin/env python3\n' + '''
+import json
+from pathlib import Path
+import sys
+root = Path(__file__).parents[1]
+state = root / 'state.json'
+catalog = root / 'catalog.json'
+action = sys.argv[1]
+if action == 'get-state':
+    print(state.read_text())
+elif action == 'list-library':
+    print(catalog.read_text())
+elif action == 'set-wallpaper':
+    state.write_text(json.dumps({'currentWallpaper': sys.argv[2], 'currentMotion': ''}))
+elif action == 'change-library':
+    data = json.loads(catalog.read_text())
+    data['wallpapers'][0]['revision'] = 'replaced'
+    data['wallpapers'].append({'name': 'Added', 'path': 'added.png', 'revision': '1'})
+    catalog.write_text(json.dumps(data))
+''')
+            backend.chmod(0o755)
+            (root / 'state.json').write_text(json.dumps({'currentWallpaper': 'old.png'}))
+            (root / 'catalog.json').write_text(json.dumps({'wallpapers': [
+                {'name': 'Old', 'path': 'old.png', 'revision': '1'},
+                {'name': 'New', 'path': 'new.png', 'revision': '1'}], 'animated': []}))
+            (root / 'scripts/watch_wallpapers.py').write_text('import time; time.sleep(10)')
+            (root / 'shell.qml').write_text('''import QtQuick
+import Quickshell
+import Quickshell.Io
+import "./services"
+ShellRoot {
+    id: harness
+    property int phase: 0
+    property int version: 0
+    property var firstTile: null
+    function require(value, message) { if (!value) throw new Error(message) }
+    function stable() {
+        require(tiles.itemAt(0) === firstTile, "unchanged scan destroyed a thumbnail tile")
+        require(WallpaperService.libraryVersion === version, "unchanged scan invalidated images")
+    }
+    Item { Repeater { id: tiles; model: WallpaperService.wallpapers; Item {} } }
+    Process {
+        id: change
+        command: [WallpaperService.script, "change-library"]
+        onExited: { harness.phase = 3; WallpaperService.scan() }
+    }
+    Timer {
+        id: afterChoice; interval: 900
+        onTriggered: {
+            try { harness.stable(); WallpaperService.scan(); afterScan.start() }
+            catch (error) { console.error("STABILITY_FAILED", error); Qt.quit() }
+        }
+    }
+    Timer {
+        id: afterScan; interval: 300
+        onTriggered: {
+            try { harness.stable(); change.running = true }
+            catch (error) { console.error("STABILITY_FAILED", error); Qt.quit() }
+        }
+    }
+    Timer {
+        interval: 25; running: true; repeat: true
+        onTriggered: {
+            try {
+                if (harness.phase === 0 && WallpaperService.wallpapers.length === 2
+                    && WallpaperService.currentWallpaper === "old.png" && !WallpaperService.scanning) {
+                    harness.firstTile = tiles.itemAt(0)
+                    harness.version = WallpaperService.libraryVersion
+                    WallpaperService.apply("new.png"); harness.phase = 1
+                } else if (harness.phase === 1 && WallpaperService.chosen === "new.png") {
+                    harness.phase = 2; afterChoice.start()
+                } else if (harness.phase === 3 && WallpaperService.wallpapers.length === 3) {
+                    require(WallpaperService.wallpapers[0].revision === "replaced", "replacement not refreshed")
+                    require(WallpaperService.wallpapers[1].revision === "1", "unrelated thumbnail changed")
+                    require(WallpaperService.libraryVersion === harness.version + 1, "real change not published once")
+                    console.log("STABILITY_OK"); Qt.quit()
+                }
+            } catch (error) { console.error("STABILITY_FAILED", error); Qt.quit() }
+        }
+    }
+    Timer { interval: 7000; running: true; onTriggered: { console.error("STABILITY_FAILED timeout"); Qt.quit() } }
+}
+''')
+            env = dict(os.environ, HOME=str(root), QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software',
+                       XDG_RUNTIME_DIR=str(root / 'runtime'), XDG_STATE_HOME=str(root / 'state'),
+                       XDG_DATA_HOME=str(root / 'data'), XDG_CACHE_HOME=str(root / 'cache'))
+            env.pop('WAYLAND_DISPLAY', None)
+            env.pop('HYPRLAND_INSTANCE_SIGNATURE', None)
+            result = subprocess.run(['qs', '--path', str(root)], env=env, capture_output=True, text=True, timeout=10)
+            output = result.stdout + result.stderr
+            self.assertEqual(result.returncode, 0, output)
+            self.assertIn('STABILITY_OK', output)
+            self.assertNotIn('STABILITY_FAILED', output)
+
     def test_failed_choice_stays_unselected_then_success_emits_once(self):
         with tempfile.TemporaryDirectory(prefix='wallpaper-picker-') as temporary:
             root = Path(temporary)

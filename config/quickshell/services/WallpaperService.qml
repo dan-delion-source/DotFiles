@@ -77,10 +77,17 @@ QtObject {
             onStreamFinished: {
                 const list = root.parseJson(text)
                 if (list && Array.isArray(list.wallpapers) && Array.isArray(list.animated)) {
-                    root.wallpapers = list.wallpapers
-                    root.animated = list.animated
+                    // Selecting a wallpaper triggers a scan too. Keep the
+                    // models and thumbnail cache intact if no file changed.
+                    const stillsChanged = JSON.stringify(root.wallpapers) !== JSON.stringify(list.wallpapers)
+                    const motionChanged = JSON.stringify(root.animated) !== JSON.stringify(list.animated)
+                    if (stillsChanged)
+                        root.wallpapers = list.wallpapers
+                    if (motionChanged)
+                        root.animated = list.animated
                     root.missingChosen = list.missingChosen ?? ""
-                    root.libraryVersion += 1
+                    if (stillsChanged || motionChanged)
+                        root.libraryVersion += 1
                 }
             }
         }

@@ -21,6 +21,56 @@ function M.focus(index)
     hl.dispatch(hl.dsp.focus({ workspace = index }))
 end
 
+function M.cycle_used(direction, offer_empty)
+    local active = hl.get_active_workspace()
+    if not active or not active.monitor or direction == 0 then return end
+
+    local occupied, used = {}, {}
+    for _, workspace in ipairs(hl.get_workspaces() or {}) do
+        if workspace.id > 0 and (workspace.windows or 0) > 0
+            and workspace.monitor and workspace.monitor.name == active.monitor.name then
+            table.insert(occupied, workspace.id)
+            used[workspace.id] = true
+        end
+    end
+    if #occupied == 0 then return end
+    table.sort(occupied)
+
+    -- Swipes offer one free slot after the last occupied workspace. An unused
+    -- slot returns to the beginning on the next forward swipe; it never starts
+    -- a chain of empty workspaces. The wheel keeps occupied-only navigation.
+    if offer_empty and direction > 0 then
+        if not used[active.id] then
+            if active.id ~= occupied[1] then M.focus(occupied[1]) end
+            return
+        end
+        if active.id == occupied[#occupied] then
+            -- Prefer the next free number, then any earlier free slot if the
+            -- monitor's range ends here. Never borrow another display's slot.
+            for offset = 1, 10 do
+                local index = (active.id + offset - 1) % 10 + 1
+                if not used[index] and M.monitor_for(index) == active.monitor.name then
+                    M.focus(index)
+                    return
+                end
+            end
+        end
+    end
+
+    -- Wrap on this monitor without entering another monitor's workspace set.
+    local target = direction > 0 and occupied[1] or occupied[#occupied]
+    if direction > 0 then
+        for _, index in ipairs(occupied) do
+            if index > active.id then target = index; break end
+        end
+    else
+        for index = #occupied, 1, -1 do
+            if occupied[index] < active.id then target = occupied[index]; break end
+        end
+    end
+    if target ~= active.id then M.focus(target) end
+end
+
 function M.move_window(index)
     hl.dispatch(hl.dsp.window.move({ workspace = index, follow = true }))
 end

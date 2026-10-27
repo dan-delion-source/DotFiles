@@ -37,6 +37,7 @@ ClippingRectangle {
         sourceSize.width: 160
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
+        retainWhileLoading: true
     }
 
     MultiEffect {

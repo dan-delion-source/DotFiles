@@ -158,9 +158,9 @@ for i = 1, 10 do
          { description = "Workspaces · Move the window to workspace " .. i })
 end
 
--- · scroll wheel to cycle through the ones on this screen
-bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "m+1" }), { description = "Workspaces · Next workspace" })
-bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "m-1" }), { description = "Workspaces · Previous workspace" })
+-- · scroll wheel skips empty workspaces on this screen
+bind(mainMod .. " + mouse_down", function() workspace_map.cycle_used(1) end, { description = "Workspaces · Next occupied workspace" })
+bind(mainMod .. " + mouse_up",   function() workspace_map.cycle_used(-1) end, { description = "Workspaces · Previous occupied workspace" })
 
 
 -- ── SCREENS ─────────────────────────────────────────────────────────────────

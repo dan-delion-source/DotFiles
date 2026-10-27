@@ -36,8 +36,28 @@ class WallpaperLibraryTests(unittest.TestCase):
                                  {"motion.gif", "video.mp4"})
                 (root / "new wallpaper.JPG").rename(root / "renamed.png")
                 (root / "other.webp").unlink()
-                self.assertEqual(theme_manager.list_wallpapers(),
-                                 [{"name": "Renamed", "path": str(root / "renamed.png")}])
+                renamed = theme_manager.list_wallpapers()
+                self.assertEqual([(entry['name'], entry['path']) for entry in renamed],
+                                 [("Renamed", str(root / "renamed.png"))])
+                self.assertTrue(renamed[0]['revision'])
+
+    def test_thumbnail_revisions_are_stable_and_change_only_for_edited_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in ('one.png', 'two.png'):
+                (root / name).write_bytes(b'original')
+            with patch.object(theme_manager, 'WALLPAPERS_DIR', str(root)):
+                original = theme_manager.list_wallpapers()
+                self.assertEqual(theme_manager.list_wallpapers(), original)
+                image = root / 'one.png'
+                previous = image.stat()
+                replacement = root / 'replacement'
+                replacement.write_bytes(b'replaced')
+                os.utime(replacement, ns=(previous.st_atime_ns, previous.st_mtime_ns))
+                replacement.replace(image)
+                updated = theme_manager.list_wallpapers()
+                self.assertNotEqual(updated[0]['revision'], original[0]['revision'])
+                self.assertEqual(updated[1], original[1])
 
     def test_missing_libraries_are_empty_without_creating_directories(self):
         with tempfile.TemporaryDirectory() as directory:

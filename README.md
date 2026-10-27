@@ -23,7 +23,13 @@ retained for compatibility with saved settings, themes and game progress.
 - Hyprland uses preferred display modes, automatic positioning and scaling.
   Workspaces 1–5 are assigned to `eDP-1`, and 6–10 to `HDMI-A-5`.
   `Super+1…9,0` selects the numbered workspace; adding Shift moves the active
-  window there. If a monitor is disconnected, its workspaces remain accessible
+  window there. `Super+mouse wheel` cycles only through occupied workspaces
+  on the active monitor. Three-finger swipes also skip empty gaps, but offer
+  one free workspace after the last occupied one. Leave it empty and the next
+  forward swipe wraps to the first used workspace; open a window to keep it
+  in the cycle. If the monitor's range is full, swipes wrap immediately.
+  Swipes switch once per gesture; all workspaces remain accessible by number.
+  If a monitor is disconnected, its workspaces remain accessible
   on an available display. Change the output names in
   `config/hypr/modules/workspaces.lua` for another monitor pair.
 - Wallpapers are optional. The installer can download the external
