@@ -209,7 +209,13 @@ SettingsSection {
 
         SettingGroup {
             title: Tr.t("Lock screen style")
-            note: Tr.t("Choose a design for the next lock. Your choice is saved automatically.")
+            note: GreeterSyncService.installed
+                ? "Your choice applies to the next lock and boot login automatically."
+                : Tr.t("Choose a design for the next lock. Your choice is saved automatically.")
+            hint: GreeterSyncService.error !== "" ? "Boot login appearance could not update. Run install.sh greeter-check."
+                : GreeterSyncService.installed
+                ? "The selected design, colours, wallpaper and avatar are shared with the boot login screen."
+                : "Use install.sh greeter-install to enable the matching boot login screen."
 
             SettingTiles {
                 label: Tr.t("Style")
@@ -241,8 +247,7 @@ SettingsSection {
         SettingGroup {
             title: Tr.t("Clock")
             visible: SettingsService.lockStyle === "classic"
-            note: Tr.t("The login screen always draws it stacked.")
-            hint: Tr.t("The login screen runs before anyone has signed in, so it cannot read your settings.")
+            note: GreeterSyncService.installed ? "The boot login follows this clock layout too." : "The layout of the session lock clock."
 
             SettingTiles {
                 label: Tr.t("Style")

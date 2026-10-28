@@ -13,7 +13,6 @@
 -- QuickShell owns notifications; a separate notification daemon is not needed.
 hl.on("hyprland.start", function()
     hl.exec_cmd(require("modules.shell").command .. " start")
-    hl.exec_cmd("awww query >/dev/null 2>&1 || awww-daemon")
 end)
 
 -- Reload only plugins already installed by the user.

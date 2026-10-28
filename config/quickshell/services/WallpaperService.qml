@@ -164,8 +164,8 @@ QtObject {
     // awww's own cache stores the resolved path and breaks if the file moves,
     // so restore from the shell's record, which points at the copy in the
     // data directory. The script only paints outputs that show nothing, so a
-    // shell restart does not repaint; it exits 3 while the daemon is still
-    // starting (quickshell is launched first), hence the retry.
+    // shell restart does not repaint. shell-control prepares the wallpaper
+    // before launching us; retries also cover launching qs directly.
     readonly property Process restoreProcess: Process {
         command: [root.script, "restore"]
         running: true
@@ -174,7 +174,7 @@ QtObject {
             onStreamFinished: root.restoreDetail = text.trim()
         }
         onExited: exitCode => {
-            if (exitCode === 3 && restoreRetry.tries < 8) {
+            if (exitCode === 3 && restoreRetry.tries < 20) {
                 restoreRetry.tries += 1
                 restoreRetry.restart()
             } else if (exitCode !== 0) {
@@ -185,7 +185,7 @@ QtObject {
 
     readonly property Timer restoreRetry: Timer {
         property int tries: 0
-        interval: 1500
+        interval: 150
         onTriggered: root.restoreProcess.running = true
     }
 

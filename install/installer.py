@@ -778,7 +778,8 @@ def platform_check():
 
 def parser():
     cli = argparse.ArgumentParser(description=__doc__)
-    cli.add_argument("command", nargs="?", choices=("check", "install", "update", "restore", "uninstall", "wallpapers"))
+    cli.add_argument("command", nargs="?", choices=("check", "install", "update", "restore", "uninstall", "wallpapers",
+                     "greeter-install", "greeter-check", "greeter-uninstall"))
     cli.add_argument("--groups", action="append", default=[], help="Comma-separated optional feature groups")
     cli.add_argument("--dry-run", action="store_true", help="Read-only preview; no packages, configs or state are written")
     cli.add_argument("--yes", action="store_true", help="Accept the displayed installer plan; package manager prompts remain")
@@ -824,6 +825,12 @@ def main():
             args.command, args.dry_run = "install", True
     else:
         terminal.banner()
+    if args.command.startswith("greeter-"):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("yozora_greeter_installer", REPO / "install/greeter.py")
+        greeter = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(greeter)
+        return int(greeter.main(args.command, args.dry_run, args.yes, args.config_dir))
     deploy = Deployment(REPO, args.config_dir, args.data_dir, args.state_dir,
                         discover=args.command not in ("restore", "uninstall"))
     if args.command in ("restore", "uninstall"):

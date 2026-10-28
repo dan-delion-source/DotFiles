@@ -12,6 +12,7 @@ Item {
 
     MainframeView {
         anchors.fill: parent
+        loginMode: LockService.loginMode === true
         shot: LockService.shotSource(root.output)
         account: AccountService.name
         output: root.output
@@ -36,7 +37,7 @@ Item {
         objectName: "mainframePassword"
         width: 1; height: 1; opacity: 0
         enabled: !LockService.authenticating && !LockService.leaving
-        echoMode: TextInput.Password
+        echoMode: LockService.echoResponse ? TextInput.Normal : TextInput.Password
         passwordMaskDelay: 0
         inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText | Qt.ImhHiddenText | Qt.ImhNoAutoUppercase
         selectByMouse: false

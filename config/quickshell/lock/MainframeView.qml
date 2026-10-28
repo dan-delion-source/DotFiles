@@ -38,15 +38,20 @@ Item {
     readonly property color displayDanger: root.danger.hslLightness < 0.6
         ? Qt.hsla(root.danger.hslHue, root.danger.hslSaturation, 0.75, 1) : root.danger
 
-    property real intro: root.preview || root.motion === 0 ? 1 : 0
+    property real intro: root.preview || root.motion === 0 ? 1 : root.loginMode ? 0.46 : 0
     property real outro: 0
     property real elapsed: 0
     property date now: new Date()
     readonly property real speed: Styles.motionFactor(root.motion)
+    readonly property int entranceDuration: root.loginMode
+        ? Styles.loginEnterMs("mainframe", root.speed) : Math.round(1350 * root.speed)
+    readonly property int departureDuration: root.loginMode
+        ? Styles.loginExitMs("mainframe", root.speed) : Styles.exitMs("mainframe", root.speed)
     readonly property real scaleFactor: Math.min(root.width / 1920, root.height / 1080)
     readonly property real textIn: Styles.segment(root.intro, 0.62, 1)
+    property bool loginMode: false
     readonly property var bootLines: [
-        "[ SESSION ]  SESSION LOCK ENGAGED",
+        "[ SESSION ]  " + (root.loginMode ? "YOZORA SYSTEM LOGIN" : "SESSION LOCK ENGAGED"),
         "[ ACCOUNT ]  " + root.account,
         "[ DISPLAY ]  " + root.output,
         "[ INPUT   ]  PASSWORD AUTHENTICATION"
@@ -71,6 +76,11 @@ Item {
                 root.outro = 1
             else
                 closing.restart()
+        } else {
+            // Authentication/launch cancellation can interrupt a slow login
+            // outro. Restore the terminal so another attempt stays usable.
+            closing.stop()
+            root.outro = 0
         }
     }
     onMotionChanged: {
@@ -86,15 +96,17 @@ Item {
         id: opening
         target: root
         property: "intro"
-        from: 0; to: 1
-        duration: Math.round(1350 * root.speed)
+        // Login has no desktop fold before the terminal: start directly at
+        // power-on so a slower entrance does not add a blank first second.
+        from: root.loginMode ? 0.46 : 0; to: 1
+        duration: root.entranceDuration
     }
     NumberAnimation {
         id: closing
         target: root
         property: "outro"
         from: 0; to: 1
-        duration: Styles.exitMs("mainframe", root.speed)
+        duration: root.departureDuration
     }
     Timer {
         interval: 1000
@@ -114,7 +126,9 @@ Item {
     Image {
         id: desktop
         anchors.fill: parent
-        source: root.shot
+        // Boot login has no desktop behind it. Avoid decoding a full-size
+        // wallpaper merely to reveal it before the greeter compositor exits.
+        source: root.loginMode ? "" : root.shot
         fillMode: Image.PreserveAspectCrop
         visible: false
         cache: false
@@ -131,7 +145,7 @@ Item {
     // revealed on exit. Missing images simply leave the opaque black ground.
     ShaderEffect {
         anchors.fill: parent
-        visible: root.effectsEnabled && desktop.status === Image.Ready && (!root.preview || root.outro > 0)
+        visible: !root.loginMode && root.effectsEnabled && desktop.status === Image.Ready && (!root.preview || root.outro > 0)
         opacity: root.leaving ? Styles.segment(root.outro, 0.38, 1)
             : 1 - Styles.segment(root.intro, 0.46, 0.62)
         property variant source: desktopTexture
@@ -152,6 +166,7 @@ Item {
 
     Item {
         id: terminalPlane
+        objectName: "mainframeTerminal"
         anchors.fill: parent
         layer.enabled: root.effectsEnabled
         layer.effect: ShaderEffect {
@@ -160,9 +175,11 @@ Item {
             property real itemHeight: Math.max(1, terminalPlane.height)
             property real crt: 1
             property real bloom: 0.28
-            property real squashY: root.leaving ? 1 - Styles.segment(root.outro, 0, 0.30)
+            property real squashY: root.leaving ? 1 - (root.loginMode
+                ? Styles.segment(root.outro, 0.12, 0.78) : Styles.segment(root.outro, 0, 0.30))
                 : Styles.segment(root.intro, 0.54, 0.80)
-            property real squashX: root.leaving ? 1 - Styles.segment(root.outro, 0.26, 0.44)
+            property real squashX: root.leaving ? 1 - (root.loginMode
+                ? Styles.segment(root.outro, 0.70, 0.94) : Styles.segment(root.outro, 0.26, 0.44))
                 : Styles.segment(root.intro, 0.48, 0.63)
             property real flash: 0
             property real glitch: root.failed && root.speed > 0 ? 0.15 : 0
@@ -170,7 +187,8 @@ Item {
             fragmentShader: root.shader
             onStatusChanged: if (status === ShaderEffect.Error) root.unavailable()
         }
-        opacity: root.leaving ? 1 - Styles.segment(root.outro, 0.32, 0.48)
+        opacity: root.leaving ? 1 - (root.loginMode
+            ? Styles.segment(root.outro, 0.90, 1) : Styles.segment(root.outro, 0.32, 0.48))
             : Styles.segment(root.intro, 0.46, 0.60)
 
         Rectangle { anchors.fill: parent; color: "#06090a" }

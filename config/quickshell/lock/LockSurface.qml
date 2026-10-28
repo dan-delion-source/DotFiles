@@ -35,9 +35,13 @@ Item {
     // 1 while the lock holds, 0 once it is answered: the type goes and the
     // blur relaxes, so the desktop is what is left when the lock falls.
     property real held: LockService.leaving ? 0 : 1
+    readonly property real backgroundHeld: LockService.loginMode ? 1 : root.held
 
     Behavior on held {
-        NumberAnimation { duration: Theme.durationMorph; easing.type: Easing.InOutCubic }
+        NumberAnimation {
+            duration: LockService.loginMode ? LockService.exitDuration : Theme.durationMorph
+            easing.type: Easing.InOutCubic
+        }
     }
 
     // 0 at rest, 1 awake: what only an awake screen shows fades and rises
@@ -105,13 +109,13 @@ Item {
         source: shot
         visible: shot.status === Image.Ready
         blurEnabled: true
-        blur: root.held
+        blur: root.backgroundHeld
         // Enough to make text unreadable while the desktop stays recognisable.
         blurMax: SettingsService.lockBlur
         // Barely darkened: a dark desktop dimmed further looks broken. The text
         // has its own shadow and every capsule is opaque, so the background
         // only needs to be blurred.
-        brightness: -0.05 * root.held
+        brightness: -0.05 * root.backgroundHeld
         saturation: 0
     }
 

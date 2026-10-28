@@ -4,7 +4,12 @@ set -eu
 script=$(readlink -f -- "$0")
 config=$(dirname -- "$(dirname -- "$script")")
 case "${1:-start}" in
-    start) exec qs --path "$config" --no-duplicate --daemonize ;;
+    start)
+        # Paint the saved background before loading the shell's services.
+        # Failure must still leave the bar and its recovery controls usable.
+        python3 "$config/scripts/start-wallpaper.py" || :
+        exec qs --path "$config" --no-duplicate --daemonize
+        ;;
     restart)
         # IPC reload preserves the instance and does not kill another config.
         if qs ipc --path "$config" call shell reload; then exit 0; fi

@@ -7,6 +7,7 @@ singleton Tr                 1.0 theme/Tr.qml
 
 singleton SettingsService    1.0 services/SettingsService.qml
 singleton ThemeService       1.0 services/ThemeService.qml
+singleton GreeterSyncService 1.0 services/GreeterSyncService.qml
 singleton WallpaperService   1.0 services/WallpaperService.qml
 singleton LauncherService    1.0 services/LauncherService.qml
 singleton SystemService      1.0 services/SystemService.qml

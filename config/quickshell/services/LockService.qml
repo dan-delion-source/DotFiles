@@ -32,6 +32,8 @@ Singleton {
     id: root
 
     property bool locked: false
+    readonly property bool loginMode: false
+    readonly property bool echoResponse: false
 
     // Freeze the presentation for the whole lock, including hotplugged screens.
     // A settings/profile change during locking applies to the following lock.

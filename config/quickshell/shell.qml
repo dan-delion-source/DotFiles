@@ -37,6 +37,7 @@ ShellRoot {
     Component.onCompleted: {
         // Restores the saved palette.
         void ThemeService.activeId
+        void GreeterSyncService.installed
         // Builds the launcher index ahead of the first open.
         void LauncherService.applications
         // Keeps history, so the graph has data before the panel opens.

@@ -172,7 +172,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 opacity: root.typing ? 1 : 0
 
-                echoMode: TextInput.Password
+                echoMode: LockService.echoResponse ? TextInput.Normal : TextInput.Password
                 passwordCharacter: "●"
                 passwordMaskDelay: 0
                 enabled: !LockService.authenticating && !LockService.leaving

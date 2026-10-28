@@ -1,5 +1,11 @@
 # Yozora
 
+Optional matching boot login: see [Yozora greeter](greeter/README.md). On a
+greetd-based system, `./install.sh greeter-install` enables the selected Session
+lock-screen design for boot login too, with password authentication before the
+desktop starts. Appearance follows automatically; rollback is available through
+`./install.sh greeter-uninstall`.
+
 A personal CachyOS/Arch rice built around Hyprland and QuickShell. The goal is a
 cohesive desktop that can be installed on another machine and adjusted from
 QuickShell settings. Screenshots and references guide its own visual direction.

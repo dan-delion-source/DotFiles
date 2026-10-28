@@ -4,7 +4,7 @@ if ! command -v python3 >/dev/null 2>&1; then
     # Read-only/recovery commands must never install a bootstrap dependency.
     for arg in "$@"; do
         case "$arg" in
-            check|restore|uninstall|--dry-run|--help|-h)
+            check|restore|uninstall|greeter-check|greeter-uninstall|--dry-run|--help|-h)
                 echo 'Python is required: sudo pacman -Syu --needed python' >&2
                 exit 1
                 ;;

@@ -56,17 +56,22 @@ class ProcessIsolationTests(unittest.TestCase):
             qs.chmod(0o755)
             env = dict(os.environ, PATH=str(tmp) + os.pathsep + os.environ['PATH'],
                        SHELL_TEST_LOG=str(tmp / 'calls'))
-            command = ['sh', str(ROOT / 'scripts/shell-control.sh')]
+            # Keep startup preparation isolated from the real desktop too.
+            scripts = tmp / 'scripts'
+            scripts.mkdir()
+            (scripts / 'shell-control.sh').write_text((ROOT / 'scripts/shell-control.sh').read_text())
+            (scripts / 'start-wallpaper.py').write_text('pass\n')
+            command = ['sh', str(scripts / 'shell-control.sh')]
             for action in ['start', 'restart', 'stop']:
                 subprocess.run(command + [action], env=env, check=True)
             subprocess.run(command + ['restart'], env=dict(env, FAIL_IPC='1'), check=True)
             calls = [json.loads(line) for line in (tmp / 'calls').read_text().splitlines()]
             self.assertEqual(calls, [
-                ['--path', str(ROOT), '--no-duplicate', '--daemonize'],
-                ['ipc', '--path', str(ROOT), 'call', 'shell', 'reload'],
-                ['kill', '--path', str(ROOT)],
-                ['ipc', '--path', str(ROOT), 'call', 'shell', 'reload'],
-                ['--path', str(ROOT), '--no-duplicate', '--daemonize']])
+                ['--path', str(tmp), '--no-duplicate', '--daemonize'],
+                ['ipc', '--path', str(tmp), 'call', 'shell', 'reload'],
+                ['kill', '--path', str(tmp)],
+                ['ipc', '--path', str(tmp), 'call', 'shell', 'reload'],
+                ['--path', str(tmp), '--no-duplicate', '--daemonize']])
 
 
 if __name__ == '__main__':
