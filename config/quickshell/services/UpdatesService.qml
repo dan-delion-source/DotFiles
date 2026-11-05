@@ -3,7 +3,6 @@
 // │   U P D A T E S   S E R V I C E                                          │
 // │   pending packages · the repositories and the AUR                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

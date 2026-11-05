@@ -3,7 +3,6 @@
 // │   S E S S I O N   S E C T I O N                                          │
 // │   session · account, lock screen and idle                                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

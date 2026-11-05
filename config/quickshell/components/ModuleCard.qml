@@ -3,7 +3,6 @@
 // │   M O D U L E   C A R D                                                  │
 // │   a module's detail · its heading on a mark, then its rows               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

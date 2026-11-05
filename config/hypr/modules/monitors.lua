@@ -3,7 +3,6 @@
 -- │   M O N I T O R S                                                        │
 -- │   displays · resolution and layout                                       │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

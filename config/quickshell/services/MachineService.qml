@@ -3,7 +3,6 @@
 // │   M A C H I N E   S E R V I C E                                          │
 // │   hardware and os summary                                                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

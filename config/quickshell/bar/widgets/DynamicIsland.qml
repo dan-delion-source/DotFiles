@@ -3,7 +3,6 @@
 // │   D Y N A M I C   I S L A N D                                            │
 // │   morphing centre capsule · hosts every island layer                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

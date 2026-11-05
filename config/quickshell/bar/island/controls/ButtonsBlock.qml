@@ -3,7 +3,6 @@
 // │   B U T T O N S   B L O C K                                              │
 // │   a block of round buttons · the session's actions, or shortcuts         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

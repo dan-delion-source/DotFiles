@@ -3,7 +3,6 @@
 -- │   T R E E S I T T E R                                                    │
 -- │   treesitter · parsers and highlighting                                  │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

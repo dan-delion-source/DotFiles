@@ -3,7 +3,6 @@
 // │   C O D E X   M A R K                                                    │
 // │   openai's codex cloud · traced from the official artwork                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

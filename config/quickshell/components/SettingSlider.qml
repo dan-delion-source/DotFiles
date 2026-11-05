@@ -3,7 +3,6 @@
 // │   S E T T I N G   S L I D E R                                            │
 // │   a number you drag, with the number on it                               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

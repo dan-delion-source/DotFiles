@@ -5,7 +5,6 @@
 # │   M O N I T O R S                                                        │
 # │   monitor detection and saved layouts                                    │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

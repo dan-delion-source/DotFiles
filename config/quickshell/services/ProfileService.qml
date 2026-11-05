@@ -3,7 +3,6 @@
 // │   P R O F I L E   S E R V I C E                                          │
 // │   profiles · switch, rename, import and export                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

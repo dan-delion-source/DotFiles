@@ -3,7 +3,6 @@
 // │   B R I G H T N E S S   M O D U L E                                      │
 // │   brightness · the focused screen's ring, a slider per screen when open  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

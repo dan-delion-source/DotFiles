@@ -3,7 +3,6 @@
 // │   C L A U D E   S E R V I C E                                            │
 // │   usage against a reference · read from the transcripts                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

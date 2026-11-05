@@ -3,7 +3,6 @@
 // │   C O N T R O L S   T R A Y                                              │
 // │   block tray · shown while arranging the control centre                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

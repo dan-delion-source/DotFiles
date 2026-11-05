@@ -3,7 +3,6 @@
 // │   L A Y O U T   E D I T O R                                              │
 // │   bar layout editor · preview and module catalogue                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   F L O O D                                                              │
 // │   fourteen by fourteen · six colours, and the corner eats the board      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

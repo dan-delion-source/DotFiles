@@ -3,7 +3,6 @@
 // │   S H O R T C U T   R O W                                                │
 // │   one key, and how it is changed                                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

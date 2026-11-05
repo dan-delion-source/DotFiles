@@ -3,7 +3,6 @@
 // │   C O N T R O L S   S E R V I C E                                        │
 // │   control centre layout · shortcuts, grid and toggles                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

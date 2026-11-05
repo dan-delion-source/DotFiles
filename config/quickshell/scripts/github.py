@@ -5,7 +5,6 @@
 # │   G I T H U B                                                            │
 # │   github contribution calendar scraper                                   │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   G A M E   B O A R D                                                    │
 // │   loads a game by id and gives it the keyboard                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -59,6 +58,8 @@ Item {
         space: spaceGame,
         tetris: tetrisGame,
         solitaire: solitaireGame,
+        aoe3Original: ageOfEmpiresGame,
+        diamondrushPrototype: diamondRushPrototypeGame,
         breakout: neonBreakoutGame,
         slidingpuzzle: slidingPuzzleGame,
         towerdefence: towerDefenceGame,
@@ -100,4 +101,6 @@ Item {
     Component { id: towerDefenceGame; TowerDefence { tint: root.tint } }
     Component { id: slidingPuzzleGame; SlidingPuzzle { tint: root.tint } }
     Component { id: neonBreakoutGame; Breakout { tint: root.tint } }
+    Component { id: diamondRushPrototypeGame; DiamondRush { tint: root.tint } }
+    Component { id: ageOfEmpiresGame; AgeOfEmpiresIII { tint: root.tint } }
 }

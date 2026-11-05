@@ -3,7 +3,6 @@
 // │   S T A T S   M O D U L E                                                │
 // │   system load · ring, sparklines when open                               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

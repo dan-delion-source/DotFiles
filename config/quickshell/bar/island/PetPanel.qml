@@ -3,7 +3,6 @@
 // │   P E T   P A N E L                                                      │
 // │   pet panel · the active pet and the family                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

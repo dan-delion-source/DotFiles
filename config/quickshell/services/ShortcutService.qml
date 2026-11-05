@@ -3,7 +3,6 @@
 // │   S H O R T C U T   S E R V I C E                                        │
 // │   keybindings per profile · reading and rebinding                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

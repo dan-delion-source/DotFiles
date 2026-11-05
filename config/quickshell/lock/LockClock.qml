@@ -3,7 +3,6 @@
 // │   L O C K   C L O C K                                                    │
 // │   the lock's clock · stacked or inline, the date above it                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

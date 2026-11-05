@@ -3,7 +3,6 @@
 // │   M I C R O P H O N E   D E T A I L                                      │
 // │   the microphone · its level, who records it, which one                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   S T A T S   P A N E L                                                  │
 // │   system statistics · load, memory and history                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

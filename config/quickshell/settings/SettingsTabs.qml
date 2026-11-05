@@ -10,7 +10,7 @@ Flickable {
     property string current: ""
     signal picked(string id)
 
-    implicitHeight: 36
+    implicitHeight: 38
     visible: root.tabs.length > 1
     clip: true
     contentWidth: links.width
@@ -36,11 +36,36 @@ Flickable {
     onTabsChanged: Qt.callLater(root.revealCurrent)
     onWidthChanged: Qt.callLater(root.revealCurrent)
 
+    Rectangle {
+        y: root.height - 1
+        width: Math.max(root.width, root.contentWidth)
+        height: 1
+        color: Theme.islandBorder
+    }
+    Rectangle {
+        z: 1
+        readonly property var selectedButton: {
+            const current = root.current
+            for (let i = 0; i < entries.count; i++) {
+                const button = entries.itemAt(i)
+                if (button && button.modelData.id === current) return button
+            }
+            return null
+        }
+        x: selectedButton ? selectedButton.x + 14 : 0
+        y: root.height - 3
+        width: selectedButton ? selectedButton.width - 28 : 0
+        height: 3
+        radius: 1.5
+        color: Theme.accent
+        Behavior on x { NumberAnimation { duration: 320 * Theme.motion; easing.type: Easing.OutCubic } }
+        Behavior on width { NumberAnimation { duration: 320 * Theme.motion; easing.type: Easing.OutCubic } }
+    }
     Row {
         id: links
         width: childrenRect.width
         height: root.height
-        spacing: 6
+        spacing: 4
 
         Repeater {
             id: entries
@@ -58,8 +83,7 @@ Flickable {
 
                 background: Rectangle {
                     radius: 8
-                    color: button.selected ? Theme.accent
-                        : button.hovered ? Theme.islandSurface : "transparent"
+                    color: button.hovered ? Theme.surface : "transparent"
                     border.width: button.visualFocus ? 1 : 0
                     border.color: Theme.text
                 }
@@ -72,7 +96,7 @@ Flickable {
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontSizeSmall
                     font.weight: button.selected ? Font.DemiBold : Font.Normal
-                    color: button.selected ? Theme.accentText : Theme.textMuted
+                    color: button.selected ? Theme.accent : Theme.textMuted
                 }
             }
         }

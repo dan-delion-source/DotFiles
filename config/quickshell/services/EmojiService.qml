@@ -3,7 +3,6 @@
 // │   E M O J I   S E R V I C E                                              │
 // │   emoji index · search, groups, skin tone, recent picks and copy         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

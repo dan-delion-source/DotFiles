@@ -3,7 +3,6 @@
 // │   P E T   S O F T   F A C E                                              │
 // │   the drawn face · eyes that blink and shut, a mouth per mood            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

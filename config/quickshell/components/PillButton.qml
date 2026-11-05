@@ -3,7 +3,6 @@
 // │   P I L L   B U T T O N                                                  │
 // │   capsule action · fills with the accent when active                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

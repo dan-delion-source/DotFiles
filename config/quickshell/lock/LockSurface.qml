@@ -3,7 +3,6 @@
 // │   L O C K   S U R F A C E                                                │
 // │   lock surface for one screen · blurred desktop behind                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

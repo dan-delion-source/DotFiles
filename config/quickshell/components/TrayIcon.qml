@@ -3,7 +3,6 @@
 // │   T R A Y   I C O N                                                      │
 // │   a tray item's icon · in grey, drawn for a dark bar                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

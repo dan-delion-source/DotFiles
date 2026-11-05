@@ -10,9 +10,7 @@ A personal CachyOS/Arch rice built around Hyprland and QuickShell. The goal is a
 cohesive desktop that can be installed on another machine and adjusted from
 QuickShell settings. Screenshots and references guide its own visual direction.
 
-The shell and parts of the compositor configuration derive from
-[Impasto by Andreu Massanet](https://github.com/andreumassanet/impasto).
-Original attribution and GPLv3 terms remain in
+Source attribution and GPLv3 terms are provided in
 [NOTICE](config/quickshell/NOTICE) and [LICENSE](config/quickshell/LICENSE).
 Yozora is the rice name. Existing `danshell` storage and IPC identifiers are
 retained for compatibility with saved settings, themes and game progress.
@@ -231,7 +229,7 @@ they are and upgrades only the installer record.
 
 To download future commits from your own configured DotFiles remote, commit your
 local repository work first, then use `git pull --ff-only`. The updater applies
-this checkout; it does not pull, reset, stash or copy anything from Impasto.
+only this checkout without pulling, resetting, stashing or copying other configurations.
 
 Updates also discover newly added config targets, so an existing installation
 can receive the GTK, Neovim and Yazi configs without reinstalling the desktop.

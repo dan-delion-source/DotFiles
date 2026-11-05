@@ -3,7 +3,6 @@
 // │   C A R D   H E A D I N G                                                │
 // │   a group's title on a card, in the height of a row                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

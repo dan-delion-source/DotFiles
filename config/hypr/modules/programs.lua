@@ -3,7 +3,6 @@
 -- │   P R O G R A M S                                                        │
 -- │   default applications · consumed by other modules                       │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

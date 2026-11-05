@@ -5,7 +5,6 @@
 # │   C O M P O S I T O R                                                    │
 # │   live hyprland options, read and set                                    │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

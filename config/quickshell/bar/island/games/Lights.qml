@@ -3,7 +3,6 @@
 // │   L I G H T S                                                            │
 // │   five by five · a press flips a cross, and fewer is better              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

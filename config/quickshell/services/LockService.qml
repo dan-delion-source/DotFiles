@@ -3,7 +3,6 @@
 // │   L O C K   S E R V I C E                                                │
 // │   session lock state · background capture and authentication             │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   S Y S T E M   I N F O                                              │
 // │   signature block · palette board and machine summary                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

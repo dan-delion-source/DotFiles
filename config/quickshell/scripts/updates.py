@@ -4,7 +4,6 @@
 # │   U P D A T E S                                                          │
 # │   packages an upgrade would touch · counted, never installed             │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

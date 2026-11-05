@@ -3,7 +3,6 @@
 -- │   C O M P L E T I O N                                                    │
 -- │   blink.cmp · completion from the language servers                       │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

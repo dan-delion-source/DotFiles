@@ -3,7 +3,6 @@
 // │   B L O C K                                                              │
 // │   control centre block · placement and dragging                          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

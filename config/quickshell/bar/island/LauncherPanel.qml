@@ -3,7 +3,6 @@
 // │   L A U N C H E R   P A N E L                                            │
 // │   launcher · apps, calculator, windows, timer, clipboard, emoji          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -376,6 +375,7 @@ ColumnLayout {
 
     ListView {
         id: resultList
+        objectName: "launcherResultList"
 
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -396,12 +396,25 @@ ColumnLayout {
         boundsBehavior: Flickable.StopAtBounds
         interactive: true
         ScrollBar.vertical: ScrollBar {
+            id: resultScroll
+            objectName: "launcherResultScroll"
             policy: ScrollBar.AsNeeded
-            width: 5
+            interactive: true
+            hoverEnabled: true
+            z: 10
+            width: 16
+            padding: 4
+            minimumSize: 0.08
+            Accessible.name: Tr.t("Scroll results")
             contentItem: Rectangle {
-                implicitWidth: 5
-                radius: 2
-                color: Theme.textMuted
+                implicitWidth: 8
+                radius: 4
+                color: resultScroll.pressed || resultScroll.hovered ? Theme.accent : Theme.textMuted
+            }
+            background: Rectangle {
+                radius: 8
+                color: resultScroll.hovered || resultScroll.pressed
+                    ? Theme.surfaceHoverIn(QsWindow.window) : "transparent"
             }
         }
         // The delegate paints the selection itself; no separate highlight.
@@ -417,7 +430,7 @@ ColumnLayout {
             // what is lit.
             readonly property bool selected: ListView.view.currentIndex === row.index
 
-            width: ListView.view.width
+            width: ListView.view.width - (resultScroll.visible ? resultScroll.width + 4 : 0)
             height: LauncherService.rowHeight
             radius: Theme.radiusSmall
             color: row.selected ? Theme.surfaceHoverIn(QsWindow.window) : "transparent"

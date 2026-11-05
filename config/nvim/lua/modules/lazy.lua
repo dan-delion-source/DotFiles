@@ -3,7 +3,6 @@
 -- │   L A Z Y                                                                │
 -- │   plugin manager · bootstrapped on first run                             │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

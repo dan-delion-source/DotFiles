@@ -3,7 +3,6 @@
 // │   P E T   C R E A T U R E                                                │
 // │   the pet drawn as itself · one silhouette per species                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

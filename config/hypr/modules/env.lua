@@ -3,7 +3,6 @@
 -- │   E N V                                                                  │
 -- │   environment variables                                                  │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

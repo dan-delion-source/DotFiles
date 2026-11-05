@@ -3,7 +3,6 @@
 // │   P O P                                                                  │
 // │   what a hit was worth · a figure that rises off it and fades            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

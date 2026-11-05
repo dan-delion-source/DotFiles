@@ -3,7 +3,6 @@
 // │   C L A U D E   M A R K                                                  │
 // │   anthropic's sunburst · traced from the official artwork                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

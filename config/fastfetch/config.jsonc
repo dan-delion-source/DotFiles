@@ -3,7 +3,6 @@
 // │   C O N F I G                                                            │
 // │   system info greeting · colours from the active palette                 │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -11,14 +10,14 @@
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
   // QuickShell's Greeting setting updates type and source when a logo is
-  // selected. The default source follows greeting.py's state directory.
+  // selected. New installations start with the supplied cat GIF.
   //
   // kitty-icat is the only logo type that animates a GIF (kitty keeps looping
-  // it after fastfetch exits). A scene is 30 columns by 15 rows; no top
+  // it after fastfetch exits). Images use a 30-column box with no top
   // padding, because fastfetch reserves no height for an icat logo.
   "logo": {
     "type": "kitty-icat",
-    "source": "~/.local/state/danshell/greeting.gif",
+    "source": "~/.config/fastfetch/logos/cat.gif",
     "width": 30,
     "padding": {
       "top": 0,

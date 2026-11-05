@@ -3,7 +3,6 @@
 -- │   L S P                                                                  │
 -- │   language servers · started only when installed                         │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   S Y S T E M   S E R V I C E                                            │
 // │   radios and power profile · the state nothing else pushes               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   C A R O U S E L                                                        │
 // │   horizontal or vertical carousel · enlarged centre tile                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

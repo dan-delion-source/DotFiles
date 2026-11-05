@@ -3,7 +3,6 @@
 // │   B A T T E R Y   S E R V I C E                                          │
 // │   charge level and power state · reactive, via upower                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   K E Y S   P A N E L                                                    │
 // │   keybinding cheat sheet                                                 │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

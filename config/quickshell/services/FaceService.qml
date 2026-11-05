@@ -3,7 +3,6 @@
 // │   F A C E   S E R V I C E                                                │
 // │   face unlock · what the machine has, the faces kept, add and try        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

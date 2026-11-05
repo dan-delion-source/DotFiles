@@ -3,7 +3,6 @@
 // │   P E T   P L U S H                                                      │
 // │   the pet drawn soft · one round body, shaded, with its crown            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

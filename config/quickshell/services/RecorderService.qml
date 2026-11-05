@@ -3,7 +3,6 @@
 // │   R E C O R D E R   S E R V I C E                                        │
 // │   screen recording state and elapsed time                                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

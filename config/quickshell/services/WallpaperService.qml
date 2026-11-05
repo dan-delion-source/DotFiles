@@ -3,7 +3,6 @@
 // │   W A L L P A P E R   S E R V I C E                                      │
 // │   wallpaper listing and application                                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

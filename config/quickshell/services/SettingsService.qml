@@ -3,7 +3,6 @@
 // │   S E T T I N G S   S E R V I C E                                        │
 // │   user preferences · defaults here, overrides on disk                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -425,6 +424,8 @@ Singleton {
         // change. Coalescing also means one write per turn (`adopt()`).
         onAdapterUpdated: saver.restart()
         onLoaded: {
+            if (["lava", "critters", "koi", "invaders", "random"].includes(config.greeting))
+                config.greeting = "cat"
             root.arrived = true
             config.barPosition = BarGeometry.normalize(config.barPosition)
             config.sideBarWidth = BarGeometry.sideWidth(config.sideBarWidth)
@@ -509,9 +510,8 @@ Singleton {
         // each change.
         property string wallpaperTransition: "wipe"
 
-        // Row id from `ThemeService.greetings`; `random` is picked by `fa` on
-        // each run.
-        property string greeting: "random"
+        // Logo id from the supplied Fastfetch library.
+        property string greeting: "cat"
 
         // One of `barStyles`.
         property string barStyle: "grouped"

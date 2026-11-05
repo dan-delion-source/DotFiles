@@ -3,7 +3,6 @@
 // │   P A C K A G E S   S E R V I C E                                        │
 // │   installed, pending, and found · pacman and the AUR, read here          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

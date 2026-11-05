@@ -3,7 +3,6 @@
 // │   N O T I F I C A T I O N   L A Y E R                                    │
 // │   an arriving notification · picture, text and actions                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

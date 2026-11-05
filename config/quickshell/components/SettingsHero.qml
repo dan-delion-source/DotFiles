@@ -3,7 +3,6 @@
 // │   S E T T I N G S   H E R O                                              │
 // │   settings page heading                                                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   P R E V I E W   T I L E                                                │
 // │   settings option shown as a preview                                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

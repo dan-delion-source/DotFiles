@@ -3,7 +3,6 @@
 // │   S O U N D   D E T A I L                                                │
 // │   the level, the output, every application's level and the microphone    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

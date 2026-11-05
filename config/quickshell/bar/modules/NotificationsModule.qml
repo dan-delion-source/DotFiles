@@ -3,7 +3,6 @@
 // │   N O T I F I C A T I O N S   M O D U L E                                │
 // │   notifications · unread count, history when open                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

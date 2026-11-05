@@ -3,7 +3,6 @@
 // │   M O N I T O R   S E R V I C E                                          │
 // │   monitors · saved layouts per set of connected screens                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

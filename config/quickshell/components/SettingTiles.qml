@@ -3,7 +3,6 @@
 // │   S E T T I N G   T I L E S                                              │
 // │   settings choice as preview tiles                                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -11,12 +10,14 @@ import QtQuick
 import QtQuick.Layouts
 
 import "../theme"
+import "SettingsContext.js" as SettingsContext
 
 // A setting whose options are shapes: the name above, then a row of
 // `PreviewTile`s sharing the card's width evenly. The one row in a group that
 // needs more than a line.
 Item {
     id: root
+    readonly property bool settingsStyle: SettingsContext.contains(root)
 
     property string label: ""
 
@@ -35,7 +36,15 @@ Item {
 
     Behavior on opacity { NumberAnimation { duration: Theme.durationFast } }
 
-    SettingDivider {}
+    Rectangle {
+        anchors.fill: parent
+        visible: root.settingsStyle
+        radius: 14
+        color: hover.hovered ? Theme.surfaceHover : Theme.surface
+        Behavior on color { ColorAnimation { duration: 160 * Theme.motion } }
+    }
+    HoverHandler { id: hover }
+    SettingDivider { visible: !root.settingsStyle && parent !== null && parent.y > 0 }
 
     ColumnLayout {
         id: body

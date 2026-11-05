@@ -36,7 +36,7 @@ def main():
     target = f"address:{address}"
     script = (
         f'hl.dispatch(hl.dsp.window.float({{action="set",window="{target}"}}));'
-        f'hl.dispatch(hl.dsp.window.resize({{x=980,y=680,exact=true,window="{target}"}}));'
+        f'hl.dispatch(hl.dsp.window.resize({{x=900,y=620,exact=true,window="{target}"}}));'
         f'hl.dispatch(hl.dsp.window.center({{window="{target}"}}))'
     )
     subprocess.run(["hyprctl", "eval", script], capture_output=True,

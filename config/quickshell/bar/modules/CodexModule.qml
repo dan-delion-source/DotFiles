@@ -3,7 +3,6 @@
 // │   C O D E X   M O D U L E                                                │
 // │   codex usage · the plan's limits, from its own logs                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

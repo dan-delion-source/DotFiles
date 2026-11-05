@@ -3,7 +3,6 @@
 // │   S E T T I N G   R O W                                                  │
 // │   one preference · its name, what it says now, and its control           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -11,6 +10,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import "../theme"
+import "SettingsContext.js" as SettingsContext
 
 // One setting on one line: its name and what it says now on the left, its
 // control on the right. Sits in a `SettingGroup`'s card.
@@ -19,6 +19,7 @@ import "../theme"
 // (and searchable); `reason` replaces the reading to say why.
 Item {
     id: root
+    readonly property bool settingsStyle: SettingsContext.contains(root)
 
     property string label: ""
 
@@ -37,19 +38,27 @@ Item {
     default property alias control: holder.data
 
     Layout.fillWidth: true
-    implicitHeight: Math.max(48, body.implicitHeight + 16)
+    implicitHeight: Math.max(root.settingsStyle ? 52 : 48, body.implicitHeight + 16)
     opacity: root.locked ? 0.55 : 1
 
     Behavior on opacity { NumberAnimation { duration: Theme.durationFast } }
 
-    SettingDivider {}
+    Rectangle {
+        anchors.fill: parent
+        visible: root.settingsStyle
+        radius: 14
+        color: hover.hovered ? Theme.surfaceHover : Theme.surface
+        Behavior on color { ColorAnimation { duration: 160 * Theme.motion } }
+    }
+    HoverHandler { id: hover }
+    SettingDivider { visible: !root.settingsStyle && parent !== null && parent.y > 0 }
 
     RowLayout {
         id: body
 
         anchors.fill: parent
-        anchors.leftMargin: 14
-        anchors.rightMargin: 14
+        anchors.leftMargin: root.settingsStyle ? 16 : 14
+        anchors.rightMargin: root.settingsStyle ? 16 : 14
         spacing: 16
 
         SettingLabel {

@@ -3,7 +3,6 @@
 // │   F A C E   R I N G                                                      │
 // │   the lock's face unlock · the scan around the padlock                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

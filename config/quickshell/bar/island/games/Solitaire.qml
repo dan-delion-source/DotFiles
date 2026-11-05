@@ -3,7 +3,6 @@
 // │   S O L I T A I R E                                                      │
 // │   klondike, draw one · a click picks up, the next puts down              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

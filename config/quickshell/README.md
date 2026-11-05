@@ -35,7 +35,7 @@ File storage and process selection are isolated. Two complete desktop shells can
 
 In **Settings → Appearance → Theme → Greeting**, select a palette scene or a logo from this checkout's `fastfetch/logos/` folder (`~/.config/fastfetch/logos` when installed). TXT, PNG, JPG/JPEG, WebP and GIF files appear with previews and filename labels. The supplied **Arch** and **Cat** choices remain available when their files are present. After adding, removing or replacing files, click **Settings → System → Profiles → Library updates → Update Greeter**. The list also loads at startup; it is not watched automatically. Refreshing keeps your current selection. Selecting a tile saves the choice and updates this checkout's `fastfetch/config.jsonc` logo type and source without replacing your Fastfetch modules.
 
-For Zsh, source `"${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch/greeting.zsh"` from `.zshrc`. `fa` follows the saved choice; `fa koi`, `fa arch`, `fa cat`, and `fa random` override it for one invocation. The helper passes the matching text/image renderer explicitly and uses `danshell` state, so a previous Arch selection cannot make a GIF render as text. Run `fa` instead of bare `fastfetch` in terminal startup if you want Random to pick a new scene each time. Missing generated scenes are initialized on first use.
+For Zsh, source `"${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch/greeting.zsh"` from `.zshrc`. `fa` follows the saved logo choice; `fa arch` and `fa cat` override it for one invocation. Logo files are discovered from the Fastfetch logos folder; refresh the list with System → Profiles → Update Greeter.
 
 ## Wallpaper library
 
@@ -140,8 +140,8 @@ unlock service, and a style is held constant across monitors for each lock.
 The loader falls back to Classic if Mainframe cannot load.
 
 Preview cards only draw: they have no password input, authentication or session
-lock actions. Profiles include the selected style. Mainframe adapts the visual
-direction and CRT shader from dhrruvsharma/shell; see NOTICE for attribution.
+lock actions. Profiles include the selected style. See NOTICE for the
+Mainframe presentation and CRT shader source attribution.
 
 The installer includes Iosevka and Qt shader tooling, and bakes the supplied
 shader source with the target system's `/usr/lib/qt6/bin/qsb` before replacing

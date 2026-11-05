@@ -3,7 +3,6 @@
 // │   N O T E S   S E R V I C E                                              │
 // │   notes storage and the open note                                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

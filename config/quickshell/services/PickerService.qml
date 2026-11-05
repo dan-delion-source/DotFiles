@@ -3,7 +3,6 @@
 // │   P I C K E R   S E R V I C E                                            │
 // │   the colour under the pointer · onto the clipboard                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

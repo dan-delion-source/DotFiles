@@ -3,7 +3,6 @@
 // │   E D I T   T R A Y                                                      │
 // │   edit tray · every piece on a card that moves                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   B R I G H T N E S S   D E T A I L                                      │
 // │   every screen's brightness, one bar each                                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

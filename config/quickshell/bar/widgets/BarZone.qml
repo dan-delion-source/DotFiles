@@ -3,7 +3,6 @@
 // │   B A R   Z O N E                                                        │
 // │   one side of the bar · its capsules in layout order                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 -- │   I N P U T                                                              │
 -- │   keyboard, mouse and touchpad                                           │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

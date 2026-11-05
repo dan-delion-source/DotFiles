@@ -3,7 +3,6 @@
 -- │   A N I M A T I O N S                                                    │
 -- │   animations · enabled here, curves pushed by the shell                  │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

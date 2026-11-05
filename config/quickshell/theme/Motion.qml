@@ -3,7 +3,6 @@
 // │   M O T I O N                                                            │
 // │   singleton · how the compositor moves, described once                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

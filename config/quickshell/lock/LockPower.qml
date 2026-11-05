@@ -3,7 +3,6 @@
 // │   L O C K   P O W E R                                                    │
 // │   power actions on the lock screen                                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

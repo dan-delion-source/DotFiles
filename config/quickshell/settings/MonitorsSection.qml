@@ -3,7 +3,6 @@
 // │   M O N I T O R S   S E C T I O N                                        │
 // │   displays · arrangement, the screen and the lid                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

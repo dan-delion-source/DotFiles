@@ -3,7 +3,6 @@
 // │   N E T W O R K   D E T A I L                                            │
 // │   connection, manual speed test, wifi networks in range                 │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

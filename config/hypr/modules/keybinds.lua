@@ -3,7 +3,6 @@
 -- │   K E Y B I N D S                                                        │
 -- │   keyboard and mouse bindings                                            │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

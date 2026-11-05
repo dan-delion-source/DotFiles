@@ -3,7 +3,6 @@
 // │   T O P   R O W   E D I T O R                                            │
 // │   the control centre's top row, arranged by dragging                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

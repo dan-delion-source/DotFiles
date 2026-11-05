@@ -3,7 +3,7 @@ import "LockStyles.js" as Styles
 
 // Presentation only: no service imports, input fields, PAM, or session locks.
 // MainframeSurface supplies live state; settings supply inert preview values.
-// CRT direction and shader adapted from dhrruvsharma/shell (GPL-3.0-or-later).
+// CRT source attribution and GPL-3.0-or-later terms: see NOTICE.
 Item {
     id: root
 

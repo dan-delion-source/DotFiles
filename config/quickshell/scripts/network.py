@@ -5,7 +5,6 @@
 # │   N E T W O R K                                                          │
 # │   wifi listing and connection, through nmcli                             │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

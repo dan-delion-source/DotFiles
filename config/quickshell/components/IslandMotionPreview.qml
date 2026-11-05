@@ -3,7 +3,6 @@
 // │   I S L A N D   M O T I O N   P R E V I E W                              │
 // │   the island opening and closing, at one preset's pace                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

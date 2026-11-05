@@ -3,7 +3,6 @@
 // │   B L O C K   I N S P E C T O R                                          │
 // │   block inspector · size and tiles                                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

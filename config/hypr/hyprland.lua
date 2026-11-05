@@ -3,7 +3,6 @@
 -- │   H Y P R L A N D                                                        │
 -- │   wayland compositor · entry point                                       │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

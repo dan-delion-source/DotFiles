@@ -3,7 +3,6 @@
 // │   C A P T U R E   O V E R L A Y                                          │
 // │   capture overlay · selection drawn on a screenshot                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   O S D   L A Y E R                                                      │
 // │   transient events · icon, level bar and reading                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

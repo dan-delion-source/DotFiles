@@ -3,7 +3,6 @@
 // │   K E P T   A P P L I C A T I O N S                                      │
 // │   pinned applications list · launcher favorites                 │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

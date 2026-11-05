@@ -3,7 +3,6 @@
 // │   G A M E S   S E R V I C E                                              │
 // │   arcade · game registry and best scores                                 │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -75,7 +74,10 @@ Singleton {
         { id: "slidingpuzzle", name: "Sliding Puzzle", icon: "◆", tint: "yellow",
           width: 650, height: 640, unit: "points", lower: false },
         { id: "breakout", name: "Neon Breakout", icon: "▰", tint: "blue",
-          width: 740, height: 620, unit: "points", lower: false }
+          width: 740, height: 620, unit: "points", lower: false },
+        { id: "diamondrushPrototype", name: "Diamond Rush", icon: "◆", tint: "green",
+          width: 640, height: 680, unit: "points", lower: false },
+        { id: "aoe3Original", name: "Age of Empires III", icon: "⚔", tint: "yellow", width: 640, height: 680, unit: "points", lower: false }
     ]
 
     function entry(id: string): var {

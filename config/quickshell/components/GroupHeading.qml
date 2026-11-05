@@ -3,7 +3,6 @@
 // │   G R O U P   H E A D I N G                                              │
 // │   settings group heading · with optional details                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -11,12 +10,14 @@ import QtQuick
 import QtQuick.Layouts
 
 import "../theme"
+import "SettingsContext.js" as SettingsContext
 
 // A settings group's name, in the sidebar's small capitals. `note` and `hint`
 // open together behind the info glyph, by click rather than hover so the page
 // does not shift under the pointer.
 ColumnLayout {
     id: root
+    readonly property bool settingsStyle: SettingsContext.contains(root)
 
     property string title: ""
     property string note: ""
@@ -38,11 +39,11 @@ ColumnLayout {
         Text {
             text: root.title
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeLabel
+            font.pixelSize: root.settingsStyle ? 15 : Theme.fontSizeLabel
             font.weight: Font.DemiBold
-            font.letterSpacing: 0.8
-            font.capitalization: Font.AllUppercase
-            color: Theme.textMuted
+            font.letterSpacing: root.settingsStyle ? 0 : 0.8
+            font.capitalization: root.settingsStyle ? Font.MixedCase : Font.AllUppercase
+            color: root.settingsStyle ? Theme.text : Theme.textMuted
         }
 
         Text {
@@ -78,7 +79,7 @@ ColumnLayout {
         text: root.told
         wrapMode: Text.WordWrap
         font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSizeLabel
+        font.pixelSize: root.settingsStyle ? 15 : Theme.fontSizeLabel
         color: Theme.textMuted
     }
 }

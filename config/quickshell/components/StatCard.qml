@@ -3,7 +3,6 @@
 // │   S T A T   C A R D                                                      │
 // │   a figure, its history and whatever detail belongs under it             │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

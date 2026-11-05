@@ -3,7 +3,6 @@
 // │   L I D   P R E V I E W                                                  │
 // │   a laptop and a monitor, and which of them is lit                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

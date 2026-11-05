@@ -3,7 +3,6 @@
 // │   W H A C K                                                              │
 // │   nine holes · a digit or a click, and the mole drops                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

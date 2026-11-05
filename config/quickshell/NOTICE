@@ -5,7 +5,9 @@ License: GNU GPL version 3; see LICENSE.
 
 Local modifications, 2026-10-15: remove the application dock and visible
 branding, isolate shell storage and process targeting, and add network
-throughput widgets. Original source attribution headers are retained.
+throughput widgets. Source attribution and license notices are retained here.
+Decorative repository links in configuration headers were removed during
+the local source cleanup on 2026-11-04.
 
 Local modifications, 2026-10-22: use Matugen for adaptive palettes, retain
 selectable presets, use portable display defaults and the selected primary

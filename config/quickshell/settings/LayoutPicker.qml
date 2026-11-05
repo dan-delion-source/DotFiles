@@ -3,7 +3,6 @@
 // │   L A Y O U T   P I C K E R                                              │
 // │   every keyboard layout X knows, and the order they are loaded in        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

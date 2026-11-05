@@ -3,7 +3,6 @@
 // │   F O N T   S E R V I C E                                                │
 // │   installed fonts                                                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

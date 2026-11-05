@@ -3,7 +3,6 @@
 // │   P E T   M O D U L E                                                    │
 // │   pet · the active pet, the shelf when open                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

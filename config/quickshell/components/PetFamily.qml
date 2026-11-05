@@ -3,7 +3,6 @@
 // │   P E T   F A M I L Y                                                    │
 // │   pet family · one row per pet and the next egg                          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

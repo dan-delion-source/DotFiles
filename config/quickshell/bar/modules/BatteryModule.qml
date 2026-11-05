@@ -3,7 +3,6 @@
 // │   B A T T E R Y   M O D U L E                                            │
 // │   battery · charge ring, time remaining when open                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

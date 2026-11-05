@@ -3,7 +3,6 @@
 // │   L A U N C H E R   S E R V I C E                                        │
 // │   application index · search and activation                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

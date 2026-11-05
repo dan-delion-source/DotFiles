@@ -3,7 +3,6 @@
 // │   B A T T E R Y   W I D G E T                                            │
 // │   charge as a ring · the level is the outline                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

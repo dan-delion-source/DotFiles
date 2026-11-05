@@ -3,7 +3,6 @@
 // │   A P P E A R A N C E   S E C T I O N                                    │
 // │   appearance · palette, windows, fonts and motion                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -124,11 +123,11 @@ SettingsSection {
             }
         }
 
-        // Generated scenes and supplied Fastfetch logos share one selector.
+        // Supplied Fastfetch logos share one selector.
         SettingGroup {
             title: Tr.t("Greeting")
             note: Tr.t("Choose the logo shown beside Fastfetch in the terminal.")
-            hint: Tr.t("The four scenes follow your palette. Random rotates those scenes. Add files to the Fastfetch logos folder, then use System → Profiles → Update Greeter to refresh this list.")
+            hint: Tr.t("Add files to the Fastfetch logos folder, then use System → Profiles → Update Greeter to refresh this list.")
 
             SettingRow {
                 visible: ThemeService.greetingUnavailable || ThemeService.greetingApplyError !== ""
@@ -156,23 +155,13 @@ SettingsSection {
 
                             required property var modelData
 
-                            stageHeight: 124
+                            stageHeight: 104
                             caption: Tr.t(greetingTile.modelData.label)
                             selected: SettingsService.greeting === greetingTile.modelData.id
                             onPicked: SettingsService.set("greeting", greetingTile.modelData.id)
 
                             Loader {
                                 anchors.centerIn: parent
-                                active: greetingTile.modelData.kind === "scene"
-                                sourceComponent: GreetingPreview {
-                                    scene: greetingTile.modelData.id
-                                    version: ThemeService.greetingStamp
-                                }
-                            }
-
-                            Loader {
-                                anchors.centerIn: parent
-                                active: greetingTile.modelData.kind !== "scene"
                                 sourceComponent: FastfetchLogoPreview {
                                     path: greetingTile.modelData.path ?? ""
                                     kind: greetingTile.modelData.kind

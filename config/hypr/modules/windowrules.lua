@@ -3,7 +3,6 @@
 -- │   W I N D O W R U L E S                                                  │
 -- │   per-window rules                                                       │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -49,7 +48,7 @@ hl.window_rule({
 
     float  = true,
     center = true,
-    size   = {980, 680},
+    size   = {900, 620},
 })
 
 

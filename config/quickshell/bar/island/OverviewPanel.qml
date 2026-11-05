@@ -3,7 +3,6 @@
 // │   O V E R V I E W   P A N E L                                            │
 // │   workspace overview · live previews, keyboard navigation                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   P E T   E G G                                                          │
 // │   the egg, drawn soft · a speckled shell in its future colour            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

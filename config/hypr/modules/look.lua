@@ -3,7 +3,6 @@
 -- │   L O O K                                                                │
 -- │   appearance · gaps, borders, blur, layouts                              │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

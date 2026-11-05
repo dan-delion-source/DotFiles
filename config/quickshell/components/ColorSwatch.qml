@@ -3,7 +3,6 @@
 // │   C O L O U R   S W A T C H                                              │
 // │   palette preview · four colours in a grid                               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

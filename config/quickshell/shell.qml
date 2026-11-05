@@ -3,7 +3,6 @@
 // │   S H E L L                                                              │
 // │   quickshell entry point · windows and top-level wiring                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

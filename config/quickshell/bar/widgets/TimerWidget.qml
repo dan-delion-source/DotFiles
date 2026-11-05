@@ -3,7 +3,6 @@
 // │   T I M E R   W I D G E T                                                │
 // │   the countdown as a ring, beside the battery                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   B R I G H T N E S S   S E R V I C E                                    │
 // │   brightness per screen · the backlight on sysfs, monitors over DDC/CI   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

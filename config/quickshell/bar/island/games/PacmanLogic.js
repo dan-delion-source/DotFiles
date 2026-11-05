@@ -1,6 +1,6 @@
 .pragma library
 
-// Original maze-chase implementation for Impasto. No external art assets.
+// Local maze-chase implementation. No external art assets.
 var maze = [
  '###################',
  '#........#........#',

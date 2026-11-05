@@ -3,7 +3,6 @@
 // │   G R I D   S I Z E                                                      │
 // │   the control centre's columns and rows · shown while arranging          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

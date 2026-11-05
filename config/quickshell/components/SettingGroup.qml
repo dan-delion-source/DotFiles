@@ -3,7 +3,6 @@
 // │   S E T T I N G   G R O U P                                              │
 // │   settings · a titled card of rows                                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -12,11 +11,13 @@ import Quickshell
 import QtQuick.Layouts
 
 import "../theme"
+import "SettingsContext.js" as SettingsContext
 
 // Its heading, then one card holding the group's rows, divided by hairlines.
 // `bare` leaves the card out, for a control that draws its own surface.
 ColumnLayout {
     id: root
+    readonly property bool settingsStyle: SettingsContext.contains(root)
 
     property string title: ""
 
@@ -29,7 +30,7 @@ ColumnLayout {
     default property alias rows: list.data
 
     Layout.fillWidth: true
-    spacing: 7
+    spacing: root.settingsStyle ? 10 : 7
 
     GroupHeading {
         visible: root.title !== ""
@@ -42,15 +43,15 @@ ColumnLayout {
         Layout.fillWidth: true
         implicitHeight: list.implicitHeight
         radius: Theme.radiusMedium
-        color: root.bare ? "transparent" : Theme.surfaceIn(QsWindow.window)
+        color: root.bare || root.settingsStyle ? "transparent" : Theme.surfaceIn(QsWindow.window)
         border.color: Theme.borderIn(QsWindow.window)
-        border.width: root.bare ? 0 : 1
+        border.width: root.bare || root.settingsStyle ? 0 : 1
 
         ColumnLayout {
             id: list
 
             width: parent.width
-            spacing: root.bare ? 10 : 0
+            spacing: root.bare || root.settingsStyle ? 8 : 0
         }
     }
 }

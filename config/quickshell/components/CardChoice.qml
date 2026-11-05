@@ -3,7 +3,6 @@
 // │   C A R D   C H O I C E                                                  │
 // │   one of several on a card · a mark on the one chosen                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

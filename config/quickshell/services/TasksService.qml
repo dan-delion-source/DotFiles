@@ -3,7 +3,6 @@
 // │   T A S K S   S E R V I C E                                              │
 // │   tasks · due dates and board state                                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

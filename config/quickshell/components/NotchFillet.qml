@@ -3,7 +3,6 @@
 // │   N O T C H   F I L L E T                                                │
 // │   the concave corner where the notch meets the screen edge               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

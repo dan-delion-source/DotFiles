@@ -3,7 +3,6 @@
 // │   I S L A N D   S U M M A R Y                                            │
 // │   hover summary · the time and what is playing                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

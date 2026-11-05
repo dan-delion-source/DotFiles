@@ -3,7 +3,6 @@
 // │   G I T H U B   M O D U L E                                              │
 // │   github · yearly count, contribution graph when open                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

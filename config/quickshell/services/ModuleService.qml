@@ -3,7 +3,6 @@
 // │   M O D U L E   S E R V I C E                                            │
 // │   module catalogue · activity and open panel state                       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

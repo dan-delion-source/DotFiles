@@ -3,7 +3,6 @@
 // │   B A R   C H I P                                                        │
 // │   one bar item, placed by the layout                                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   S E S S I O N   S E R V I C E                                          │
 // │   lock, suspend, log out, reboot, shut down                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

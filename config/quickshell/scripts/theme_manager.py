@@ -5,7 +5,6 @@
 # │   T H E M E   M A N A G E R                                              │
 # │   wallpapers and adaptive palette · quickshell backend                   │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -33,8 +32,6 @@ import textwrap
 import tempfile
 from xml.sax.saxutils import escape
 
-# Sibling module with the greeting's pixel-art scenes.
-import greeting
 import palette as matugen_palette
 
 XDG_CONFIG_HOME = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
@@ -751,19 +748,6 @@ def push_terminal_palette(colors):
             # A stale socket from a closed terminal is normal; keep going.
             sys.stderr.write(f"{os.path.basename(socket_path)}: "
                              f"{result.stderr.strip()}\n")
-
-
-def write_greetings(colors):
-    """Render the greeting's scenes in this palette.
-
-    Uses the terminal's colours, lifted as in build_terminal_palette. greeting.py
-    renders in the background, since all four scenes take about five seconds.
-    """
-    ground = terminal_background(colors)
-    paint = {key: lift(colors[key], MIN_CONTRAST, ground)
-             for key in ("accent", "green", "yellow", "red", "blue")}
-    paint.update(ground=ground, text=colors["text"], muted=colors["textMuted"])
-    greeting.push(paint)
 
 
 def build_btop_theme(colors):
@@ -4089,7 +4073,6 @@ def main():
     elif action == "push-terminal-palette" and argument:
         colors = json.loads(argument)
         push_terminal_palette(colors)
-        write_greetings(colors)
         write_btop_theme(colors)
         write_cava_theme(colors)
         write_yazi_flavor(colors)

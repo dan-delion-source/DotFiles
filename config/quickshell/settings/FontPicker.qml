@@ -3,7 +3,6 @@
 // │   F O N T   P I C K E R                                                  │
 // │   every family rendered in itself                                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

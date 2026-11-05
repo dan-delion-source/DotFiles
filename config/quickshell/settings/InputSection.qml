@@ -3,7 +3,6 @@
 // │   I N P U T   S E C T I O N                                              │
 // │   keyboard and pointer settings                                          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   B A R   P R E V I E W                                                  │
 // │   the bar's style, drawn small                                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

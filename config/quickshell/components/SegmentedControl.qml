@@ -3,7 +3,6 @@
 // │   S E G M E N T E D   C O N T R O L                                      │
 // │   pick one of a few, with all of them visible                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

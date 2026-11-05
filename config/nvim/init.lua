@@ -3,7 +3,6 @@
 -- │   I N I T                                                                │
 -- │   entry point · loads the modules                                        │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

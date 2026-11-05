@@ -3,7 +3,6 @@
 // │   B A R                                                                  │
 // │   the bar · the island and its two sides, in three styles                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

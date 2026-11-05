@@ -3,7 +3,6 @@
 // │   S E T T I N G S   W I N D O W                                          │
 // │   settings window · a regular, movable window                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -36,8 +35,8 @@ FloatingWindow {
     // Matched by the window rule in `windowrules.lua`.
     title: "Settings"
 
-    implicitWidth: 980
-    implicitHeight: 680
+    implicitWidth: 900
+    implicitHeight: 620
     minimumSize: Qt.size(760, 520)
 
     color: "#000000"

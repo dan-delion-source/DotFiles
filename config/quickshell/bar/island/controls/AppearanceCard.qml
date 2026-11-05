@@ -3,7 +3,6 @@
 // │   A P P E A R A N C E   C A R D                                          │
 // │   current wallpaper · opens the appearance panel                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

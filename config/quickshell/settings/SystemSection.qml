@@ -3,7 +3,6 @@
 // │   S Y S T E M   S E C T I O N                                            │
 // │   system · profiles, machine info and reset                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

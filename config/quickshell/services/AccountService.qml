@@ -3,7 +3,6 @@
 // │   A C C O U N T   S E R V I C E                                          │
 // │   current user · name and avatar                                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

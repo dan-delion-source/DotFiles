@@ -3,7 +3,6 @@
 // │   H Y P R L A N D   S E R V I C E                                        │
 // │   workspace state · read from hyprctl, refreshed on events               │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

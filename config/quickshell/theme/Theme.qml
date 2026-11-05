@@ -3,7 +3,6 @@
 // │   T H E M E                                                              │
 // │   design tokens · consumed by every component                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

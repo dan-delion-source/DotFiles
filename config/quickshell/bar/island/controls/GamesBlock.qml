@@ -3,7 +3,6 @@
 // │   G A M E S   B L O C K                                                  │
 // │   arcade block · best scores and play                                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

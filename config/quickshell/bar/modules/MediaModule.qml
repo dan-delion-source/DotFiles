@@ -3,7 +3,6 @@
 // │   M E D I A   M O D U L E                                                │
 // │   media · artwork and spectrum, full player when open                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

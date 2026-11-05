@@ -3,7 +3,6 @@
 // │   D E T A I L   C H O I C E                                              │
 // │   one of a list to choose from on a control-centre page                  │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

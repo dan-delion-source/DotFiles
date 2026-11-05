@@ -3,7 +3,6 @@
 -- │   O P T I O N S                                                          │
 -- │   editor options                                                         │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

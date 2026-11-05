@@ -3,7 +3,6 @@
 // │   N O T E S   P A N E L                                                  │
 // │   notes · the deck and the note editor                                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

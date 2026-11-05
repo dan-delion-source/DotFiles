@@ -3,7 +3,6 @@
 // │   K E Y S   S E C T I O N                                                │
 // │   every binding hyprland has, with what it does                          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -5,7 +5,6 @@
 # │   W E A T H E R                                                          │
 # │   current weather and forecast                                           │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

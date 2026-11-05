@@ -3,7 +3,6 @@
 // │   C O D E X   S E R V I C E                                              │
 // │   the Codex plan's limits, as Codex last recorded them                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

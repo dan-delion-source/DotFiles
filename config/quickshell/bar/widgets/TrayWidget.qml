@@ -3,7 +3,6 @@
 // │   T R A Y   W I D G E T                                                  │
 // │   the applications' tray icons · one capsule                             │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

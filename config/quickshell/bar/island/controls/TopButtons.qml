@@ -3,7 +3,6 @@
 // │   T O P   B U T T O N S                                                  │
 // │   one side of the control centre's top row · session and panels          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

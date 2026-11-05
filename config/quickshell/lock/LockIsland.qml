@@ -3,7 +3,6 @@
 // │   L O C K   I S L A N D                                                  │
 // │   the island on the lock · the padlock, and the face scan under it       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

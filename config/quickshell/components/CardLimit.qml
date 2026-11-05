@@ -3,7 +3,6 @@
 // │   C A R D   L I M I T                                                    │
 // │   one limit on a card · its name, how much is used, when it renews       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

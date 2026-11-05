@@ -4,7 +4,6 @@
 # │   P A C K A G E S                                                        │
 # │   package queries · pacman and the aur, read only                        │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

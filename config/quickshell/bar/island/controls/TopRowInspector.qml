@@ -3,7 +3,6 @@
 // │   T O P   R O W   I N S P E C T O R                                      │
 // │   the top row's card while arranging · which buttons, which side         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

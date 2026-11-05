@@ -3,7 +3,6 @@
 // │   T R A Y   S E R V I C E                                                │
 // │   system tray · the items and the menu open in the island                │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

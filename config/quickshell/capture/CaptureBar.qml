@@ -3,7 +3,6 @@
 // │   C A P T U R E   B A R                                                  │
 // │   capture options · region, kind and action                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

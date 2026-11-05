@@ -3,7 +3,6 @@
 // │   S N A K E                                                              │
 // │   twenty by twenty · arrows or WASD, and the tail is the enemy           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

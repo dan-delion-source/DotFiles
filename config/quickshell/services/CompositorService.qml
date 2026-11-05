@@ -3,7 +3,6 @@
 // │   C O M P O S I T O R   S E R V I C E                                    │
 // │   hyprland options, for this session                                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

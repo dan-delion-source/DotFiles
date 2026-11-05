@@ -3,7 +3,6 @@
 // │   T R                                                                    │
 // │   singleton · what language the shell speaks                             │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

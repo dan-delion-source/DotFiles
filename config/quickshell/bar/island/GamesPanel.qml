@@ -3,7 +3,6 @@
 // │   G A M E S   P A N E L                                                  │
 // │   arcade · the game shelf and the running game                           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -194,6 +193,22 @@ FocusScope {
                                         source: "./games/breakout-logo.svg"
                                         sourceSize.width: 68; sourceSize.height: 68
                                     }
+                                    Image {
+                                        anchors.centerIn: parent
+                                        width: 34; height: 34
+                                        visible: card.modelData.id === "diamondrushPrototype"
+                                        source: "./games/diamondrush-logo.png"
+                                        smooth: false
+                                    }
+                                    Image {
+                                        anchors.centerIn: parent
+                                        width: 34; height: 34
+                                        visible: card.modelData.id === "aoe3Original"
+                                        source: "./games/aoe3/icon.png"
+                                        smooth: false
+                                    }
+
+
 
 
 
@@ -201,7 +216,7 @@ FocusScope {
 
                                     Text {
                                         anchors.centerIn: parent
-                                        text: card.modelData.id === "breakout" ? "" : (["memorymatch", "bubbleshooter", "towerdefence", "slidingpuzzle"].indexOf(card.modelData.id) >= 0 ? "" : (card.modelData.id === "chess" ? "" : (card.modelData.id === "spider" ? "" : card.modelData.icon)))
+                                        text: card.modelData.id === "aoe3Original" ? "" : (card.modelData.id === "diamondrushPrototype" ? "" : (card.modelData.id === "breakout" ? "" : (["memorymatch", "bubbleshooter", "towerdefence", "slidingpuzzle"].indexOf(card.modelData.id) >= 0 ? "" : (card.modelData.id === "chess" ? "" : (card.modelData.id === "spider" ? "" : card.modelData.icon)))))
                                         font.family: Theme.fontMono
                                         font.pixelSize: 22
                                         color: card.tint
@@ -270,7 +285,7 @@ FocusScope {
 
             function again(): void {
                 round.beaten = false
-                if (round.played) {
+                if (round.played && typeof round.played.restart === "function") {
                     round.played.restart()
                     round.played.forceActiveFocus()
                 }
@@ -306,7 +321,7 @@ FocusScope {
                 PillButton {
                     text: "Restart"
                     active: true
-                    enabled: round.played !== null
+                    enabled: round.played !== null && typeof round.played.restart === "function"
                     onClicked: round.again()
                 }
 

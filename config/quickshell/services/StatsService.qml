@@ -3,7 +3,6 @@
 // │   S T A T S   S E R V I C E                                              │
 // │   machine load, and enough history to draw it                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

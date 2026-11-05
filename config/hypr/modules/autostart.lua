@@ -3,7 +3,6 @@
 -- │   A U T O S T A R T                                                      │
 -- │   processes launched with the session                                    │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 -- │   T H E M E                                                              │
 -- │   colourscheme · generated from the active palette                       │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   C O N T R O L S   S E C T I O N                                        │
 // │   control centre · its grid, and the buttons over it                     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

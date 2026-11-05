@@ -3,7 +3,6 @@
 // │   M O N I T O R   C A N V A S                                            │
 // │   the screens to scale · dragged into place, snapped to each other       │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

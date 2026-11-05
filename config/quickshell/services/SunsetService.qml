@@ -3,7 +3,6 @@
 // │   S U N S E T   S E R V I C E                                            │
 // │   night light · runs hyprsunset while enabled                            │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

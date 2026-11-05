@@ -3,7 +3,6 @@
 // │   C L A U D E   M O D U L E                                              │
 // │   claude code usage · the plan's limits and the current session          │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

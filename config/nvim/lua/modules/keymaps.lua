@@ -3,7 +3,6 @@
 -- │   K E Y M A P S                                                          │
 -- │   editor keymaps · plugin keys live with each plugin                     │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 

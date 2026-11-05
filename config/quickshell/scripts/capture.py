@@ -4,7 +4,6 @@
 # │   C A P T U R E                                                          │
 # │   screenshots · capture and crop                                         │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

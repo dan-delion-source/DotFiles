@@ -3,7 +3,6 @@
 // │   W O R K S P A C E S   W I D G E T                                      │
 // │   the workspace strip · dots, bars, rings or the number written out      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

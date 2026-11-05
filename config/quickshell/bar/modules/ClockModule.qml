@@ -3,7 +3,6 @@
 // │   C L O C K   M O D U L E                                                │
 // │   clock · the island's resting face                                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

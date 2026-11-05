@@ -3,7 +3,6 @@
 // │   T H E M E   S E R V I C E                                              │
 // │   active palette · persistence and adaptive colours                      │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 
@@ -108,16 +107,8 @@ QtObject {
 
     // ── GREETING ────────────────────────────────────────────────────────────
     //
-    // Which scene `fa` shows. The palette push redraws all of them
-    // (`greeting.py`); this only records the choice. `random` is resolved
-    // by `fa`.
-    property var greetings: [
-        { id: "lava", label: "Lava lamp", kind: "scene" },
-        { id: "critters", label: "Critters", kind: "scene" },
-        { id: "koi", label: "Koi", kind: "scene" },
-        { id: "invaders", label: "Invaders", kind: "scene" },
-        { id: "random", label: "Random", kind: "scene" }
-    ]
+    // The supplied Fastfetch logo library, refreshed manually.
+    property var greetings: []
     readonly property bool refreshingGreetings: greetingScan.running
     property bool greetingsLoaded: false
     property string greetingScanError: ""
@@ -171,6 +162,13 @@ QtObject {
     function pushGreeting(): void {
         if (!SettingsService.arrived)
             return
+        if (["lava", "critters", "koi", "invaders", "random"].includes(SettingsService.greeting)) {
+            Qt.callLater(() => {
+                if (["lava", "critters", "koi", "invaders", "random"].includes(SettingsService.greeting))
+                    SettingsService.set("greeting", "cat")
+            })
+            return
+        }
         if (root.greetingProcess.running) {
             root.greetingPending = true
             return
@@ -198,18 +196,6 @@ QtObject {
                 root.pushGreeting()
             }
         }
-    }
-
-    // Written by `greeting.py` once every scene is redrawn. The settings
-    // tiles reload on this rather than on the palette change, when the new
-    // scenes are still being drawn.
-    property string greetingStamp: ""
-
-    readonly property FileView greetingStampView: FileView {
-        path: `${SettingsService.stateDirectory}/greeting.stamp`
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.greetingStamp = text().trim()
     }
 
     // The backend writes the colour fragment kitty.conf includes and repaints

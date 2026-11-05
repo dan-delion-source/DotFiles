@@ -1,5 +1,5 @@
 // Shared bar and control-centre preferences, extracted from WidgetsSection.
-// Original configuration: Andreu Massanet, GPL-3.0; see NOTICE and LICENSE.
+// Source attribution and GPL-3.0 terms: see NOTICE and LICENSE.
 import QtQuick
 import QtQuick.Layouts
 import "../theme"

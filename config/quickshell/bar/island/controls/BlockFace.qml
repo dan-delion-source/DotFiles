@@ -3,7 +3,6 @@
 // │   B L O C K   F A C E                                                    │
 // │   maps a block id and size to its card                                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

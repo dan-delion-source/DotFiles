@@ -4,7 +4,6 @@
 # │   R E C O R D                                                            │
 # │   screen recording · start, monitor and stop                             │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

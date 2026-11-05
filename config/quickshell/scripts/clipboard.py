@@ -4,7 +4,6 @@
 # │   C L I P B O A R D                                                      │
 # │   clipboard history · watch, store and restore                           │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

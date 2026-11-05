@@ -3,7 +3,6 @@
 // │   N O T E S   M O D U L E                                                │
 // │   notes · recent notes when open                                         │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

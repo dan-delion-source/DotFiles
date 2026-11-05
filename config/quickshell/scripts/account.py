@@ -5,7 +5,6 @@
 # │   A C C O U N T                                                          │
 # │   the account's name and picture · read and change them                  │
 # │                                                                          │
-# │   github.com/andreumassanet/impasto                                      │
 # │                                                                          │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 

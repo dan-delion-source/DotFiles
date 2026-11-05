@@ -3,7 +3,6 @@
 // │   W A L L P A P E R   T R A N S I T I O N   P R E V I E W                │
 // │   looping preview of a wallpaper transition                              │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   B L U E T O O T H   D E T A I L                                        │
 // │   paired and nearby bluetooth devices                                    │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

@@ -3,7 +3,6 @@
 // │   S E T T I N G   F I E L D                                              │
 // │   a preference that is a piece of text                                   │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

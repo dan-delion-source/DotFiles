@@ -3,7 +3,6 @@
 // │   B U R S T                                                              │
 // │   a hit, drawn · a ring that opens and sparks thrown out of it           │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

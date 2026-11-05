@@ -37,12 +37,9 @@ class GreetingTests(unittest.TestCase):
         (self.logos / "cat.gif").write_bytes(b"GIF89a")
         self.state = base / "state"
         self.state.mkdir()
-        for scene in greeting.SCENES:
-            (self.state / f"greeting-{scene}.gif").write_bytes(b"GIF89a")
         values = dict(STATE_DIR=str(self.state), FASTFETCH_CONFIG=str(self.config),
                       LOGO_DIR=str(self.logos), CHOICE_FILE=str(self.state / "greeting"),
-                      LINK=str(self.state / "greeting.gif"),
-                      PAINT_FILE=str(self.state / "paint.json"))
+                      LINK=str(self.state / "greeting.gif"))
         self.overrides = patch.multiple(greeting, **values)
         self.overrides.start()
         self.addCleanup(self.overrides.stop)
@@ -60,27 +57,31 @@ class GreetingTests(unittest.TestCase):
                 if choice not in greeting.EXTRA_LOGOS:
                     self.assertTrue(Path(greeting.LINK).is_file())
 
-    def test_one_off_scene_overrides_arch_renderer_without_changing_saved_choice(self):
+    def test_one_off_logo_preserves_saved_choice_and_config(self):
         self.assertTrue(greeting.choose("arch"))
         before = self.config.read_bytes()
         with patch.object(greeting.subprocess, "call", return_value=0) as runner:
-            self.assertEqual(greeting.show(["koi", "--structure", "title"]), 0)
+            self.assertEqual(greeting.show(["cat", "--structure", "title"]), 0)
         args = runner.call_args.args[0]
         self.assertEqual(args[args.index("--logo-type") + 1], "kitty-icat")
-        self.assertEqual(args[args.index("--logo") + 1], str(self.state / "greeting-koi.gif"))
+        self.assertEqual(args[args.index("--logo") + 1], str(self.logos / "cat.gif"))
         self.assertEqual(args[-2:], ["--structure", "title"])
         self.assertEqual(greeting.read_choice(), "arch")
         self.assertEqual(self.config.read_bytes(), before)
 
-    def test_missing_scenes_are_generated_before_selection_and_render_failure_preserves_config(self):
-        (self.state / "greeting-koi.gif").unlink()
-        before = self.config.read_bytes()
-        with patch.object(greeting, "draw", return_value=False) as draw, \
-                contextlib.redirect_stderr(io.StringIO()):
-            self.assertFalse(greeting.choose("koi"))
-            draw.assert_called_once()
-        self.assertEqual(self.config.read_bytes(), before)
-        self.assertFalse(Path(greeting.CHOICE_FILE).exists())
+    def test_removed_scenes_are_unavailable_and_saved_selections_migrate(self):
+        ids = {entry["id"] for entry in greeting.list_greetings()}
+        self.assertFalse(ids & greeting.REMOVED_SCENES)
+        for scene in greeting.REMOVED_SCENES:
+            with self.subTest(scene=scene):
+                Path(greeting.CHOICE_FILE).write_text(scene)
+                self.assertEqual(greeting.read_choice(), "cat")
+                with patch.object(greeting.subprocess, "call") as runner, contextlib.redirect_stderr(io.StringIO()):
+                    self.assertEqual(greeting.show([scene]), 1)
+                    runner.assert_not_called()
+                self.assertTrue(greeting.seed())
+                self.assertEqual(Path(greeting.CHOICE_FILE).read_text().strip(), "cat")
+                self.assertEqual(json.loads(self.config.read_text().split("\n", 1)[1])["logo"]["type"], "kitty-icat")
 
     def test_unknown_choice_does_not_run_fastfetch_or_change_selection(self):
         before = self.config.read_bytes()
@@ -137,10 +138,10 @@ class GreetingTests(unittest.TestCase):
             with self.subTest(choice=choice), contextlib.redirect_stderr(io.StringIO()):
                 self.assertFalse(greeting.choose(choice))
 
-    def test_missing_folder_keeps_generated_scenes(self):
+    def test_missing_folder_has_no_logo_choices(self):
         with patch.object(greeting, "LOGO_DIR", str(self.logos / "missing")):
             self.assertEqual({entry["id"] for entry in greeting.list_greetings()},
-                             set(greeting.SCENES) | {"random"})
+                             set())
 
 
 if __name__ == "__main__":

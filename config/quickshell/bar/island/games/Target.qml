@@ -3,7 +3,6 @@
 // │   T A R G E T                                                            │
 // │   one target at a time · it shrinks, and the bullseye is worth three     │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

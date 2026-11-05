@@ -3,7 +3,6 @@
 // │   D E T A I L   S E C T I O N                                            │
 // │   a titled group of rows on a control-centre page                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

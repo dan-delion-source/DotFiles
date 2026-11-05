@@ -3,7 +3,6 @@
 // │   P A L E T T E S                                                        │
 // │   curated colour schemes · single source of truth                        │
 // │                                                                          │
-// │   github.com/andreumassanet/impasto                                      │
 // │                                                                          │
 // ╰──────────────────────────────────────────────────────────────────────────╯
 

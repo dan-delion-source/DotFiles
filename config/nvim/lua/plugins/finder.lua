@@ -3,7 +3,6 @@
 -- │   F I N D E R                                                            │
 -- │   fzf-lua · fuzzy finding with the system fzf                            │
 -- │                                                                          │
--- │   github.com/andreumassanet/impasto                                      │
 -- │                                                                          │
 -- ╰──────────────────────────────────────────────────────────────────────────╯
 
