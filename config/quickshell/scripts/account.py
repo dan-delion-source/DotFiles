@@ -12,7 +12,7 @@
 
 The name is the GECOS field, changed through AccountsService, which lets the
 active user change their own without a password. The picture is the first
-conventional path that exists, and is changed through /usr/lib/impasto/avatar
+conventional path that exists, and is changed through the installed avatar helper
 under pkexec: the picture is read and made square here, as the user, and only
 the PNG that comes out reaches the helper.
 

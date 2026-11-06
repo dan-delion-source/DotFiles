@@ -55,7 +55,6 @@ Singleton {
     readonly property alias weatherPlace: config.weatherPlace
     readonly property alias githubUser: config.githubUser
     readonly property alias launcherFavourites: config.launcherFavourites
-    readonly property alias petStyle: config.petStyle
     readonly property alias launcherResults: config.launcherResults
     readonly property alias launcherListAll: config.launcherListAll
     readonly property alias launcherOrder: config.launcherOrder
@@ -153,7 +152,7 @@ Singleton {
     // a module. The tray is not drawn while it is empty.
     readonly property var barDefaults: ({
         left: ["workspaces"],
-        right: ["tray", "notifications", "network", "bluetooth", "volume", "battery"]
+        right: ["tray", "notifications", "network", "bluetooth", "volume", { id: "water", figure: "always" }, "battery"]
     })
 
     // An entry is a bare id, or `{ id, shape, figure, when }` when the piece
@@ -164,7 +163,10 @@ Singleton {
     // `Array.isArray` and would be mutated in place by a caller's filter.
     function barItems(side: string): var {
         const kept = side === "left" ? config.barLeft : config.barRight
-        const list = kept ? Array.from(kept) : root.barDefaults[side]
+        let list = kept ? Array.from(kept) : root.barDefaults[side]
+        if (!kept && side === "right" && Array.from(config.barLeft ?? []).some(
+                entry => (typeof entry === "string" ? entry : entry.id) === "water"))
+            list = list.filter(entry => (typeof entry === "string" ? entry : entry.id) !== "water")
         return list.map(entry => typeof entry === "string"
             ? { id: entry, shape: "", figure: "", when: "" }
             : { id: entry.id, shape: entry.shape ?? "", figure: entry.figure ?? "",
@@ -299,7 +301,7 @@ Singleton {
     readonly property var machineKeys: [
         "displays", "lidPolicy",
         "userName", "userAvatar", "language", "keyboard", "weatherPlace", "githubUser",
-        "emojiTone",
+        "emojiTone", "waterModuleMigrated",
         "doNotDisturb", "nightLight", "nightTemperature", "barHidden",
         "recorderAudio", "captureShape", "captureKind"
     ]
@@ -347,6 +349,18 @@ Singleton {
         return value === undefined ? null : JSON.parse(JSON.stringify(value))
     }
 
+    function migrateWaterLayout(value: var): var {
+        if (typeof value === "string") return value === "pet" ? "water" : value
+        if (Array.isArray(value)) return value.map(entry => root.migrateWaterLayout(entry))
+        if (value && typeof value === "object") {
+            const out = {}
+            for (const key of Object.keys(value))
+                out[key === "Shell · Open the pet" ? "Shell · Open water tracker" : key] = root.migrateWaterLayout(value[key])
+            return out
+        }
+        return value
+    }
+
     // Every profile key, from `values` where valid and from the defaults
     // otherwise, so a switch never inherits the previous profile's values.
     function complete(values: var): var {
@@ -360,6 +374,8 @@ Singleton {
             if (key === "sideBarWidth") out[key] = BarGeometry.sideWidth(out[key])
             if (key === "barHeight") out[key] = BarGeometry.barHeight(out[key])
         }
+        for (const key of ["barLeft", "barRight", "centreButtons", "centreTop", "centreBlocks", "keys"])
+            if (out[key] !== undefined) out[key] = root.migrateWaterLayout(out[key])
         return out
     }
 
@@ -424,6 +440,21 @@ Singleton {
         // change. Coalescing also means one write per turn (`adopt()`).
         onAdapterUpdated: saver.restart()
         onLoaded: {
+            for (const key of ["barLeft", "barRight", "centreButtons", "centreTop", "centreBlocks", "keys"]) {
+                const before = root.copy(config[key])
+                const after = root.migrateWaterLayout(before)
+                if (JSON.stringify(before) !== JSON.stringify(after)) config[key] = after
+            }
+            if (!config.waterModuleMigrated) {
+                const ids = [...root.barZone("left"), ...root.barZone("right")]
+                if (!ids.includes("water") && config.barRight !== null) {
+                    const right = root.copy(config.barRight)
+                    const at = right.findIndex(entry => (typeof entry === "string" ? entry : entry.id) === "battery")
+                    right.splice(at < 0 ? right.length : at, 0, { id: "water", figure: "always" })
+                    config.barRight = right
+                }
+                config.waterModuleMigrated = true
+            }
             if (["lava", "critters", "koi", "invaders", "random"].includes(config.greeting))
                 config.greeting = "cat"
             root.arrived = true
@@ -519,6 +550,7 @@ Singleton {
         property string barPosition: "top"
 
         // Ids either side of the island; null means `barDefaults`.
+        property bool waterModuleMigrated: false
         property var barLeft: null
         property var barRight: null
 
@@ -701,9 +733,6 @@ Singleton {
         // GitHub user for the contributions widget; empty draws nothing.
         property string githubUser: ""
 
-        // One of `PetService.styles`: how the pet is drawn, everywhere it is
-        // drawn.
-        property string petStyle: "creature"
 
         // Idle timeouts in minutes, 0 = never; all off by default.
         // `IdleService` runs one monitor per value.

@@ -16,9 +16,9 @@ Item {
             cat.paused = false
             cat.profile = "balanced"
         }
-        function test_original_profile_timings() {
-            const profiles = [["balanced", 150], ["performance", 80], ["turbo", 50],
-                              ["powersave", 220], ["power-saver", 220], ["unknown", 200]]
+        function test_profile_timings() {
+            const profiles = [["balanced", 80], ["performance", 60], ["turbo", 50],
+                              ["powersave", 100], ["power-saver", 100], ["unknown", 80]]
             for (const row of profiles) {
                 cat.profile = row[0]
                 compare(cat.interval, row[1])
@@ -48,5 +48,14 @@ Item {
             cat.paused = true
             verify(!cat.animating)
         }
+        function test_power_saver_keeps_a_running_cadence() {
+            cat.profile = "power-saver"
+            wait(150)
+            frameSpy.clear()
+            wait(1000)
+            verify(frameSpy.count >= 8, "power saver must still look like running")
+            verify(frameSpy.count <= 12, "cadence must not follow monitor refresh rate")
+        }
     }
+    SignalSpy { id: frameSpy; target: cat; signalName: "frameChanged" }
 }

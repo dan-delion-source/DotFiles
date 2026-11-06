@@ -34,7 +34,7 @@ singleton BluetoothService   1.0 services/BluetoothService.qml
 singleton ClaudeService      1.0 services/ClaudeService.qml
 singleton CodexService       1.0 services/CodexService.qml
 singleton UpdatesService     1.0 services/UpdatesService.qml
-singleton PetService         1.0 services/PetService.qml
+singleton WaterService         1.0 services/WaterService.qml
 singleton ModuleService      1.0 services/ModuleService.qml
 singleton ShortcutService    1.0 services/ShortcutService.qml
 singleton AccountService     1.0 services/AccountService.qml
@@ -70,9 +70,6 @@ NotchFillet      1.0 components/NotchFillet.qml
 NotchOutline     1.0 components/NotchOutline.qml
 ClaudeMark       1.0 components/ClaudeMark.qml
 CodexMark        1.0 components/CodexMark.qml
-PetFace          1.0 components/PetFace.qml
-PetFamily        1.0 components/PetFamily.qml
-PetShelf         1.0 components/PetShelf.qml
 UsageBar         1.0 components/UsageBar.qml
 Figure           1.0 components/Figure.qml
 ModuleCard       1.0 components/ModuleCard.qml
@@ -142,7 +139,7 @@ BluetoothModule  1.0 bar/modules/BluetoothModule.qml
 WeatherModule    1.0 bar/modules/WeatherModule.qml
 StatsModule      1.0 bar/modules/StatsModule.qml
 UpdatesModule    1.0 bar/modules/UpdatesModule.qml
-PetModule        1.0 bar/modules/PetModule.qml
+WaterModule        1.0 bar/modules/WaterModule.qml
 GamesModule      1.0 bar/modules/GamesModule.qml
 NotesModule      1.0 bar/modules/NotesModule.qml
 NotificationsModule 1.0 bar/modules/NotificationsModule.qml
@@ -174,7 +171,7 @@ CalendarCard     1.0 bar/island/controls/CalendarCard.qml
 LockScreen       1.0 lock/LockScreen.qml
 LockSurface      1.0 lock/LockSurface.qml
 SessionPanel     1.0 bar/island/SessionPanel.qml
-PetPanel         1.0 bar/island/PetPanel.qml
+WaterPanel         1.0 bar/island/WaterPanel.qml
 GamesPanel       1.0 bar/island/GamesPanel.qml
 NotesPanel       1.0 bar/island/NotesPanel.qml
 BoardPanel       1.0 bar/island/BoardPanel.qml
@@ -192,7 +189,7 @@ Block            1.0 bar/island/controls/Block.qml
 BlockFace        1.0 bar/island/controls/BlockFace.qml
 TogglesBlock     1.0 bar/island/controls/TogglesBlock.qml
 SystemInfoBlock     1.0 bar/island/controls/SystemInfoBlock.qml
-PetBlock         1.0 bar/island/controls/PetBlock.qml
+WaterBlock         1.0 bar/island/controls/WaterBlock.qml
 ClockBlock       1.0 bar/island/controls/ClockBlock.qml
 GamesBlock       1.0 bar/island/controls/GamesBlock.qml
 ControlsTray     1.0 bar/island/controls/ControlsTray.qml
@@ -220,3 +217,5 @@ EdgeRail 1.0 bar/EdgeRail.qml
 BarPositionPreview 1.0 components/BarPositionPreview.qml
 
 StackedClock 1.0 components/StackedClock.qml
+WaterGlass 1.0 components/WaterGlass.qml
+WaterTracker 1.0 components/WaterTracker.qml

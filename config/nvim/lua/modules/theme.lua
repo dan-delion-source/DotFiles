@@ -49,7 +49,7 @@ local function clear_grounds()
 end
 
 vim.api.nvim_create_autocmd("ColorScheme", {
-    group = vim.api.nvim_create_augroup("impasto_ground", { clear = true }),
+    group = vim.api.nvim_create_augroup("danshell_ground", { clear = true }),
     callback = clear_grounds,
 })
 

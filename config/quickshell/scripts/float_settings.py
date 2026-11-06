@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 """Float this shell's Settings window when the Hyprland rule is not loaded."""
 
+import argparse
 import json
 import re
 import subprocess
 import time
 
 
-def settings_window():
+def settings_window(pid=None):
     result = subprocess.run(["hyprctl", "clients", "-j"], capture_output=True,
                             text=True, timeout=2, check=True)
     for window in json.loads(result.stdout):
         if (window.get("class") == "org.danshell"
                 and window.get("title") == "Settings"
-                and window.get("mapped")):
+                and window.get("mapped")
+                and (pid is None or window.get("pid") == pid)):
             return window
     return None
 
 
-def main():
+def main(pid=None):
     # The toplevel can become visible in QML before Hyprland maps it.
     for _ in range(20):
-        window = settings_window()
+        window = settings_window(pid)
         if window is not None:
             break
         time.sleep(0.05)
@@ -44,4 +46,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--pid", type=int)
+    main(parser.parse_args().pid)

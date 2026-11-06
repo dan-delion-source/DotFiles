@@ -18,6 +18,14 @@ hl.monitor({
     scale    = "auto",
 })
 
+-- Keep fullscreen video in the configured display colorspace. Automatic HDR
+-- can enable wide gamut on an 8-bit output and trigger a 10-bit warning.
+hl.config({
+    render = {
+        cm_auto_hdr = 0,
+    },
+})
+
 
 -- Workspace ownership: 1–5 on eDP-1, 6–10 on HDMI-A-5.
 require("modules.workspaces")

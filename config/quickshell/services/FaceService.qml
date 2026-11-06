@@ -14,10 +14,10 @@ import Quickshell.Io
 import Quickshell.Services.Pam
 
 // howdy keeps its models where only root reads them, so the faces are listed,
-// added and removed through /usr/lib/impasto/face under pkexec: listing asks
+// added and removed through the installed face helper under pkexec: listing asks
 // nothing of the active user, adding or removing asks for their password.
 // Trying a face needs no root at all — it is the lock screen's own PAM
-// conversation, `impasto-face`, run here.
+// conversation, run here.
 Singleton {
     id: root
 

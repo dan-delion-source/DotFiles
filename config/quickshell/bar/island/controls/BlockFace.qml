@@ -44,7 +44,7 @@ Item {
         calendar: calendarBlock,
         notifications: notificationsBlock,
         systemInfo: systemInfoBlock,
-        pet: petBlock,
+        water: waterBlock,
         networkSpeed: networkSpeedBlock,
         clock: clockBlock,
         games: gamesBlock,
@@ -180,8 +180,8 @@ Item {
     }
 
     Component {
-        id: petBlock
-        PetBlock {
+        id: waterBlock
+        WaterBlock {
             rows: root.shape.rows
             onPanelRequested: panel => root.panelRequested(panel)
         }

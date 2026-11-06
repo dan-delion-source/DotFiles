@@ -20,7 +20,7 @@ return {
             -- · the main branch does not start highlighting by itself; pcall
             --   for filetypes without a parser
             vim.api.nvim_create_autocmd("FileType", {
-                group = vim.api.nvim_create_augroup("impasto_ts", { clear = true }),
+                group = vim.api.nvim_create_augroup("danshell_ts", { clear = true }),
                 callback = function(event)
                     pcall(vim.treesitter.start, event.buf)
                 end,

@@ -85,13 +85,13 @@ Item {
                  { id: "preferences", label: Tr.t("Module settings") },
                  { id: "workspaces", label: Tr.t("Workspaces") },
                  { id: "notifications", label: Tr.t("Notifications") }],
-          keywords: "bar position edge top bottom left right vertical horizontal island notch height margin width full span workspaces unified layout island bar band notification toast do not disturb silence timeout clock time date seconds format beside running modules layout left right split drag catalogue running cat animation weather location city github username pet style notes handwriting chip icon ring figure hover shape media claude battery timer volume brightness network wifi bluetooth weather stats cpu updates pet capture record screenshot buttons every screen monitors ground glass classic blur transparent translucent codex",
+          keywords: "bar position edge top bottom left right vertical horizontal island notch height margin width full span workspaces unified layout island bar band notification toast do not disturb silence timeout clock time date seconds format beside running modules layout left right split drag catalogue running cat animation weather location city github username water glasses hydration reminder notes handwriting chip icon ring figure hover shape media claude battery timer volume brightness network wifi bluetooth weather stats cpu updates water capture record screenshot buttons every screen monitors ground glass classic blur transparent translucent codex",
           page: barPage },
 
         { id: "controls", category: "shell", icon: "󰕰", label: Tr.t("Control Centre"),
           blurb: Tr.t("What the island opens onto when you click it."),
           tabs: [],
-          keywords: "controls control centre center panel doors buttons row network speed upload download system info pet games notes board tasks kanban stats blocks grid toggles tiles arrange edit tray wifi bluetooth airplane microphone focus",
+          keywords: "controls control centre center panel doors buttons row network speed upload download system info water hydration glasses games notes board tasks kanban stats blocks grid toggles tiles arrange edit tray wifi bluetooth airplane microphone focus",
           page: controlsPage },
 
 

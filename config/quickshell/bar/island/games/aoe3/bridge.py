@@ -3,7 +3,7 @@
 
 Quickshell starts the default client. Closing its stdin detaches only the client.
 The Java game remains alive and suspended, until `python3 bridge.py stop` or logout.
-The original J2ME RMS records remain stored under ~/.local/state/impasto-aoe3/rms.
+The original J2ME RMS records remain stored in the engine's existing state directory.
 """
 from pathlib import Path
 import fcntl
@@ -215,7 +215,7 @@ def client():
                 break
             time.sleep(0.05)
     if sock is None:
-        print(json.dumps({'type': 'error', 'message': 'Cannot start Age of Empires III background engine. See ~/.local/state/impasto-aoe3/runtime.log'}), flush=True)
+        print(json.dumps({'type': 'error', 'message': f'Cannot start Age of Empires III background engine. See {LOG}'}), flush=True)
         return 1
 
     sel = selectors.DefaultSelector()

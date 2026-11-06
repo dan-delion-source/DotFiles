@@ -40,7 +40,7 @@ Item {
         github: githubModule,
         stats: statsModule,
         updates: updatesModule,
-        pet: petModule,
+        water: waterModule,
         runningCat: runningCatModule,
         games: gamesModule,
         notes: notesModule,
@@ -75,7 +75,7 @@ Item {
     Component { id: statsModule;      StatsModule { compact: root.compact } }
     Component { id: updatesModule;    UpdatesModule {} }
     Component { id: runningCatModule; RunningCatModule {} }
-    Component { id: petModule;        PetModule { compact: root.compact } }
+    Component { id: waterModule;        WaterModule { compact: root.compact } }
     Component { id: gamesModule;      GamesModule {} }
     Component { id: notesModule;      NotesModule {} }
     Component { id: tasksModule;      TasksModule {} }

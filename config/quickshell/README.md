@@ -105,7 +105,7 @@ Noto Sans JP subset under SIL OFL 1.1; source and rebuild instructions are in
 
 Desktop widgets, their grid editor, widget themes and edge-note decks have been
 removed. The wallpaper stays clear. Bar modules, control-centre blocks, notes
-and games remain available. Shared weather, GitHub, pet-style and note-font
+and games remain available. Shared weather, GitHub, water tracking and note-font
 preferences are under **Settings → Bar & Island → Module settings**.
 Old desktop placement fields are ignored when loading settings or profiles.
 
@@ -121,7 +121,7 @@ Animation follows its power-profile timings: balanced 150 ms, performance
 80 ms, turbo 50 ms, power saver 220 ms; unavailable profiles use 200 ms.
 The cat runs in place in its module. Hidden modules and the global motion-off
 setting pause it. It uses the existing system sampler and adds no dependencies.
-It is separate from the existing Pet module. Asset provenance and the retained
+It is separate from the water tracker. Asset provenance and the retained
 Unlicense are in `assets/running-cat/` and `NOTICE`.
 
 ## Lock screen styles
@@ -160,7 +160,7 @@ check after installation.
 
 ## Storage and compatibility
 
-The shell starts with fresh defaults and does not import existing settings, pets, notes, or game progress:
+The shell starts with fresh defaults and does not import existing settings, notes, or game progress:
 
 - State: `${XDG_STATE_HOME:-~/.local/state}/danshell`
 - Data: `${XDG_DATA_HOME:-~/.local/share}/danshell`
@@ -182,3 +182,12 @@ python3 -B -m unittest discover -s tests -v
 ```
 
 Regression tests cover traffic rates, loopback exclusion, interface churn/reset, and config-specific launch/reload/stop commands. Validation also included parsing changed QML and Lua files, compiling the shell against the installed Wayland backend without instantiating it, and an isolated offscreen widget/settings test. A full live-desktop drag/drop and multi-monitor test has not been performed.
+
+## Water tracker
+
+Water replaces the former companion module on the bar, in the control centre
+and behind Super+Shift+P. Click any of eight outlined glasses to log it; click
+a filled glass to undo it. Progress is saved in `water.json` under the shell
+state directory and resets at local midnight. The eighth glass opens a small
+congratulations screen. Reminders run every 90 minutes from 9 AM until 9 PM,
+pause with Do Not Disturb, and stop once all eight glasses are logged.

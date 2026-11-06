@@ -44,8 +44,8 @@ Singleton {
           detail: "Processor, memory, disks, the network", panel: "stats" },
         { id: "settings",   icon: "󰒓", label: "Settings",
           detail: "The whole desk, in a window",           panel: "" },
-        { id: "pet",        icon: "󰏩", label: "Pet",
-          detail: "The creature living on the bar",        panel: "pet" },
+        { id: "water",        icon: "󰆫", label: "Water",
+          detail: "Eight glasses, one day at a time",        panel: "water" },
         { id: "games",      icon: "󰊗", label: "Games",
           detail: "The arcade",                            panel: "games" },
         { id: "networkManager", icon: "󰤨", label: "Network Manager",
@@ -68,7 +68,7 @@ Singleton {
           detail: "Updates, what is installed, the AUR",   panel: "packages" }
     ]
 
-    readonly property var defaultButtons: ["stats", "settings", "pet", "games", "networkManager", "notes", "board"]
+    readonly property var defaultButtons: ["stats", "settings", "water", "games", "networkManager", "notes", "board"]
 
     // The grid when nothing is chosen, which the default layout fills.
     readonly property int defaultColumns: 6
@@ -485,7 +485,7 @@ Singleton {
         { id: "notifications", name: "Notifications", icon: "󰂚", sizes: ["3x2", "3x3", "2x4", "3x4", "2x6", "2x8", "3x8"] },
         { id: "systemInfo",       name: "System Info",       icon: "󰏘", sizes: ["1x2", "2x2", "2x4"] },
         { id: "networkSpeed",  name: "Network Speed", icon: "󰓅", sizes: ["2x1", "2x2"] },
-        { id: "pet",           name: "Pet",           icon: "󰏩", sizes: ["2x2", "2x3"] },
+        { id: "water",           name: "Water",           icon: "󰆫", sizes: ["2x2", "2x3"] },
         { id: "clock",         name: "Clock",         icon: "󰥔", sizes: ["1x2", "2x2", "2x4"] },
         { id: "games",         name: "Games",         icon: "󰊗", sizes: ["2x1", "2x2"] },
         { id: "notes",         name: "Notes",         icon: "󰎞", sizes: ["1x2", "2x2", "2x4"] },

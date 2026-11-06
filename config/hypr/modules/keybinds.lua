@@ -258,7 +258,7 @@ bind(mainMod .. " + comma",     hl.dsp.global("danshell:settings"),   { descript
 bind(mainMod .. " + T",         hl.dsp.global("danshell:appearance"), { description = "Shell · Open appearance" })
 bind(mainMod .. " + SHIFT + T", hl.dsp.global("danshell:palette"),    { description = "Shell · Open the palette" })
 bind(mainMod .. " + U",         hl.dsp.global("danshell:stats"),      { description = "Shell · Open system statistics" })
-bind(mainMod .. " + SHIFT + P", hl.dsp.global("danshell:pet"),        { description = "Shell · Open the pet" })
+bind(mainMod .. " + SHIFT + P", hl.dsp.global("danshell:water"),        { description = "Shell · Open water tracker" })
 bind(mainMod .. " + G",         hl.dsp.global("danshell:games"),      { description = "Shell · Open the games" })
 bind(mainMod .. " + S",         hl.dsp.global("danshell:notes"),      { description = "Shell · Open the notes" })
 bind(mainMod .. " + K",         hl.dsp.global("danshell:board"),      { description = "Shell · Open the task board" })

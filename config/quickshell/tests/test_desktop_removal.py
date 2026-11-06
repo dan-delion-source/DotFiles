@@ -16,7 +16,7 @@ class DesktopRemovalTests(unittest.TestCase):
                      fixture.root / "services/NotesService.qml")
         (fixture.root / "state/danshell/settings.json").write_text(json.dumps({
             "barLeft": ["clock", "runningCat"], "barRight": ["volume"],
-            "weatherPlace": "Bengaluru", "petStyle": "pixel",
+            "weatherPlace": "Bengaluru", "notesHandwriting": False,
             "desktopWidgets": [{"id": "notes", "key": "notes-1"}],
             "desktopHidden": False, "desktopTheme": "analogue",
             "desktopGround": "glass", "widgetShadow": True,
@@ -28,10 +28,10 @@ class DesktopRemovalTests(unittest.TestCase):
         fixture.shell('''
             require(SettingsService.barZone("left")[1] === "runningCat", "bar preserved");
             require(SettingsService.weatherPlace === "Bengaluru", "shared preference preserved");
-            require(SettingsService.petStyle === "pixel", "pet style preserved");
+            require(SettingsService.notesHandwriting === false, "note style preserved");
             require(!("desktopWidgets" in SettingsService.snapshot()), "obsolete fields excluded");
             const oldProfile = { desktopWidgets: [{id: "clock"}], desktopHidden: false,
-                barLeft: ["runningCat", "clock"], petStyle: "plush" };
+                barLeft: ["runningCat", "clock"], notesHandwriting: true };
             SettingsService.adopt(oldProfile);
             require(SettingsService.barZone("left")[0] === "runningCat", "old profile bar works");
             require(NotesService.entry("kept").text === "My note", "existing notes preserved");

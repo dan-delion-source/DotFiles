@@ -69,10 +69,10 @@ Item {
         y: (Theme.capsuleHeight - height) / 2
         visible: !root.ring
         width: root.moduleId === "runningCat" ? Math.min(Math.max(1, Math.round(Theme.capsuleHeight * 35 / 30)), root.vertical ? Theme.sideContentWidth : 100000)
-            : root.moduleId === "pet" ? root.size + 2 : (symbol.visible ? symbol.implicitWidth : root.size)
+            : root.moduleId === "water" ? root.size + 2 : (symbol.visible ? symbol.implicitWidth : root.size)
         height: root.moduleId === "runningCat" ? Theme.capsuleHeight : root.size + 2
 
-        // Claude, Codex and the pet have no font glyph and draw their own
+        // Claude, Codex and water have no font glyph and draw their own
         // mark at glyph size.
         Loader {
             anchors.centerIn: parent
@@ -96,11 +96,12 @@ Item {
 
         Loader {
             anchors.centerIn: parent
-            active: !root.ring && root.moduleId === "pet"
-            sourceComponent: PetFace {
+            active: !root.ring && root.moduleId === "water"
+            sourceComponent: WaterGlass {
                 width: root.size + 2
                 height: root.size + 2
-                size: root.size + 2
+                drank: WaterService.count > 0
+                interactive: false
             }
         }
 
@@ -117,7 +118,7 @@ Item {
 
             anchors.centerIn: parent
             visible: root.moduleId !== "claude" && root.moduleId !== "codex"
-                && root.moduleId !== "pet" && root.moduleId !== "runningCat"
+                && root.moduleId !== "water" && root.moduleId !== "runningCat"
             text: ModuleService.glyphOf(root.moduleId)
             font.family: Theme.fontMono
             font.pixelSize: root.size

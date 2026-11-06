@@ -244,6 +244,8 @@ ShellRoot {
 
     // A normal window rather than an island panel, so the island stays
     // visible while its settings change.
+    readonly property var waterTracker: WaterService
+
     SettingsWindow {
         id: settingsWindow
 
@@ -411,9 +413,9 @@ ShellRoot {
 
     GlobalShortcut {
         appid: "danshell"
-        name: "pet"
-        description: "Open the pet"
-        onPressed: root.togglePanel("pet")
+        name: "water"
+        description: "Open water tracker"
+        onPressed: root.togglePanel("water")
     }
 
     GlobalShortcut {

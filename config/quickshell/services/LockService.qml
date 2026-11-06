@@ -280,7 +280,7 @@ Singleton {
 
     // ── FACE ────────────────────────────────────────────────────────────────
 
-    // A PAM service of its own, `impasto-face`, beside the password and never
+    // A PAM service of its own, beside the password and never
     // inside `login`: a face that is not recognised does not count against
     // the password's attempts, and the password never waits for the camera.
     // Ready where `./setup system` put the service and `./setup face` put howdy,

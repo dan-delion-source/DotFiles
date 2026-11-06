@@ -42,7 +42,7 @@ hl.window_rule({
     name  = "quickshell-settings",
     match = {
         -- A regex, not a Lua pattern.
-        class = "^(org\\.quickshell)$",
+        class = "^org[.]danshell$",
         title = "^(Settings)$",
     },
 
@@ -79,7 +79,7 @@ hl.window_rule({
 --   installer from Settings
 hl.window_rule({
     name  = "shell-terminal",
-    match = { class = "^(impasto-packages|impasto-update)$" },
+    match = { class = "^(danshell-packages|danshell-update)$" },
 
     float  = true,
     center = true,
@@ -174,20 +174,4 @@ hl.window_rule({
 
     float  = true,
     center = true,
-})
-
-
--- ── LAYERS ──────────────────────────────────────────────────────────────────
-
--- · blur behind the desktop widgets, so translucent backgrounds stay legible
---
--- The layer covers the whole screen, so ignore_alpha is required or the
--- entire wallpaper gets blurred. 0.12 matches the bar and the dock, and is
--- below the widget opacity slider's 20% floor.
-hl.layer_rule({
-    name  = "impasto-desktop-blur",
-    match = { namespace = "^(impasto-desktop)$" },
-
-    blur         = true,
-    ignore_alpha = 0.12,
 })

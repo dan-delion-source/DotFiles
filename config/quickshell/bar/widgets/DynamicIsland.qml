@@ -102,8 +102,7 @@ Rectangle {
         brightness: { width: BrightnessService.panelWidth, height: BrightnessService.panelHeight },
         bluetooth:  { width: 420,  height: 500 },
         session:    { width: 720,  height: 180 },
-        // A row per creature, plus one for the next egg.
-        pet:        { width: 560,  height: 205 + 62 * PetService.family.length },
+        water:        { width: 520, height: 410 },
         // The shelf of cards, or the game being played at its own size.
         games:      GamesService.playing !== ""
             ? Geometry.gameFrameSize(SettingsService.barPosition, GamesService.panelSize(GamesService.playing))
@@ -183,7 +182,7 @@ Rectangle {
         stats: statsPanel,
         overview: overviewPanel,
         session: sessionPanel,
-        pet: petPanel,
+        water: waterPanel,
         games: gamesPanel,
         notes: notesPanel,
         board: boardPanel,
@@ -642,8 +641,8 @@ Rectangle {
     }
 
     Component {
-        id: petPanel
-        PetPanel { onClosed: root.close() }
+        id: waterPanel
+        WaterPanel { onClosed: root.close() }
     }
 
     Component {

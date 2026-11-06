@@ -48,7 +48,7 @@ Singleton {
         # The production module uses a fake sampler; no hardware or daemon runs.
         fixture.shell('''
             const cat = holder.item;
-            require(cat.interval === 150 && cat.size === 35, "upstream timing and scale");
+            require(cat.interval === 80 && cat.size === 35, "balanced timing and scale");
             require(SystemService.watchers === 1, "single sampler subscription");
             cat.visible = false;
             require(SystemService.watchers === 0, "hidden module releases sampler");

@@ -270,7 +270,7 @@ QtObject {
             "Network": "Red",
             "Weather": "Tiempo",
             "Updates": "Actualizaciones",
-            "Pet": "Mascota",
+            "Water": "Agua",
             "Spectrum": "Espectro",
             "Sound bars from whatever is playing, on the grid or along an edge.":
                 "Barras de sonido de lo que esté sonando, en la cuadrícula o a lo largo de un borde.",
@@ -342,8 +342,6 @@ QtObject {
 
             "How the creature is drawn, wherever it is drawn.":
                 "Cómo se dibuja la criatura, en todas partes donde se dibuja.",
-            "The species decides the colour and what the creature is; the style decides how it is drawn. The same drawing is used on the bar, in the pet's panel and on the desktop.":
-                "La especie decide el color y qué criatura es; el estilo decide cómo se dibuja. El mismo dibujo se usa en la barra, en el panel de la mascota y en el escritorio.",
             "Creature": "Criatura",
             "A different animal for each species.":
                 "Un animal distinto para cada especie.",

@@ -44,7 +44,7 @@ local dirs       = user_dirs()
 local captures   = dirs.SCREENSHOTS or (dirs.PICTURES or home) .. "/Screenshots"
 local recordings = dirs.SCREENCASTS or (dirs.VIDEOS or home) .. "/Screencasts"
 local camera     = dirs.CAMERA or (dirs.PICTURES or home) .. "/Camera"
-hl.env("IMPASTO_CAPTURES",   captures)
+hl.env("DANSHELL_CAPTURES",   captures)
 hl.env("HYPRSHOT_DIR",       captures)
-hl.env("IMPASTO_RECORDINGS", recordings)
-hl.env("IMPASTO_CAMERA",     camera)
+hl.env("DANSHELL_RECORDINGS", recordings)
+hl.env("DANSHELL_CAMERA",     camera)
